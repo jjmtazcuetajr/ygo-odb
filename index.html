@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <script>
+    function setTheme() {
+      const theme = localStorage.getItem('theme')
+      if (theme === 'dark' || theme === null) {
+        document.documentElement.dataset.theme = 'dark'
+        localStorage.setItem('theme', 'dark')
+      } else {
+        document.documentElement.dataset.theme = ''
+        localStorage.setItem('theme', 'light')
+      }
+    }
+    setTheme()
+  </script>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/src/assets/main.css" rel="stylesheet">
+  <title>Vite App</title>
+</head>
+
+<body class="bg-white dark:bg-neutral-900 transition-colors duration-400">
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

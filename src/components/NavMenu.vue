@@ -1,0 +1,52 @@
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import { SwitchRoot, SwitchThumb } from 'radix-vue'
+import { ref, onBeforeMount } from 'vue'
+import { Sun, Moon } from 'lucide-vue-next';
+
+const switchState = ref(false)
+
+/**
+ * Toggles between light and dark theme
+ */
+function switchTheme() {
+  if (switchState.value) {
+    document.documentElement.dataset.theme = 'dark'
+    localStorage.setItem('theme', 'dark')
+  } else {
+    document.documentElement.dataset.theme = ''
+    localStorage.setItem('theme', 'light')
+  }
+}
+
+onBeforeMount(() => {
+  const theme = localStorage.getItem('theme')
+  if (theme === 'dark') {
+    switchState.value = true
+  } else if (theme === 'light') {
+    switchState.value = false
+  }
+})
+</script>
+<template>
+  <header class="border-b-1 border-b-neutral-300 dark:border-b-neutral-700 py-4 px-5">
+    <nav class="flex justify-between items-center text-neutral-800 dark:text-neutral-300">
+      <RouterLink to="/" class="flex items-center font-medium text-xl hover:opacity-70 transition-opacity duration-400">
+        <img alt="Vue logo" class="mr-3" src="@/assets/logo.svg" width="30" height="20" />YGO ODB
+      </RouterLink>
+      <div class="flex items-center divide-x-1 divide-neutral-300 dark:divide-neutral-700">
+        <RouterLink class="pr-4 font-medium hover:text-emerald-600 duration-400" activeClass="text-emerald-600"
+          to="/about">About
+        </RouterLink>
+        <SwitchRoot id="switch-theme" v-model:checked="switchState" @update:checked="switchTheme"
+          class="w-[42px] h-[22px] ml-4 border border-solid focus:outline-none focus-visible:border-emerald-600 duration-400 border-neutral-400 dark:border-neutral-500 hover:border-emerald-600 bg-neutral-200 shadow-sm rounded-full relative data-[state=checked]:bg-neutral-700 cursor-pointer">
+          <SwitchThumb
+            class="flex justify-center items-center w-[18px] h-[18px] my-auto bg-white shadow-sm rounded-full transition-transform duration-300 translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[20.5px] data-[state=checked]:bg-neutral-950">
+            <Sun v-if="!switchState" color="gray" :size="14" />
+            <Moon v-else color="white" :size="14" />
+          </SwitchThumb>
+        </SwitchRoot>
+      </div>
+    </nav>
+  </header>
+</template>
