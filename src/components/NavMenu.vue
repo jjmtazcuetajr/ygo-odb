@@ -40,8 +40,8 @@ onBeforeMount(() => {
       <div class="flex items-center divide-x-1 divide-neutral-300 dark:divide-neutral-700">
         <div class="pr-4">
           <RouterLink
-            class="font-medium hover:text-emerald-600 duration-400 rounded-xs transition-text-color focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-4 focus-visible:outline-emerald-500 dark:focus-visible:outline-emerald-700"
-            activeClass="text-emerald-600" to="/about">About
+            class="font-medium hover:text-emerald-700 dark:hover:text-emerald-600 duration-400 rounded-xs transition-text-color focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-4 focus-visible:outline-emerald-500 dark:focus-visible:outline-emerald-700"
+            activeClass="text-emerald-700 dark:text-emerald-600" to="/about">About
           </RouterLink>
         </div>
         <SwitchRoot id="switch-theme" v-model:checked="switchState" @update:checked="switchTheme"
