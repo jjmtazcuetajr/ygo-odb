@@ -1,6 +1,2 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-@theme {
-  --transition-property-text-color: color;
-  --transition-property-border-color: border-color;
-}
