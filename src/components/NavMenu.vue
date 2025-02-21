@@ -44,7 +44,7 @@ onBeforeMount(() => {
           </RouterLink>
         </div>
         <SwitchRoot id="switch-theme" v-model:modelValue="switchState" @update:modelValue="switchTheme"
-          class="w-[42px] h-[22px] ml-4 shadow-sm rounded-full relative cursor-pointer border duration-400 border-neutral-400 dark:border-neutral-500 hover:border-emerald-600 bg-neutral-200 data-[state=checked]:bg-neutral-700">
+          class="w-[42px] h-[22px] ml-4 shadow-sm rounded-full relative cursor-pointer border border-neutral-400 dark:border-neutral-500 hover:border-emerald-600 transition-[border-color] duration-400 bg-neutral-200 data-[state=checked]:bg-neutral-700">
           <SwitchThumb
             class="flex justify-center items-center w-[18px] h-[18px] my-auto bg-white shadow-sm rounded-full transition-transform duration-300 translate-x-[1px] will-change-transform data-[state=checked]:translate-x-[21px] data-[state=checked]:bg-neutral-950">
             <Sun v-if="!switchState" color="gray" :size="14" />
