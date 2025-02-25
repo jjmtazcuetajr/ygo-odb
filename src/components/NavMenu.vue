@@ -29,10 +29,11 @@ onBeforeMount(() => {
 })
 </script>
 <template>
-  <header class="border-b-1 border-b-neutral-300 dark:border-b-neutral-700 py-4 px-5">
+  <header
+    class="sticky top-0 border-b-1 bg-white dark:bg-neutral-900 border-b-neutral-300 dark:border-b-neutral-700 py-4 px-5 transition-colors duration-400">
     <nav class="flex justify-between items-center text-neutral-800 dark:text-neutral-300">
       <RouterLink to="/" class="focus-visible:outline-offset-2">
-        <div class="flex items-center font-medium text-xl hover:opacity-70 transition-opacity duration-400">
+        <div class="flex items-center font-medium text-xl hover:opacity-70 transition-[opacity,color] duration-400">
           <img alt="Vue logo" class="mr-3" src="@/assets/logo.svg" width="30" height="20" />YGO ODB
         </div>
       </RouterLink>
