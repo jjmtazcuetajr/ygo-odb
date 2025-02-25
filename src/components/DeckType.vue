@@ -30,7 +30,7 @@ function determineDeckTypeId(decktype: string) {
         </template>)
       </span>
     </div>
-    <div :id="determineDeckTypeId(type) + '-deck'" :class="'flex flex-wrap w-full mt-1 border rounded-md ' +
+    <div :id="determineDeckTypeId(type) + '-deck'" :class="'flex flex-wrap w-full mt-1 border rounded-md transition-colors duration-400 ' +
       (type === 'Main' ? 'min-h-90 border-neutral-400 bg-neutral-300 dark:border-neutral-500 dark:bg-neutral-700' :
         type === 'Extra' ? 'min-h-30 border-emerald-400 bg-emerald-200 dark:border-emerald-500 dark:bg-emerald-800' :
           'min-h-30 border-cyan-400 bg-cyan-200 dark:border-cyan-600 dark:bg-cyan-900')
