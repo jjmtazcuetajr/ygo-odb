@@ -33,7 +33,7 @@ function sortByArchetype() {
   <DropdownMenuRoot v-model:open="toggleState" :modal="false">
     <DropdownMenuTrigger
       class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color,color] duration-200"
-      aria-label="Import options">
+      :aria-label="type + ' options'">
       <FileInput v-if="type === 'Import'" class="mr-1" :size="16" />
       <FileOutput v-else-if="type === 'Export'" class="mr-1" :size="16" />
       <ArrowDownUp v-else class="mr-1" :size="16" />
