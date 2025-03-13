@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger } from 'reka-ui'
 import { X } from 'lucide-vue-next'
+import CardFilters from './dialog-content/CardFilters.vue';
 </script>
 
 <template>
@@ -16,7 +17,7 @@ import { X } from 'lucide-vue-next'
         <DialogTitle class="text-lg font-semibold dark:text-neutral-300">
           Filter Cards
         </DialogTitle>
-        <div></div>
+        <CardFilters />
         <div class="mt-[25px] flex justify-end">
           <button type="button"
             class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-neutral-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color] duration-200">
