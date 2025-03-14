@@ -5,7 +5,7 @@ export const cardCategories = [
   { val: 'trap', textContent: 'Trap' }
 ]
 
-export const monsterCardTypes = [
+export const monsterCards = [
   { val: 'all', textContent: 'All' },
   { val: 'normal', textContent: 'Normal' },
   { val: 'effect', textContent: 'Effect' },
@@ -53,4 +53,34 @@ export const sortTypes = [
 export const sortDirections = [
   { val: 'asc', textContent: 'Ascending' },
   { val: 'desc', textContent: 'Descending' }
+]
+
+export const monsterTypes = [
+  { val: 'all', textContent: 'All' },
+  { val: 'aqua', textContent: 'Aqua' },
+  { val: 'beast', textContent: 'Beast' },
+  { val: 'beast-warrior', textContent: 'Beast-Warrior' },
+  { val: 'creator-god', textContent: 'Creator God' },
+  { val: 'cyberse', textContent: 'Cyberse' },
+  { val: 'dinosaur', textContent: 'Dinosaur' },
+  { val: 'divine-beast', textContent: 'Divine-Beast' },
+  { val: 'dragon', textContent: 'Dragon' },
+  { val: 'fairy', textContent: 'Fairy' },
+  { val: 'fiend', textContent: 'Fiend' },
+  { val: 'fish', textContent: 'Fish' },
+  { val: 'illusion', textContent: 'Illusion' },
+  { val: 'insect', textContent: 'Insect' },
+  { val: 'machine', textContent: 'Machine' },
+  { val: 'plant', textContent: 'Plant' },
+  { val: 'psychic', textContent: 'Psychic' },
+  { val: 'pyro', textContent: 'Pyro' },
+  { val: 'reptile', textContent: 'Reptile' },
+  { val: 'rock', textContent: 'Rock' },
+  { val: 'sea serpent', textContent: 'Sea Serpent' },
+  { val: 'spellcaster', textContent: 'Spellcaster' },
+  { val: 'thunder', textContent: 'Thunder' },
+  { val: 'warrior', textContent: 'Warrior' },
+  { val: 'winged beast', textContent: 'Winged Beast' },
+  { val: 'wyrm', textContent: 'Wyrm' },
+  { val: 'zombie', textContent: 'Zombie' }
 ]
