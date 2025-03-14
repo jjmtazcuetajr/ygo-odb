@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { X, Filter } from 'lucide-vue-next';
 import DialogModal from './DialogModal.vue';
+import SelectOption from './SelectOption.vue';
+import { sortTypes, sortDirections } from "../utils/select-options";
 </script>
 <template>
   <div class="fixed lg:static inset-0 mt-[60px] lg:mt-[unset] lg:w-[35%] xl:w-[30%]">
@@ -15,20 +17,16 @@ import DialogModal from './DialogModal.vue';
       </div>
       <input id="search-input" type="text" placeholder="Enter card name or effect..."
         class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
-      <div class="flex flex-wrap gap-2">
-        <select id="sort-type" aria-label="Sort by"
-          class="text-xs sm:text-base rounded-md px-1 py-0.5 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
-          <option selected disabled>Sort by</option>
-          <option value="">Name</option>
-          <option value="">Attack</option>
-          <option value="">Defense</option>
-        </select>
-        <select id="sort-dir" aria-label="Sort direction"
-          class="text-xs sm:text-base rounded-md px-1 py-0.5 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
-          <option selected disabled>Direction</option>
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
+      <div class="flex flex-wrap items-end gap-2">
+        <div class="flex flex-col">
+          <label for="sort-type" class="text-xs sm:text-sm mb-1">Sort by</label>
+          <SelectOption :id="'sort-type'" :bg-color-class="'bg-neutral-50 dark:bg-neutral-900'" :options="sortTypes" />
+        </div>
+        <div class="flex flex-col">
+          <label for="sort-dir" class="text-xs sm:text-sm mb-1">Direction</label>
+          <SelectOption :id="'sort-dir'" :bg-color-class="'bg-neutral-50 dark:bg-neutral-900'"
+            :options="sortDirections" />
+        </div>
         <DialogModal>
           <template #trigger>
             <button type="button"

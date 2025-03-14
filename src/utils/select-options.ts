@@ -1,12 +1,12 @@
 export const cardCategories = [
-  { val: 'all', textContent: 'All', selected: true },
+  { val: 'all', textContent: 'All' },
   { val: 'monster', textContent: 'Monster' },
   { val: 'spell', textContent: 'Spell' },
   { val: 'trap', textContent: 'Trap' }
 ]
 
 export const monsterCardTypes = [
-  { val: 'all', textContent: 'All', selected: true },
+  { val: 'all', textContent: 'All' },
   { val: 'normal', textContent: 'Normal' },
   { val: 'effect', textContent: 'Effect' },
   { val: 'ritual', textContent: 'Ritual' },
@@ -27,7 +27,7 @@ export const monsterCardTypes = [
 ]
 
 export const spellTypes = [
-  { val: 'all', textContent: 'All', selected: true },
+  { val: 'all', textContent: 'All' },
   { val: 'normal', textContent: 'Normal' },
   { val: 'continuous', textContent: 'Continuous' },
   { val: 'equip', textContent: 'Equip' },
@@ -37,8 +37,20 @@ export const spellTypes = [
 ]
 
 export const trapTypes = [
-  { val: 'all', textContent: 'All', selected: true },
+  { val: 'all', textContent: 'All' },
   { val: 'normal', textContent: 'Normal' },
   { val: 'continuous', textContent: 'Continuous' },
   { val: 'counter', textContent: 'Counter' }
+]
+
+export const sortTypes = [
+  { val: 'name', textContent: 'Name' },
+  { val: 'atk', textContent: 'Attack' },
+  { val: 'def', textContent: 'Defense' },
+  { val: 'lvl', textContent: 'Level/Rank' }
+]
+
+export const sortDirections = [
+  { val: 'asc', textContent: 'Ascending' },
+  { val: 'desc', textContent: 'Descending' }
 ]
