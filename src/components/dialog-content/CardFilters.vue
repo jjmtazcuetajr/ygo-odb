@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import SelectOption from '../SelectOption.vue';
 import AttributeSelection from './AttributeSelection.vue';
+import NumberField from '../NumberField.vue';
 import { cardCategories, monsterCards, spellTypes, trapTypes, monsterTypes } from '../../utils/select-options'
 
 const category = ref()
@@ -28,6 +29,11 @@ const handleCategoryChange = (val: string) => { category.value = val }
         <div class="mt-2">
           Attributes
           <AttributeSelection class="mt-1" />
+        </div>
+        <div class="mt-2">
+          <NumberField id="lvl-rank" :max="12" label-val="Lv/Rank" />
+          <NumberField id="scale" :max="13" label-val="Scale" class="mt-1" />
+          <NumberField id="link" :min="1" :max="6" :default-val="1" label-val="Link Rating" class="mt-1" />
         </div>
       </template>
       <template v-else-if="category === 'spell'">
