@@ -1,23 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import CardCategory from './CardCategory.vue';
 import SelectOption from '../SelectOption.vue';
 import AttributeSelection from './AttributeSelection.vue';
 import NumberField from '../NumberField.vue';
 import LinkArrows from './LinkArrows.vue';
-import { cardCategories, monsterCards, spellTypes, trapTypes, monsterTypes } from '../../utils/select-options'
+import { monsterCards, spellTypes, trapTypes, monsterTypes } from '../../utils/select-options'
 
-const category = ref()
-
-const handleCategoryChange = (val: string) => { category.value = val }
+const category = ref('')
 </script>
 
 <template>
   <div class="mt-3 dark:text-neutral-300 text-xs sm:text-base">
-    <div>
-      <label for="category" class="mr-3">Card Category</label>
-      <SelectOption :id="'category'" :options="cardCategories" @handle-option-change="handleCategoryChange" />
+    <div class="flex flex-wrap gap-2">
+      Card Category
+      <CardCategory v-model="category" />
     </div>
-    <div class="mt-2">
+    <div class="mt-3">
       <template v-if="category === 'monster'">
         <div>
           <label for="monster-card" class="mr-3">Monster card</label>

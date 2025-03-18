@@ -1,10 +1,3 @@
-export const cardCategories = [
-  { val: 'all', textContent: 'All' },
-  { val: 'monster', textContent: 'Monster' },
-  { val: 'spell', textContent: 'Spell' },
-  { val: 'trap', textContent: 'Trap' }
-]
-
 export const monsterCards = [
   { val: 'all', textContent: 'All' },
   { val: 'normal', textContent: 'Normal' },

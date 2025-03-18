@@ -12,26 +12,12 @@ const toggleGroupItemClasses = toggleButtonStyles + lightThemeColors + darkTheme
 
 <template>
   <ToggleGroupRoot v-model="toggleStateMultiple" type="multiple" class="flex flex-wrap gap-2 dark:text-neutral-200">
-    <ToggleGroupItem value="earth" :class="toggleGroupItemClasses">
-      EARTH
-    </ToggleGroupItem>
-    <ToggleGroupItem value="water" :class="toggleGroupItemClasses">
-      WATER
-    </ToggleGroupItem>
-    <ToggleGroupItem value="fire" :class="toggleGroupItemClasses">
-      FIRE
-    </ToggleGroupItem>
-    <ToggleGroupItem value="wind" :class="toggleGroupItemClasses">
-      WIND
-    </ToggleGroupItem>
-    <ToggleGroupItem value="light" :class="toggleGroupItemClasses">
-      LIGHT
-    </ToggleGroupItem>
-    <ToggleGroupItem value="dark" :class="toggleGroupItemClasses">
-      DARK
-    </ToggleGroupItem>
-    <ToggleGroupItem value="divine" :class="toggleGroupItemClasses">
-      DIVINE
-    </ToggleGroupItem>
+    <ToggleGroupItem value="earth" :class="toggleGroupItemClasses">EARTH</ToggleGroupItem>
+    <ToggleGroupItem value="water" :class="toggleGroupItemClasses">WATER</ToggleGroupItem>
+    <ToggleGroupItem value="fire" :class="toggleGroupItemClasses">FIRE</ToggleGroupItem>
+    <ToggleGroupItem value="wind" :class="toggleGroupItemClasses">WIND</ToggleGroupItem>
+    <ToggleGroupItem value="light" :class="toggleGroupItemClasses">LIGHT</ToggleGroupItem>
+    <ToggleGroupItem value="dark" :class="toggleGroupItemClasses">DARK</ToggleGroupItem>
+    <ToggleGroupItem value="divine" :class="toggleGroupItemClasses">DIVINE</ToggleGroupItem>
   </ToggleGroupRoot>
 </template>
