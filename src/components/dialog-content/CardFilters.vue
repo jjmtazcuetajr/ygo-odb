@@ -11,49 +11,48 @@ const category = ref('')
 </script>
 
 <template>
-  <div class="mt-3 dark:text-neutral-300 text-xs sm:text-base">
+  <div
+    class="flex flex-col mt-3 p-1 overflow-y-auto dark:text-neutral-300 dark:[color-scheme:dark] text-xs sm:text-base">
     <div class="flex flex-wrap gap-2">
       Card Category
       <CardCategory v-model="category" />
     </div>
-    <div class="mt-3">
-      <template v-if="category === 'monster'">
+    <div v-if="category === 'monster'" class="mt-3">
+      <div>
+        <label for="monster-card" class="mr-2">Monster card</label>
+        <SelectOption :id="'monster-card'" :options="monsterCards" />
+      </div>
+      <div class="mt-2">
+        <label for="monster-type" class="mr-2">Monster Type</label>
+        <SelectOption :id="'monster-type'" :options="monsterTypes" />
+      </div>
+      <div class="mt-2">
+        Attributes
+        <AttributeSelection class="mt-1" />
+      </div>
+      <div class="flex flex-wrap justify-between items-center gap-3 mt-2">
+        <div class="flex flex-col gap-1">
+          <NumberField id="lvl-rank" :max="12" label-val="Lv/Rank" />
+          <NumberField id="scale" :max="13" label-val="Scale" class="mt-1" />
+          <NumberField id="link" :min="1" :max="6" :default-val="1" label-val="Link Rating" class="mt-1" />
+        </div>
         <div>
-          <label for="monster-card" class="mr-3">Monster card</label>
-          <SelectOption :id="'monster-card'" :options="monsterCards" />
+          Link Arrows
+          <LinkArrows class="mt-1" />
         </div>
-        <div class="mt-2">
-          <label for="monster-type" class="mr-3">Monster Type</label>
-          <SelectOption :id="'monster-type'" :options="monsterTypes" />
-        </div>
-        <div class="mt-2">
-          Attributes
-          <AttributeSelection class="mt-1" />
-        </div>
-        <div class="flex flex-wrap justify-between items-center gap-2 mt-1">
-          <div class="flex flex-col gap-1">
-            <NumberField id="lvl-rank" :max="12" label-val="Lv/Rank" />
-            <NumberField id="scale" :max="13" label-val="Scale" class="mt-1" />
-            <NumberField id="link" :min="1" :max="6" :default-val="1" label-val="Link Rating" class="mt-1" />
-          </div>
-          <div>
-            Link Arrows
-            <LinkArrows class="mt-1" />
-          </div>
-        </div>
-        <div class="flex flex-wrap justify-between gap-2 mt-4">
-          <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="Attack" />
-          <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="Defense" />
-        </div>
-      </template>
-      <template v-else-if="category === 'spell'">
-        <label for="spell" class="mr-3">Spell Type</label>
-        <SelectOption :id="'spell'" :options="spellTypes" />
-      </template>
-      <template v-else-if="category === 'trap'">
-        <label for="trap" class="mr-3">Trap Type</label>
-        <SelectOption :id="'trap'" :options="trapTypes" />
-      </template>
+      </div>
+      <div class="flex flex-wrap justify-between gap-3 mt-4">
+        <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" />
+        <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" />
+      </div>
+    </div>
+    <div v-else-if="category === 'spell'" class="mt-3">
+      <label for="spell" class="mr-3">Spell Type</label>
+      <SelectOption :id="'spell'" :options="spellTypes" />
+    </div>
+    <div v-else-if="category === 'trap'" class="mt-3">
+      <label for="trap" class="mr-3">Trap Type</label>
+      <SelectOption :id="'trap'" :options="trapTypes" />
     </div>
   </div>
 </template>
