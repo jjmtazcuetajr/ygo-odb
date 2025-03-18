@@ -14,7 +14,7 @@ defineProps<{
 
 <template>
   <NumberFieldRoot :id="id" :min="min || 0" :max="max" :step="step || 1" :default-value="defaultVal || 0"
-    class="flex items-center justify-between">
+    :step-snapping="false" class="flex items-center justify-between">
     <label :for="id" class="mr-3">{{ labelVal }}</label>
     <div
       class="flex items-center focus-within:ring rounded-md border border-neutral-500 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-950 transition-[background-color] duration-300">
