@@ -17,7 +17,7 @@ defineProps<{
     class="flex items-center justify-between">
     <label :for="id" class="mr-3">{{ labelVal }}</label>
     <div
-      class="mt-1 flex items-center focus-within:ring rounded-md border border-neutral-500 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-950 transition-[background-color] duration-300">
+      class="flex items-center focus-within:ring rounded-md border border-neutral-500 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-950 transition-[background-color] duration-300">
       <NumberFieldDecrement class="p-0.5 sm:p-1.5 cursor-pointer disabled:cursor-not-allowed disabled:opacity-20">
         <Minus :size="16" />
       </NumberFieldDecrement>

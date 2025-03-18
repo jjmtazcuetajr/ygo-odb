@@ -31,7 +31,7 @@ const category = ref('')
           <AttributeSelection class="mt-1" />
         </div>
         <div class="flex flex-wrap justify-between items-center gap-2 mt-1">
-          <div>
+          <div class="flex flex-col gap-1">
             <NumberField id="lvl-rank" :max="12" label-val="Lv/Rank" />
             <NumberField id="scale" :max="13" label-val="Scale" class="mt-1" />
             <NumberField id="link" :min="1" :max="6" :default-val="1" label-val="Link Rating" class="mt-1" />
@@ -40,6 +40,10 @@ const category = ref('')
             Link Arrows
             <LinkArrows class="mt-1" />
           </div>
+        </div>
+        <div class="flex flex-wrap justify-between gap-2 mt-4">
+          <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="Attack" />
+          <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="Defense" />
         </div>
       </template>
       <template v-else-if="category === 'spell'">
