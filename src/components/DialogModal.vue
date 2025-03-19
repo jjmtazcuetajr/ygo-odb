@@ -13,7 +13,7 @@ import CardFilters from './dialog-content/CardFilters.vue';
       <DialogOverlay
         class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30" />
       <DialogContent :aria-describedby="undefined"
-        class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-[-50%] rounded-md p-6 z-100 border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
+        class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide fixed top-[10%] left-0 right-0 mx-auto max-h-[85vh] w-[90vw] max-w-[450px] rounded-md p-6 z-100 border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
         <DialogTitle class="text-lg font-semibold ml-1 dark:text-neutral-300">
           Filter Cards
         </DialogTitle>
