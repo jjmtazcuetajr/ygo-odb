@@ -5,6 +5,7 @@ import SelectOption from '../SelectOption.vue';
 import AttributeSelection from './AttributeSelection.vue';
 import NumberField from '../NumberField.vue';
 import LinkArrows from './LinkArrows.vue';
+import PopOver from './PopOver.vue';
 import { monsterCards, spellTypes, trapTypes, monsterTypes } from '../../utils/select-options'
 
 const category = ref('')
@@ -13,8 +14,11 @@ const category = ref('')
 <template>
   <div
     class="flex flex-col mt-3 p-1 overflow-y-auto dark:text-neutral-300 dark:[color-scheme:dark] text-xs sm:text-base">
-    <div class="flex flex-wrap gap-2">
-      Card Category
+    <div class="flex items-center flex-wrap gap-2">
+      <div class="flex items-start sm:items-end gap-1">
+        Card Category
+        <PopOver usage="category" />
+      </div>
       <CardCategory v-model="category" />
     </div>
     <div v-if="category === 'monster'" class="mt-3">
@@ -27,7 +31,10 @@ const category = ref('')
         <SelectOption :id="'monster-type'" :options="monsterTypes" />
       </div>
       <div class="mt-2">
-        Attributes
+        <div class="flex items-start sm:items-end gap-1">
+          Attributes
+          <PopOver usage="attributes" />
+        </div>
         <AttributeSelection class="mt-1" />
       </div>
       <div class="flex flex-wrap justify-between items-center gap-3 mt-2">
@@ -37,12 +44,18 @@ const category = ref('')
           <NumberField id="link" :min="1" :max="6" :default-val="1" label-val="Link Rating" class="mt-1" />
         </div>
         <div>
-          Link Arrows
+          <div class="flex items-start sm:items-end gap-1">
+            <span>Link Arrows</span>
+            <PopOver usage="link-arrows" />
+          </div>
           <LinkArrows class="mt-1" />
         </div>
       </div>
       <div class="flex flex-wrap justify-between gap-3 mt-4">
-        <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" />
+        <div class="flex items-center gap-1">
+          <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" />
+          <PopOver usage="atk/def" />
+        </div>
         <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" />
       </div>
     </div>
