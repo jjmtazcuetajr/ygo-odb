@@ -27,12 +27,11 @@ import { sortTypes, sortDirections } from "../utils/select-options";
           <SelectOption :id="'sort-dir'" :bg-color-class="'bg-neutral-50 dark:bg-neutral-900'"
             :options="sortDirections" />
         </div>
-        <DialogModal>
+        <DialogModal usage="filters">
           <template #trigger>
             <button type="button"
               class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-300 hover:bg-gray-400 active:bg-gray-500 dark:bg-zinc-600 dark:hover:bg-zinc-500 dark:active:bg-zinc-400 transition-[background-color,color] duration-200">
-              <Filter class="mr-1" :size="16" />
-              Filters
+              <Filter class="mr-1" :size="16" /> Filters
             </button>
           </template>
         </DialogModal>
