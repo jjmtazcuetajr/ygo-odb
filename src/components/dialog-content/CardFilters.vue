@@ -12,8 +12,7 @@ const category = ref('')
 </script>
 
 <template>
-  <div
-    class="flex flex-col mt-3 p-1 overflow-y-auto dark:text-neutral-300 dark:[color-scheme:dark] text-xs sm:text-base">
+  <div class="flex flex-col mt-3 p-1 dark:text-neutral-300 text-xs sm:text-base">
     <div class="flex items-center flex-wrap gap-2">
       <div class="flex items-start sm:items-end gap-1">
         Card Category
@@ -21,8 +20,8 @@ const category = ref('')
       </div>
       <CardCategory v-model="category" />
     </div>
-    <div v-if="category === 'monster'" class="mt-3">
-      <div>
+    <template v-if="category === 'monster'">
+      <div class="mt-3">
         <label for="monster-card" class="mr-2">Monster card</label>
         <SelectOption :id="'monster-card'" :options="monsterCards" />
       </div>
@@ -58,7 +57,7 @@ const category = ref('')
         </div>
         <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" />
       </div>
-    </div>
+    </template>
     <div v-else-if="category === 'spell'" class="mt-3">
       <label for="spell" class="mr-3">Spell Type</label>
       <SelectOption :id="'spell'" :options="spellTypes" />
