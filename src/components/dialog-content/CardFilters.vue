@@ -39,7 +39,7 @@ const category = ref('')
       </div>
       <div class="flex flex-wrap justify-between items-center gap-3 mt-2">
         <div class="flex flex-col gap-1">
-          <NumberField id="lvl-rank" :max="12" label-val="Lv/Rank" />
+          <NumberField id="lvl-rank" :max="13" label-val="Lv/Rank" />
           <NumberField id="scale" :max="13" label-val="Scale" class="mt-1" />
           <NumberField id="link" :min="1" :max="6" :default-val="1" label-val="Link Rating" class="mt-1" />
         </div>
