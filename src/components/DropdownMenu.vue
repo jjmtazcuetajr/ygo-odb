@@ -1,20 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FileInput, FileOutput, ChevronDown, ArrowDownUp } from 'lucide-vue-next';
-import { DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger } from 'reka-ui'
+import { FileInput, FileOutput, ChevronDown, ArrowDownUp, X } from 'lucide-vue-next'
+import { DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger, DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger } from 'reka-ui'
 
 defineProps<{
   type: 'Import' | 'Export' | 'Sort'
 }>()
 
 const toggleState = ref(false)
+const usage = ref('')
 
-function importFromYdkFile() {
-  console.log('import from ydk file');
-}
-function importFromYdkeUrl() {
-  console.log('import from ydke url');
-}
+const openYdkFileDialog = () => { usage.value = 'ydk-file' }
+const openYdkeUrlDialog = () => { usage.value = 'ydke-url' }
 function exportToYdkFile() {
   console.log('export to ydk file');
 }
@@ -27,46 +24,105 @@ function sortByName() {
 function sortByArchetype() {
   console.log('sort by archetype');
 }
+
+type PointerDownOutsideEvent = CustomEvent<{ originalEvent: PointerEvent }>
+
+/**
+ * Prevents a dialog (modal) from closing when the scroll from the scrollable overlay was clicked
+ * @param event a custom pointer event
+ */
+function persistDialog(event: PointerDownOutsideEvent) {
+  const originalEvent = event.detail.originalEvent
+  const target = originalEvent.target as HTMLElement
+  if (originalEvent.offsetX > target.clientWidth || originalEvent.offsetY > target.clientHeight) {
+    event.preventDefault()
+  }
+}
 </script>
 
 <template>
-  <DropdownMenuRoot v-model:open="toggleState" :modal="false">
-    <DropdownMenuTrigger
-      class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color,color] duration-200"
-      :aria-label="type + ' options'">
-      <FileInput v-if="type === 'Import'" class="mr-1" :size="16" />
-      <FileOutput v-else-if="type === 'Export'" class="mr-1" :size="16" />
-      <ArrowDownUp v-else class="mr-1" :size="16" />
-      {{ type }}
-      <ChevronDown class="ml-1" :size="16" />
-    </DropdownMenuTrigger>
+  <DialogRoot>
+    <DropdownMenuRoot v-model:open="toggleState" :modal="false">
+      <DropdownMenuTrigger
+        class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color,color] duration-200"
+        :aria-label="type + ' options'">
+        <FileInput v-if="type === 'Import'" class="mr-1" :size="16" />
+        <FileOutput v-else-if="type === 'Export'" class="mr-1" :size="16" />
+        <ArrowDownUp v-else class="mr-1" :size="16" />
+        {{ type }}
+        <ChevronDown class="ml-1" :size="16" />
+      </DropdownMenuTrigger>
 
-    <DropdownMenuPortal>
-      <DropdownMenuContent
-        class="rounded-md p-1 border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 shadow-xl shadow-neutral-400 dark:shadow-neutral-800 will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
-        :side-offset="5">
-        <template v-if="type === 'Import' || type === 'Export'">
-          <DropdownMenuItem v-on="type === 'Import' ? { click: importFromYdkFile } : { click: exportToYdkFile }"
-            class="text-sm rounded flex items-center h-6 px-3 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
-            {{ type === 'Import' ? 'From' : 'To' }} .ydk file
-          </DropdownMenuItem>
-          <DropdownMenuItem v-on="type === 'Import' ? { click: importFromYdkeUrl } : { click: exportToYdkeUrl }"
-            class="text-sm rounded flex items-center h-6 px-3 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
-            {{ type === 'Import' ? 'From' : 'To' }} YDKe URL
-          </DropdownMenuItem>
-        </template>
-        <template v-else>
-          <DropdownMenuItem @click="sortByName"
-            class="text-sm rounded flex items-center h-6 px-3 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
-            By name
-          </DropdownMenuItem>
-          <DropdownMenuItem @click="sortByArchetype"
-            class="text-sm rounded flex items-center h-6 px-3 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
-            By archetype
-          </DropdownMenuItem>
-        </template>
-        <DropdownMenuArrow class="fill-neutral-100 dark:fill-neutral-800 stroke-neutral-300 dark:stroke-neutral-600" />
-      </DropdownMenuContent>
-    </DropdownMenuPortal>
-  </DropdownMenuRoot>
+      <DropdownMenuPortal>
+        <DropdownMenuContent
+          class="rounded-md p-1 border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 shadow-xl shadow-neutral-400 dark:shadow-neutral-800 will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+          :side-offset="5">
+          <template v-if="type === 'Import' || type === 'Export'">
+            <DropdownMenuItem v-on="type === 'Import' ? { click: openYdkFileDialog } : { click: exportToYdkFile }"
+              class="text-sm rounded flex items-center h-6 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
+              <DialogTrigger class="w-full text-start px-3" v-if="type === 'Import'">From .ydk file</DialogTrigger>
+              <span class="w-full text-start px-3" v-else>To .ydk file</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem v-on="type === 'Import' ? { click: openYdkeUrlDialog } : { click: exportToYdkeUrl }"
+              class="text-sm rounded flex items-center h-6 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
+              <DialogTrigger class="w-full text-start px-3" v-if="type === 'Import'">From YDKe URL</DialogTrigger>
+              <span class="w-full text-start px-3" v-else>To YDKe URL</span>
+            </DropdownMenuItem>
+          </template>
+          <template v-else>
+            <DropdownMenuItem @click="sortByName"
+              class="text-sm rounded flex items-center h-6 px-3 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
+              By name
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="sortByArchetype"
+              class="text-sm rounded flex items-center h-6 px-3 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
+              By archetype
+            </DropdownMenuItem>
+          </template>
+          <DropdownMenuArrow
+            class="fill-neutral-100 dark:fill-neutral-800 stroke-neutral-300 dark:stroke-neutral-600" />
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenuRoot>
+    <DialogPortal>
+      <DialogOverlay
+        class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto dark:[color-scheme:dark]">
+        <DialogContent :aria-describedby="undefined" @pointer-down-outside="persistDialog"
+          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto mt-[50%] sm:mt-[10%] mb-[10%] w-[90vw] max-w-[450px] p-6 z-100 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
+          <DialogTitle class="text-lg font-semibold dark:text-neutral-300">
+            Import {{ usage === 'ydk-file' ? '.ydk file' : 'YDKe URL' }}
+          </DialogTitle>
+          <div class="mt-3 dark:text-neutral-300">
+            <template v-if="usage === 'ydk-file'">
+              <div class="mb-2 text-sm sm:text-base">You may drag a .ydk file here</div>
+              <span class="sr-only">Please upload a .ydk file</span>
+              <input type="file"
+                class="w-full py-10 px-2 text-xs sm:text-base rounded-lg border-[2px] border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
+            </template>
+            <div v-else-if="usage === 'ydke-url'"
+              class="flex overflow-hidden rounded-md border border-neutral-500 focus-within:outline-2 focus-within:-outline-offset-1 focus-within:outline-sky-500">
+              <textarea id="ydke" placeholder="Please enter a YDKe URL" rows="7"
+                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] focus:outline-none"></textarea>
+            </div>
+          </div>
+          <div class="mt-5 mr-1 flex justify-end gap-2">
+            <button type="button"
+              class="px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-emerald-300 hover:bg-emerald-400 active:bg-emerald-500 dark:bg-emerald-900 dark:hover:bg-emerald-800 dark:active:bg-emerald-700 transition-[background-color] duration-200">
+              Import
+            </button>
+            <DialogClose as-child>
+              <button type="button"
+                class="px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-neutral-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color] duration-200">
+                Cancel
+              </button>
+            </DialogClose>
+          </div>
+          <DialogClose aria-label="Close"
+            class="absolute top-[10px] right-[10px] self-start p-1 size-[24px] rounded-full cursor-pointer dark:text-neutral-300 hover:bg-neutral-200 active:bg-gray-400 dark:hover:bg-neutral-700 dark:active:bg-neutral-500 transition-[background-color] duration-200">
+            <X :size="16" />
+          </DialogClose>
+        </DialogContent>
+      </DialogOverlay>
+    </DialogPortal>
+  </DialogRoot>
 </template>
