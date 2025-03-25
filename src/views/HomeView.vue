@@ -6,21 +6,23 @@ import DialogModal from '@/components/DialogModal.vue';
 import { Trash2, CircleHelp, Search } from 'lucide-vue-next';
 import { ref, onMounted } from 'vue';
 
-const isMobileFiltersShown = ref(false)
+const isSideDrawerShown = ref(false)
 
-function toggleMobileFilters() {
-  isMobileFiltersShown.value = !isMobileFiltersShown.value
+function closeSideDrawer(ev: MouseEvent) {
+  if (ev && (ev.target as HTMLElement).id === 'overlay' && isSideDrawerShown.value) {
+    isSideDrawerShown.value = false
+  }
 }
 
-function showFiltersOnLargeScreens() {
-  if (window.innerWidth >= 640 && !isMobileFiltersShown.value) {
-    isMobileFiltersShown.value = true
+function showSideDrawerOnLargeScreens() {
+  if (window.innerWidth >= 640 && !isSideDrawerShown.value) {
+    isSideDrawerShown.value = true
   }
 }
 
 onMounted(() => {
-  showFiltersOnLargeScreens()
-  window.addEventListener('resize', showFiltersOnLargeScreens)
+  showSideDrawerOnLargeScreens()
+  window.addEventListener('resize', showSideDrawerOnLargeScreens)
 })
 </script>
 <template>
@@ -51,10 +53,9 @@ onMounted(() => {
               </button>
             </template>
           </DialogModal>
-          <button type="button" @click="toggleMobileFilters"
+          <button type="button" @click="isSideDrawerShown = true"
             class="flex lg:hidden place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color,color] duration-200">
-            <Search class="mr-1" :size="16" />
-            Search
+            <Search class="mr-1" :size="16" /> Search
           </button>
         </div>
       </div>
@@ -65,24 +66,33 @@ onMounted(() => {
         <DeckType type="Extra" />
         <DeckType type="Side" />
       </div>
-      <transition name="slide-fade">
-        <SearchResults v-if="isMobileFiltersShown" @toggle-mobile-filters="toggleMobileFilters" />
+      <transition name="nested">
+        <SearchResults v-if="isSideDrawerShown" @handleOverlayClick="closeSideDrawer"
+          @handleCloseSideDrawer="isSideDrawerShown = false" />
       </transition>
     </div>
   </main>
 </template>
 <style>
 @media screen and (max-width: 1023px) {
-  .slide-fade-enter-active {
-    transition: all 0.3s ease-out;
+
+  .nested-enter-active,
+  .nested-leave-active {
+    transition: opacity 0.3s ease-in-out;
   }
 
-  .slide-fade-leave-active {
-    transition: all 0.3s ease-out;
+  .nested-enter-from,
+  .nested-leave-to {
+    opacity: 0;
   }
 
-  .slide-fade-enter-from,
-  .slide-fade-leave-to {
+  .nested-enter-active .inner,
+  .nested-leave-active .inner {
+    transition: all 0.3s ease-in-out;
+  }
+
+  .nested-enter-from .inner,
+  .nested-leave-to .inner {
     transform: translateX(-100px);
     opacity: 0;
   }

@@ -5,12 +5,13 @@ import SelectOption from './SelectOption.vue';
 import { sortTypes, sortDirections } from "../utils/select-options";
 </script>
 <template>
-  <div class="fixed lg:static inset-0 mt-[60px] lg:mt-[unset] lg:w-[35%] xl:w-[30%]">
+  <div id="overlay" @click="$emit('handleOverlayClick', $event)"
+    class="fixed lg:static inset-0 lg:mt-[unset] lg:w-[35%] xl:w-[30%] bg-neutral-700/70 dark:bg-neutral-950/70">
     <div
-      class="flex flex-col gap-2 p-3 bg-neutral-100 dark:bg-neutral-800 border-r lg:border-r-0 border-y lg:border-y-0 rounded-r-lg lg:rounded-l-lg border-neutral-400 dark:border-neutral-500 shadow-[5px_15px_15px_5px_#999] dark:shadow-[5px_15px_15px_5px_#000] lg:shadow-[unset] dark:lg:shadow-[unset] w-[70%] sm:w-[60%] md:w-[50%] lg:w-full h-full transition-[background-color,border-color,box-shadow] duration-400">
+      class="inner flex flex-col gap-2 p-3 bg-neutral-100 dark:bg-neutral-800 border-r lg:border-r-0 border-y lg:border-y-0 rounded-r-lg lg:rounded-l-lg border-neutral-400 dark:border-neutral-500 shadow-[5px_15px_15px_5px_#555] dark:shadow-[5px_15px_15px_5px_#000] lg:shadow-[unset] dark:lg:shadow-[unset] w-[70%] sm:w-[60%] md:w-[50%] lg:w-full h-full transition-[background-color,border-color,box-shadow] duration-400">
       <div class="flex lg:hidden items-center">
-        <span class="text-lg leading-none font-medium grow">Search and filter cards</span>
-        <button type="button" aria-label="Hide search results" @click="$emit('toggleMobileFilters')"
+        <span class="text-base sm:text-lg leading-none font-medium grow">Search & filter</span>
+        <button type="button" aria-label="Hide search results" @click="$emit('handleCloseSideDrawer')"
           class="self-start p-1 size-[24px] rounded-full cursor-pointer dark:text-white bg-gray-200 active:bg-gray-400 dark:bg-zinc-700 dark:active:bg-zinc-500 transition-[background-color,color] duration-200">
           <X :size="16" />
         </button>
