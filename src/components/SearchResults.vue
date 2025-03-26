@@ -6,7 +6,7 @@ import { sortTypes, sortDirections } from "../utils/select-options";
 </script>
 <template>
   <div id="overlay" @click="$emit('handleOverlayClick', $event)"
-    class="fixed lg:static inset-0 lg:mt-[unset] lg:w-[35%] xl:w-[30%] bg-neutral-700/70 dark:bg-neutral-950/70">
+    class="fixed lg:static inset-0 lg:w-[35%] xl:w-[30%] bg-neutral-700/70 dark:bg-neutral-950/70 lg:bg-[unset] dark:lg:bg-[unset]">
     <div
       class="inner flex flex-col gap-2 p-3 bg-neutral-100 dark:bg-neutral-800 border-r lg:border-r-0 border-y lg:border-y-0 rounded-r-lg lg:rounded-l-lg border-neutral-400 dark:border-neutral-500 shadow-[5px_15px_15px_5px_#555] dark:shadow-[5px_15px_15px_5px_#000] lg:shadow-[unset] dark:lg:shadow-[unset] w-[70%] sm:w-[60%] md:w-[50%] lg:w-full h-full transition-[background-color,border-color,box-shadow] duration-400">
       <div class="flex lg:hidden items-center">
