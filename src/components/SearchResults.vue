@@ -35,7 +35,6 @@ function handleSearch(ev: Event) {
   let value = target.value;
 
   const input = sanitizeInput(value)
-
   inputValue.value = input;
 
   if (inputValue.value.length >= 3) {
