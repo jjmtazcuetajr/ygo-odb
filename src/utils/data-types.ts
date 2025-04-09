@@ -72,3 +72,19 @@ export interface YGOCardData {
 export interface YGOCards {
   data: YGOCardData[]
 }
+
+export interface FilterOptions {
+  search?: string,
+  category?: string,
+  monsterCardType?: string,
+  monsterType?: string,
+  attribute?: string,
+  lvRank?: number,
+  scale?: number,
+  linkRating?: number,
+  linkArrows?: string[],
+  atk?: number,
+  def?: number,
+  spellType?: string,
+  trapType?: string
+}
