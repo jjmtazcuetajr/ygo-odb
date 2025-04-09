@@ -3,6 +3,48 @@ import { X, Filter } from 'lucide-vue-next';
 import DialogModal from './DialogModal.vue';
 import SelectOption from './SelectOption.vue';
 import { sortTypes, sortDirections } from "../utils/select-options";
+import { ref } from 'vue';
+
+const inputValue = ref('')
+let timer: ReturnType<typeof setTimeout> = 0
+
+/**
+ * Removes any extra whitespace from a string
+ * @param input The string input
+ */
+function sanitizeInput(input: string): string {
+  // prevent whitespace if the input is empty
+  if (input === ' ') input = ''
+
+  // prevent leading whitespace
+  if (input.startsWith(' ')) input = input.trimStart()
+
+  // replace multiple spaces with a single space
+  input = input.replace(/\s+/g, ' ');
+
+  return input
+}
+
+/**
+ * Handles the input element's oninput event
+ * @param ev The event object
+ */
+function handleSearch(ev: Event) {
+  clearTimeout(timer)
+  const target = ev.target as HTMLInputElement;
+  let value = target.value;
+
+  const input = sanitizeInput(value)
+
+  inputValue.value = input;
+
+  if (inputValue.value.length >= 3) {
+    timer = setTimeout(() => {
+      // trim the end of the ref's string value
+      inputValue.value = inputValue.value.trimEnd();
+    }, 1000);
+  }
+}
 </script>
 <template>
   <div id="overlay" @click="$emit('handleOverlayClick', $event)"
@@ -16,7 +58,8 @@ import { sortTypes, sortDirections } from "../utils/select-options";
           <X :size="16" />
         </button>
       </div>
-      <input id="search-input" type="text" placeholder="Enter card name or effect..."
+      <input id="search-input" type="text" placeholder="Enter card name or effect..." v-model="inputValue"
+        @input="handleSearch"
         class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
       <div class="flex flex-wrap items-end gap-2">
         <div class="flex flex-col">
