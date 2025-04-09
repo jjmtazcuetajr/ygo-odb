@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { YGOCardData, YGOCards } from "@/utils/data-types";
+import type { YGOCardData, YGOCards } from "@/utils/interfaces";
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
