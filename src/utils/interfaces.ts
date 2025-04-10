@@ -75,10 +75,10 @@ export interface YGOCards {
 
 export interface FilterOptions {
   search?: string,
-  category?: string,
+  category?: string | undefined,
   monsterCardType?: string,
   monsterType?: string,
-  attribute?: string,
+  attribute?: string | undefined,
   lvRank?: number,
   scale?: number,
   linkRating?: number,

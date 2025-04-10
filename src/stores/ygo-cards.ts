@@ -1,14 +1,38 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { YGOCardData, YGOCards } from "@/utils/interfaces";
+import type { YGOCardData, YGOCards, FilterOptions } from "@/utils/interfaces"
+import { matchCategory } from "@/utils/helpers"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
   const cards = ref<YGOCardData[]>([])
+  const filters = ref<FilterOptions>({
+    search: '',
+    category: undefined,
+    monsterCardType: '',
+    monsterType: '',
+    attribute: undefined,
+    lvRank: 0,
+    scale: 0,
+    linkRating: 0,
+    linkArrows: [],
+    atk: 0,
+    def: 0,
+    spellType: '',
+    trapType: ''
+  })
 
   // getters
-  const filterByNameOrEffect = (keyword: string) => computed(() => {
-    return cards.value.filter((card: YGOCardData) => card.name.toLowerCase().includes(keyword) || card.desc.toLowerCase().includes(keyword))
+  const getFilteredCards = computed(() => {
+    return cards.value.filter((card: YGOCardData) => {
+      const matchesSearch = filters.value.search
+        ? card.name.toLowerCase().includes(filters.value.search.toLowerCase()) || card.desc.toLowerCase().includes(filters.value.search.toLowerCase())
+        : true
+      const matchesCategory = matchCategory(card, filters.value.category)
+      const matchesSpellType = filters.value.spellType ? card.frameType === 'spell' && card.race.toLowerCase() === filters.value.spellType : true
+
+      return matchesSearch && matchesCategory && matchesSpellType
+    })
   })
 
   // actions
@@ -29,5 +53,5 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     }
   }
 
-  return { cards, filterByNameOrEffect, fetchCards }
+  return { cards, filters, getFilteredCards, fetchCards }
 })

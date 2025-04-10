@@ -2,11 +2,12 @@
 import { X, Filter } from 'lucide-vue-next';
 import DialogModal from './DialogModal.vue';
 import SelectOption from './SelectOption.vue';
-import { sortTypes, sortDirections } from "../utils/select-options";
-import { ref } from 'vue';
+import { sortTypes, sortDirections } from "@/utils/select-options"
+import { useYgoCardsStore } from "@/stores/ygo-cards"
+import { storeToRefs } from "pinia"
 
-const inputValue = ref('')
-let timer: ReturnType<typeof setTimeout> = 0
+const store = useYgoCardsStore()
+const { filters, getFilteredCards } = storeToRefs(store)
 
 /**
  * Removes any extra whitespace from a string
@@ -20,7 +21,7 @@ function sanitizeInput(input: string): string {
   if (input.startsWith(' ')) input = input.trimStart()
 
   // replace multiple spaces with a single space
-  input = input.replace(/\s+/g, ' ');
+  input = input.replace(/\s+/g, ' ')
 
   return input
 }
@@ -30,19 +31,11 @@ function sanitizeInput(input: string): string {
  * @param ev The event object
  */
 function handleSearch(ev: Event) {
-  clearTimeout(timer)
-  const target = ev.target as HTMLInputElement;
-  let value = target.value;
+  const target = ev.target as HTMLInputElement
+  let value = target.value
 
   const input = sanitizeInput(value)
-  inputValue.value = input;
-
-  if (inputValue.value.length >= 3) {
-    timer = setTimeout(() => {
-      // trim the end of the ref's string value
-      inputValue.value = inputValue.value.trimEnd();
-    }, 1000);
-  }
+  filters.value.search = input
 }
 </script>
 <template>
@@ -57,7 +50,7 @@ function handleSearch(ev: Event) {
           <X :size="16" />
         </button>
       </div>
-      <input id="search-input" type="text" placeholder="Enter card name or effect..." v-model="inputValue"
+      <input id="search-input" type="text" placeholder="Enter card name or effect..." v-model="filters.search"
         @input="handleSearch"
         class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
       <div class="flex flex-wrap items-end gap-2">
@@ -81,10 +74,11 @@ function handleSearch(ev: Event) {
       </div>
       <div
         class="grid grid-cols-3 sm:grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 sm:px-2 mt-6 content-start dark:[color-scheme:dark]">
-        <template v-for="_ in 14">
+        <!-- <template v-for="_ in 14">
           <img src="https://images.ygoprodeck.com/images/cards_small/5043010.jpg" alt="Firewall Dragon"
             class="rounded-sm aspect-[268/391]">
-        </template>
+        </template> -->
+        <div v-for="card in getFilteredCards" :key="card.id">{{ card.name }}</div>
       </div>
     </div>
   </div>

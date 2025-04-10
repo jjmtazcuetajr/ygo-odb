@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import CardCategory from './CardCategory.vue';
 import SelectOption from '../SelectOption.vue';
 import AttributeSelection from './AttributeSelection.vue';
 import NumberField from '../NumberField.vue';
 import LinkArrows from './LinkArrows.vue';
 import PopOver from './PopOver.vue';
-import { monsterCards, spellTypes, trapTypes, monsterTypes } from '../../utils/select-options'
+import { monsterCards, spellTypes, trapTypes, monsterTypes } from '@/utils/select-options'
+import { useYgoCardsStore } from "@/stores/ygo-cards"
+import { storeToRefs } from "pinia"
 
-const category = ref('')
+const store = useYgoCardsStore()
+const { filters } = storeToRefs(store)
 </script>
 
 <template>
@@ -18,9 +20,9 @@ const category = ref('')
         Card Category
         <PopOver usage="category" />
       </div>
-      <CardCategory v-model="category" />
+      <CardCategory v-model="filters.category" />
     </div>
-    <template v-if="category === 'monster'">
+    <template v-if="filters.category === 'monster'">
       <div class="mt-3">
         <label for="monster-card" class="mr-2">Monster card</label>
         <SelectOption :id="'monster-card'" :options="monsterCards" />
@@ -58,11 +60,11 @@ const category = ref('')
         <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" />
       </div>
     </template>
-    <div v-else-if="category === 'spell'" class="mt-3">
+    <div v-else-if="filters.category === 'spell'" class="mt-3">
       <label for="spell" class="mr-3">Spell Type</label>
       <SelectOption :id="'spell'" :options="spellTypes" />
     </div>
-    <div v-else-if="category === 'trap'" class="mt-3">
+    <div v-else-if="filters.category === 'trap'" class="mt-3">
       <label for="trap" class="mr-3">Trap Type</label>
       <SelectOption :id="'trap'" :options="trapTypes" />
     </div>
