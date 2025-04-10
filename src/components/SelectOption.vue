@@ -9,12 +9,24 @@ defineProps<{
   bgColorClass?: string,
   options: SelectOption[]
 }>()
+
+const model = defineModel()
+
+/**
+ * Handles the select element's onchange event
+ * @param ev The event object
+ */
+function handleOptionChange(ev: Event) {
+  const target = ev.target as HTMLSelectElement
+  const val = target.value
+  model.value = val
+}
 </script>
 <template>
-  <select :id="id" @change="$emit('handleOptionChange', ($event.target as HTMLSelectElement).value)"
+  <select :id="id" v-model="model" @change="handleOptionChange"
     class="text-xs sm:text-base rounded-md pl-1.5 pr-6 py-0.5 appearance-none bg-no-repeat bg-[right_.2rem_center] bg-[auto_1.1rem] border border-neutral-500 transition-[background-color,background-image] duration-400"
     :class="bgColorClass || 'bg-neutral-100 dark:bg-neutral-800'">
-    <option v-for="(option, idx) in options" :key="option.val" :value="option.val" :selected="idx === 0 ? true : false">
+    <option v-for="option in options" :key="option.val" :value="option.val">
       {{ option.textContent }}
     </option>
   </select>

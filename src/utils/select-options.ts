@@ -20,7 +20,7 @@ export const monsterCards = [
 ]
 
 export const spellTypes = [
-  { val: 'all', textContent: 'All' },
+  { val: '', textContent: 'All' },
   { val: 'normal', textContent: 'Normal' },
   { val: 'continuous', textContent: 'Continuous' },
   { val: 'equip', textContent: 'Equip' },
