@@ -66,7 +66,7 @@ const { filters } = storeToRefs(store)
     </div>
     <div v-else-if="filters.category === 'trap'" class="mt-3">
       <label for="trap" class="mr-3">Trap Type</label>
-      <SelectOption :id="'trap'" :options="trapTypes" />
+      <SelectOption :id="'trap'" :options="trapTypes" v-model="filters.trapType" />
     </div>
   </div>
 </template>

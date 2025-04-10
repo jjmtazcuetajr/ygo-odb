@@ -30,8 +30,9 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         : true
       const matchesCategory = matchCategory(card, filters.value.category)
       const matchesSpellType = filters.value.spellType ? card.frameType === 'spell' && card.race.toLowerCase() === filters.value.spellType : true
+      const matchesTrapType = filters.value.trapType ? card.frameType === 'trap' && card.race.toLowerCase() === filters.value.trapType : true
 
-      return matchesSearch && matchesCategory && matchesSpellType
+      return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType
     })
   })
 
