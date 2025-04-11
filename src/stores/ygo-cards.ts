@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions } from "@/utils/interfaces"
-import { matchCategory, matchMonsterCardType } from "@/utils/helpers"
+import { matchCategory, matchMonsterCardType, matchMonsterAbility } from "@/utils/helpers"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
@@ -35,15 +35,16 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesSpellType = filters.value.spellType ? card.frameType === 'spell' && card.race.toLowerCase() === filters.value.spellType : true
       const matchesTrapType = filters.value.trapType ? card.frameType === 'trap' && card.race.toLowerCase() === filters.value.trapType : true
       const matchesMonsterCardType = matchMonsterCardType(card, filters.value.monsterCardType)
-      //const matchesMonsterAbility = matchMonsterAbility(card, filters.value.monsterAbility)
+      const matchesMonsterAbility = matchMonsterAbility(card, filters.value.monsterAbility)
 
-      return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType
+      return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility
     })
   })
 
   // actions
   /**
    * Fetch Yu-Gi-Oh! cards from the YGOPRODeck API
+   * @see {@link https://ygoprodeck.com/api-guide}
    */
   async function fetchCards() {
     const url = 'http://localhost:5173/src/utils/response.json'
@@ -72,6 +73,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       filters.value.trapType = ''
     } else if (category === 'spell' || category === 'trap') {
       filters.value.monsterCardType = ''
+      filters.value.monsterAbility = ''
       filters.value.monsterType = ''
       filters.value.attribute = undefined
       filters.value.lvRank = 0

@@ -5,7 +5,7 @@ import AttributeSelection from './AttributeSelection.vue';
 import NumberField from '../NumberField.vue';
 import LinkArrows from './LinkArrows.vue';
 import PopOver from './PopOver.vue';
-import { monsterCards, spellTypes, trapTypes, monsterTypes } from '@/utils/select-options'
+import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities } from '@/utils/select-options'
 import { useYgoCardsStore } from "@/stores/ygo-cards"
 import { storeToRefs } from "pinia"
 
@@ -26,6 +26,10 @@ const { filters } = storeToRefs(store)
       <div class="mt-3">
         <label for="monster-card" class="mr-2">Monster card</label>
         <SelectOption :id="'monster-card'" :options="monsterCards" v-model="filters.monsterCardType" />
+      </div>
+      <div class="mt-2">
+        <label for="ability" class="mr-2">Ability</label>
+        <SelectOption :id="'ability'" :options="monsterAbilities" v-model="filters.monsterAbility" />
       </div>
       <div class="mt-2">
         <label for="monster-type" class="mr-2">Monster Type</label>

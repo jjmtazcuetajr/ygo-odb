@@ -13,6 +13,7 @@ export function matchCategory(card: YGOCardData, category: string | undefined): 
 
 /**
  * Finds monster card matches based on frame color
+ * @see {@link https://ygoprodeck.com/api-guide}
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
  * @param cardType Monster card type based on frame color
  */
@@ -22,17 +23,22 @@ export function matchMonsterCardType(card: YGOCardData, cardType: string): boole
   return true
 }
 
+/**
+ * Finds effect monster card matches based on ability
+ * @see {@link https://yugipedia.com/wiki/Ability}
+ * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
+ * @param ability Monster ability. Either flip, gemini, spirit, toon, or union
+ */
 export function matchMonsterAbility(card: YGOCardData, ability: string): boolean {
-  if (ability === 'flip') return card.desc.includes('FLIP:')
-  else if (ability === 'gemini') {
-    const geminiEffect = 'While this card is a Normal Monster on the field, you can Normal Summon it to have it become an Effect Monster'
-    return card.desc.toLowerCase().includes(geminiEffect.toLowerCase())
-  } else if (ability === 'spirit' && card.typeline) {
-    return card.typeline.includes('Spirit')
-  } else if (ability === 'toon' && card.typeline) {
-    return card.typeline.includes('Toon')
-  } else if (ability === 'union' && card.typeline) {
-    return card.typeline.includes('Union')
+  if (card.typeline) {
+    if (ability === 'flip') return card.desc.includes('FLIP:') || card.typeline.includes('Flip') || card.name === 'Deus X-Krawler'
+    else if (ability === 'gemini') return card.typeline.includes('Gemini')
+    else if (ability === 'spirit') {
+      const spiritMonsters = ['Han-Shi Kyudo Spirit', 'Kai-Den Kendo Spirit', 'Kuro-Obi Karate Spirit', 'Shinobaron Peacock', 'Shinobaron Shade Peacock', 'Shinobaroness Peacock', 'Shinobaroness Shade Peacock', 'Yoko-Zuna Sumo Spirit']
+      return card.typeline.includes('Spirit') || spiritMonsters.includes(card.name)
+    }
+    else if (ability === 'toon') return card.typeline.includes('Toon')
+    else if (ability === 'union') return card.typeline.includes('Union') || card.name === 'Torque Tune Gear'
   }
   return true
 }
