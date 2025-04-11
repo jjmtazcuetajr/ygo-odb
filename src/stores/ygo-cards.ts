@@ -10,6 +10,9 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     search: '',
     category: undefined,
     monsterCardType: '',
+    monsterAbility: '',
+    tunerType: '',
+    pendulumType: '',
     monsterType: '',
     attribute: undefined,
     lvRank: 0,
@@ -32,6 +35,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesSpellType = filters.value.spellType ? card.frameType === 'spell' && card.race.toLowerCase() === filters.value.spellType : true
       const matchesTrapType = filters.value.trapType ? card.frameType === 'trap' && card.race.toLowerCase() === filters.value.trapType : true
       const matchesMonsterCardType = matchMonsterCardType(card, filters.value.monsterCardType)
+      //const matchesMonsterAbility = matchMonsterAbility(card, filters.value.monsterAbility)
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType
     })
