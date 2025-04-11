@@ -1,5 +1,5 @@
 export const monsterCards = [
-  { val: 'all', textContent: 'All' },
+  { val: '', textContent: 'All' },
   { val: 'normal', textContent: 'Normal' },
   { val: 'effect', textContent: 'Effect' },
   { val: 'ritual', textContent: 'Ritual' },
@@ -7,16 +7,19 @@ export const monsterCards = [
   { val: 'synchro', textContent: 'Synchro' },
   { val: 'xyz', textContent: 'Xyz' },
   { val: 'pendulum', textContent: 'Pendulum' },
-  { val: 'link', textContent: 'Link' },
-  { val: 'normal-tuner', textContent: 'Normal | Tuner' },
-  { val: 'normal-pendulum', textContent: 'Normal | Pendulum' },
-  { val: 'synchro-tuner', textContent: 'Synchro | Tuner' },
-  { val: 'tuner', textContent: 'Tuner' },
-  { val: 'flip', textContent: 'Flip' },
-  { val: 'gemini', textContent: 'Gemini' },
-  { val: 'spirit', textContent: 'Spirit' },
-  { val: 'toon', textContent: 'Toon' },
-  { val: 'union', textContent: 'Union' }
+  { val: 'link', textContent: 'Link' }
+  // { val: 'tuner', textContent: 'Tuner' },
+  // { val: 'normal_pendulum', textContent: 'Normal | Pendulum' },
+  // { val: 'effect_pendulum', textContent: 'Effect | Pendulum' },
+  // { val: 'ritual_pendulum', textContent: 'Ritual | Pendulum' },
+  // { val: 'fusion_pendulum', textContent: 'Fusion | Pendulum' },
+  // { val: 'synchro_pendulum', textContent: 'Synchro | Pendulum' },
+  // { val: 'xyz_pendulum', textContent: 'Xyz | Pendulum' },
+  // { val: 'flip', textContent: 'Flip' },
+  // { val: 'gemini', textContent: 'Gemini' },
+  // { val: 'spirit', textContent: 'Spirit' },
+  // { val: 'toon', textContent: 'Toon' },
+  // { val: 'union', textContent: 'Union' }
 ]
 
 export const spellTypes = [

@@ -74,17 +74,17 @@ export interface YGOCards {
 }
 
 export interface FilterOptions {
-  search?: string,
-  category?: string | undefined,
-  monsterCardType?: string,
-  monsterType?: string,
-  attribute?: string | undefined,
-  lvRank?: number,
-  scale?: number,
-  linkRating?: number,
-  linkArrows?: string[],
-  atk?: number,
-  def?: number,
-  spellType?: string,
-  trapType?: string
+  search: string,
+  category: string | undefined,
+  monsterCardType: string,
+  monsterType: string,
+  attribute: string | undefined,
+  lvRank: number,
+  scale: number,
+  linkRating: number,
+  linkArrows: string[],
+  atk: number,
+  def: number,
+  spellType: string,
+  trapType: string
 }

@@ -25,7 +25,7 @@ const { filters } = storeToRefs(store)
     <template v-if="filters.category === 'monster'">
       <div class="mt-3">
         <label for="monster-card" class="mr-2">Monster card</label>
-        <SelectOption :id="'monster-card'" :options="monsterCards" />
+        <SelectOption :id="'monster-card'" :options="monsterCards" v-model="filters.monsterCardType" />
       </div>
       <div class="mt-2">
         <label for="monster-type" class="mr-2">Monster Type</label>

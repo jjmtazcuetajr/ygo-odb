@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions } from "@/utils/interfaces"
-import { matchCategory } from "@/utils/helpers"
+import { matchCategory, matchMonsterCardType } from "@/utils/helpers"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
@@ -31,8 +31,9 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesCategory = matchCategory(card, filters.value.category)
       const matchesSpellType = filters.value.spellType ? card.frameType === 'spell' && card.race.toLowerCase() === filters.value.spellType : true
       const matchesTrapType = filters.value.trapType ? card.frameType === 'trap' && card.race.toLowerCase() === filters.value.trapType : true
+      const matchesMonsterCardType = matchMonsterCardType(card, filters.value.monsterCardType)
 
-      return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType
+      return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType
     })
   })
 
