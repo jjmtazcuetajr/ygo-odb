@@ -8,18 +8,6 @@ export const monsterCards = [
   { val: 'xyz', textContent: 'Xyz' },
   { val: 'pendulum', textContent: 'Pendulum' },
   { val: 'link', textContent: 'Link' }
-  // { val: 'tuner', textContent: 'Tuner' },
-  // { val: 'normal_pendulum', textContent: 'Normal | Pendulum' },
-  // { val: 'effect_pendulum', textContent: 'Effect | Pendulum' },
-  // { val: 'ritual_pendulum', textContent: 'Ritual | Pendulum' },
-  // { val: 'fusion_pendulum', textContent: 'Fusion | Pendulum' },
-  // { val: 'synchro_pendulum', textContent: 'Synchro | Pendulum' },
-  // { val: 'xyz_pendulum', textContent: 'Xyz | Pendulum' },
-  // { val: 'flip', textContent: 'Flip' },
-  // { val: 'gemini', textContent: 'Gemini' },
-  // { val: 'spirit', textContent: 'Spirit' },
-  // { val: 'toon', textContent: 'Toon' },
-  // { val: 'union', textContent: 'Union' }
 ]
 
 export const spellTypes = [
@@ -79,4 +67,33 @@ export const monsterTypes = [
   { val: 'winged beast', textContent: 'Winged Beast' },
   { val: 'wyrm', textContent: 'Wyrm' },
   { val: 'zombie', textContent: 'Zombie' }
+]
+
+export const monsterAbilities = [
+  { val: '', textContent: 'All' },
+  { val: 'flip', textContent: 'Flip' },
+  { val: 'gemini', textContent: 'Gemini' },
+  { val: 'spirit', textContent: 'Spirit' },
+  { val: 'toon', textContent: 'Toon' },
+  { val: 'union', textContent: 'Union' }
+]
+
+export const tuners = [
+  { val: '', textContent: 'All' },
+  { val: 'normal', textContent: 'Normal' },
+  { val: 'effect', textContent: 'Effect' },
+  { val: 'ritual', textContent: 'Ritual' },
+  { val: 'fusion', textContent: 'Fusion' },
+  { val: 'synchro', textContent: 'Synchro' },
+  { val: 'pendulum', textContent: 'Pendulum' }
+]
+
+export const pendulums = [
+  { val: '', textContent: 'All' },
+  { val: 'normal_pendulum', textContent: 'Normal' },
+  { val: 'effect_pendulum', textContent: 'Effect' },
+  { val: 'ritual_pendulum', textContent: 'Ritual' },
+  { val: 'fusion_pendulum', textContent: 'Fusion' },
+  { val: 'synchro_pendulum', textContent: 'Synchro' },
+  { val: 'xyz_pendulum', textContent: 'Xyz' }
 ]
