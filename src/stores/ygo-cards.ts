@@ -38,13 +38,16 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   })
 
   // actions
+  /**
+   * Fetch Yu-Gi-Oh! cards from the YGOPRODeck API
+   */
   async function fetchCards() {
     const url = 'http://localhost:5173/src/utils/response.json'
     //const url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php'
     try {
       const response = await fetch(url)
       if (!response.ok) {
-        throw new Error(`HTTP error! Code: ${response.status}, Status: ${response.statusText || 'Something might be wrong with the YGOPRODeck api server'}`)
+        throw new Error(`HTTP error! Code: ${response.status}, Status: ${response.statusText || 'Something might be wrong with the YGOPRODeck API server'}`)
       }
 
       const rawData: YGOCards = await response.json()
@@ -55,5 +58,28 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     }
   }
 
-  return { cards, filters, getFilteredCards, fetchCards }
+  /**
+   * Reset certain filters depending on the card category
+   * @param category Either monster, spell, or trap card
+   */
+  function resetCardCategory(category: string) {
+    if (category === 'monster') {
+      filters.value.spellType = ''
+      filters.value.trapType = ''
+    } else if (category === 'spell' || category === 'trap') {
+      filters.value.monsterCardType = ''
+      filters.value.monsterType = ''
+      filters.value.attribute = undefined
+      filters.value.lvRank = 0
+      filters.value.scale = 0
+      filters.value.linkRating = 0
+      filters.value.linkArrows = []
+      filters.value.atk = 0
+      filters.value.def = 0
+      if (category === 'spell') filters.value.trapType = ''
+      else if (category === 'trap') filters.value.spellType = ''
+    }
+  }
+
+  return { cards, filters, getFilteredCards, fetchCards, resetCardCategory }
 })
