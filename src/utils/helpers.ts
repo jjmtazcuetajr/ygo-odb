@@ -37,7 +37,7 @@ export function matchMonsterAbility(card: YGOCardData, ability: string): boolean
       checkDesc?: boolean
     }
 
-    // this is needed because there are some monster cards lacking Abilities from the API
+    // this is needed because there are some monster cards lacking an Ability from the API
     const abilityMapping: Record<string, AbilityProperties> = {
       flip: {
         typeline: 'Flip',
@@ -101,6 +101,24 @@ export function matchTunerType(card: YGOCardData, tuner: string): boolean {
       return (isTuner && frameMatch) || effectTuners
     }
     return (isTuner && frameMatch) || specialTunerMatch
+  }
+  return true
+}
+
+/**
+ * Finds pendulum monster card matches
+ * @see {@link https://yugipedia.com/wiki/Pendulum_Monster}
+ * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
+ * @param pendulum Type of Pendulum Monster card
+ */
+export function matchPendulumType(card: YGOCardData, pendulum: string): boolean {
+  if (pendulum !== '') {
+    // this is needed because Supreme King Z-ARC - Synchro Universe isn't labeled as a Synchro Pendulum monster
+    const specialPendulums: Record<string, string[]> = {
+      synchro_pendulum: ['Supreme King Z-ARC - Synchro Universe']
+    }
+    const isSpecialPendulum = specialPendulums[pendulum]?.includes(card.name)
+    return card.frameType === pendulum || isSpecialPendulum
   }
   return true
 }

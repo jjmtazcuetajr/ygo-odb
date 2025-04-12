@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions } from "@/utils/interfaces"
-import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType } from "@/utils/helpers"
+import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType } from "@/utils/helpers"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
@@ -37,8 +37,9 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesMonsterCardType = matchMonsterCardType(card, filters.value.monsterCardType)
       const matchesMonsterAbility = matchMonsterAbility(card, filters.value.monsterAbility)
       const matchesTunerType = matchTunerType(card, filters.value.tunerType)
+      const matchesPendulumType = matchPendulumType(card, filters.value.pendulumType)
 
-      return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType
+      return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
     })
   })
 
@@ -76,6 +77,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       filters.value.monsterCardType = ''
       filters.value.monsterAbility = ''
       filters.value.tunerType = ''
+      filters.value.pendulumType = ''
       filters.value.monsterType = ''
       filters.value.attribute = undefined
       filters.value.lvRank = 0
