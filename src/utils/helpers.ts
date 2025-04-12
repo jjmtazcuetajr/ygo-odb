@@ -42,3 +42,40 @@ export function matchMonsterAbility(card: YGOCardData, ability: string): boolean
   }
   return true
 }
+
+/**
+ * Finds effect monster card matches based on tuner types
+ * @see {@link https://yugipedia.com/wiki/Tuner_monster}
+ * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
+ * @param tuner Type of tuner based on {@link https://yugipedia.com/wiki/Tuner_monster#By_monster_card_type | monster card type}
+ */
+export function matchTunerType(card: YGOCardData, tuner: string): boolean {
+  if (card.typeline && tuner !== '') {
+    // this is needed because the API lacks the 'Tuner' type in the typeline data for these monsters
+    const specialTuners: Record<string, string[]> = {
+      effect: ['Turbo-Tainted Hot Rod GT19'],
+      fusion: ['Magikey Beast - Ansyalabolas', 'Magistus Chorozo'],
+      pendulum: ['Superheavy Samurai Prodigy Wakaushi', 'Supreme King Dragon Lightwurm', 'Symphonic Warrior Guitariss']
+    }
+
+    const frameTypeMapping: Record<string, string[]> = {
+      normal: ['normal', 'normal_pendulum'],
+      effect: ['effect', 'effect_pendulum'],
+      ritual: ['ritual'],
+      fusion: ['fusion'],
+      synchro: ['synchro'],
+      pendulum: ['normal_pendulum', 'effect_pendulum']
+    }
+
+    const isTuner = card.typeline.includes('Tuner')
+    const frameMatch = frameTypeMapping[tuner]?.includes(card.frameType)
+    const specialTunerMatch = specialTuners[tuner]?.includes(card.name)
+    
+    if (tuner === 'effect') {
+      const effectTuners = specialTuners['effect'].concat(specialTuners['pendulum']).includes(card.name)
+      return (isTuner && frameMatch) || effectTuners
+    }
+    return (isTuner && frameMatch) || specialTunerMatch
+  }
+  return true
+}

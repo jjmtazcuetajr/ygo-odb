@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions } from "@/utils/interfaces"
-import { matchCategory, matchMonsterCardType, matchMonsterAbility } from "@/utils/helpers"
+import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType } from "@/utils/helpers"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
@@ -36,8 +36,9 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesTrapType = filters.value.trapType ? card.frameType === 'trap' && card.race.toLowerCase() === filters.value.trapType : true
       const matchesMonsterCardType = matchMonsterCardType(card, filters.value.monsterCardType)
       const matchesMonsterAbility = matchMonsterAbility(card, filters.value.monsterAbility)
+      const matchesTunerType = matchTunerType(card, filters.value.tunerType)
 
-      return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility
+      return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType
     })
   })
 
@@ -74,6 +75,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     } else if (category === 'spell' || category === 'trap') {
       filters.value.monsterCardType = ''
       filters.value.monsterAbility = ''
+      filters.value.tunerType = ''
       filters.value.monsterType = ''
       filters.value.attribute = undefined
       filters.value.lvRank = 0
