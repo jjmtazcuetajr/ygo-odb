@@ -31,14 +31,39 @@ export function matchMonsterCardType(card: YGOCardData, cardType: string): boole
  */
 export function matchMonsterAbility(card: YGOCardData, ability: string): boolean {
   if (card.typeline) {
-    if (ability === 'flip') return card.desc.includes('FLIP:') || card.typeline.includes('Flip') || card.name === 'Deus X-Krawler'
-    else if (ability === 'gemini') return card.typeline.includes('Gemini')
-    else if (ability === 'spirit') {
-      const spiritMonsters = ['Han-Shi Kyudo Spirit', 'Kai-Den Kendo Spirit', 'Kuro-Obi Karate Spirit', 'Shinobaron Peacock', 'Shinobaron Shade Peacock', 'Shinobaroness Peacock', 'Shinobaroness Shade Peacock', 'Yoko-Zuna Sumo Spirit']
-      return card.typeline.includes('Spirit') || spiritMonsters.includes(card.name)
+    type AbilityProperties = {
+      typeline: string
+      names?: string[],
+      checkDesc?: boolean
     }
-    else if (ability === 'toon') return card.typeline.includes('Toon')
-    else if (ability === 'union') return card.typeline.includes('Union') || card.name === 'Torque Tune Gear'
+
+    // this is needed because there are some monster cards lacking Abilities from the API
+    const abilityMapping: Record<string, AbilityProperties> = {
+      flip: {
+        typeline: 'Flip',
+        names: ['Deus X-Krawler'],
+        checkDesc: true
+      },
+      gemini: { typeline: 'Gemini' },
+      spirit: {
+        typeline: 'Spirit',
+        names: ['Han-Shi Kyudo Spirit', 'Kai-Den Kendo Spirit', 'Kuro-Obi Karate Spirit', 'Shinobaron Peacock', 'Shinobaron Shade Peacock', 'Shinobaroness Peacock', 'Shinobaroness Shade Peacock', 'Yoko-Zuna Sumo Spirit']
+      },
+      toon: { typeline: 'Toon' },
+      union: {
+        typeline: 'Union',
+        names: ['Torque Tune Gear']
+      }
+    }
+
+    const abilityInfo = abilityMapping[ability]
+    if (abilityInfo) {
+      const hasTypeline = card.typeline.includes(abilityInfo.typeline)
+      const isSpecialName = abilityInfo.names?.includes(card.name)
+      const hasDescCheck = abilityInfo.checkDesc ? card.desc.includes('FLIP:') : false
+
+      return hasTypeline || isSpecialName || hasDescCheck
+    }
   }
   return true
 }
