@@ -43,7 +43,7 @@ const { filters } = storeToRefs(store)
       </div>
       <div class="mt-2">
         <label for="monster-type" class="mr-2">Monster Type</label>
-        <SelectOption :id="'monster-type'" :options="monsterTypes" />
+        <SelectOption :id="'monster-type'" :options="monsterTypes" v-model="filters.monsterType" />
       </div>
       <div class="mt-2">
         <div class="flex items-start sm:items-end gap-1">

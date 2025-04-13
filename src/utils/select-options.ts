@@ -40,11 +40,11 @@ export const sortDirections = [
 ]
 
 export const monsterTypes = [
-  { val: 'all', textContent: 'All' },
+  { val: '', textContent: 'All' },
   { val: 'aqua', textContent: 'Aqua' },
   { val: 'beast', textContent: 'Beast' },
   { val: 'beast-warrior', textContent: 'Beast-Warrior' },
-  { val: 'creator-god', textContent: 'Creator God' },
+  { val: 'creator god', textContent: 'Creator God' },
   { val: 'cyberse', textContent: 'Cyberse' },
   { val: 'dinosaur', textContent: 'Dinosaur' },
   { val: 'divine-beast', textContent: 'Divine-Beast' },

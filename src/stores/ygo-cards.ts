@@ -38,8 +38,10 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesMonsterAbility = matchMonsterAbility(card, filters.value.monsterAbility)
       const matchesTunerType = matchTunerType(card, filters.value.tunerType)
       const matchesPendulumType = matchPendulumType(card, filters.value.pendulumType)
+      const matchesMonsterType = filters.value.monsterType ? !['spell', 'trap'].includes(card.frameType) && card.race.toLowerCase() === filters.value.monsterType : true
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
+        && matchesMonsterType
     })
   })
 
