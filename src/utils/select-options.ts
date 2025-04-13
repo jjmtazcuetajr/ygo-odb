@@ -97,3 +97,14 @@ export const pendulums = [
   { val: 'synchro_pendulum', textContent: 'Synchro' },
   { val: 'xyz_pendulum', textContent: 'Xyz' }
 ]
+
+export const attributes = [
+  { val: '', textContent: 'All' },
+  { val: 'earth', textContent: 'EARTH' },
+  { val: 'water', textContent: 'WATER' },
+  { val: 'fire', textContent: 'FIRE' },
+  { val: 'wind', textContent: 'WIND' },
+  { val: 'light', textContent: 'LIGHT' },
+  { val: 'dark', textContent: 'DARK' },
+  { val: 'divine', textContent: 'DIVINE' }
+]

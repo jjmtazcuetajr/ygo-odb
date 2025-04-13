@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import CardCategory from './CardCategory.vue';
 import SelectOption from '../SelectOption.vue';
-import AttributeSelection from './AttributeSelection.vue';
 import NumberField from '../NumberField.vue';
 import LinkArrows from './LinkArrows.vue';
 import PopOver from './PopOver.vue';
-import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tuners, pendulums } from '@/utils/select-options'
+import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tuners, pendulums, attributes } from '@/utils/select-options'
 import { useYgoCardsStore } from "@/stores/ygo-cards"
 import { storeToRefs } from "pinia"
 
@@ -41,16 +40,15 @@ const { filters } = storeToRefs(store)
           <SelectOption :id="'pendulum'" :options="pendulums" v-model="filters.pendulumType" />
         </div>
       </div>
-      <div class="mt-2">
-        <label for="monster-type" class="mr-2">Monster Type</label>
-        <SelectOption :id="'monster-type'" :options="monsterTypes" v-model="filters.monsterType" />
-      </div>
-      <div class="mt-2">
-        <div class="flex items-start sm:items-end gap-1">
-          Attributes
-          <PopOver usage="attributes" />
+      <div class="flex justify-between flex-wrap mt-2">
+        <div class="flex flex-col gap-0.5">
+          <label for="monster-type" class="mr-2">Monster Type</label>
+          <SelectOption :id="'monster-type'" :options="monsterTypes" v-model="filters.monsterType" />
         </div>
-        <AttributeSelection class="mt-1" />
+        <div class="flex flex-col gap-0.5">
+          <label for="attribute" class="mr-2">Attribute</label>
+          <SelectOption :id="'attribute'" :options="attributes" v-model="filters.attribute" />
+        </div>
       </div>
       <div class="flex flex-wrap justify-between items-center gap-3 mt-2">
         <div class="flex flex-col gap-1">

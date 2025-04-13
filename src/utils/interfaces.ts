@@ -81,7 +81,7 @@ export interface FilterOptions {
   tunerType: string,
   pendulumType: string,
   monsterType: string,
-  attribute: string | undefined,
+  attribute: string,
   lvRank: number,
   scale: number,
   linkRating: number,

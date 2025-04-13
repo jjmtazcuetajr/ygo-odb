@@ -14,7 +14,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     tunerType: '',
     pendulumType: '',
     monsterType: '',
-    attribute: undefined,
+    attribute: '',
     lvRank: 0,
     scale: 0,
     linkRating: 0,
@@ -39,9 +39,10 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesTunerType = matchTunerType(card, filters.value.tunerType)
       const matchesPendulumType = matchPendulumType(card, filters.value.pendulumType)
       const matchesMonsterType = filters.value.monsterType ? !['spell', 'trap'].includes(card.frameType) && card.race.toLowerCase() === filters.value.monsterType : true
+      const matchesAttribute = filters.value.attribute ? card.attribute?.toLowerCase() === filters.value.attribute : true
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
-        && matchesMonsterType
+        && matchesMonsterType && matchesAttribute
     })
   })
 
@@ -81,7 +82,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       filters.value.tunerType = ''
       filters.value.pendulumType = ''
       filters.value.monsterType = ''
-      filters.value.attribute = undefined
+      filters.value.attribute = ''
       filters.value.lvRank = 0
       filters.value.scale = 0
       filters.value.linkRating = 0
