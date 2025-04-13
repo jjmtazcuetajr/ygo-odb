@@ -70,7 +70,7 @@ export const monsterTypes = [
 ]
 
 export const monsterAbilities = [
-  { val: '', textContent: 'All' },
+  { val: '', textContent: 'None' },
   { val: 'flip', textContent: 'Flip' },
   { val: 'gemini', textContent: 'Gemini' },
   { val: 'spirit', textContent: 'Spirit' },
@@ -79,7 +79,7 @@ export const monsterAbilities = [
 ]
 
 export const tuners = [
-  { val: '', textContent: 'All' },
+  { val: '', textContent: 'None' },
   { val: 'normal', textContent: 'Normal' },
   { val: 'effect', textContent: 'Effect' },
   { val: 'ritual', textContent: 'Ritual' },
@@ -89,7 +89,7 @@ export const tuners = [
 ]
 
 export const pendulums = [
-  { val: '', textContent: 'All' },
+  { val: '', textContent: 'None' },
   { val: 'normal_pendulum', textContent: 'Normal' },
   { val: 'effect_pendulum', textContent: 'Effect' },
   { val: 'ritual_pendulum', textContent: 'Ritual' },
