@@ -54,15 +54,10 @@ function handleSearch(ev: Event) {
         @input="handleSearch"
         class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
       <div class="flex flex-wrap items-end gap-2">
-        <div class="flex flex-col">
-          <label for="sort-type" class="text-xs sm:text-sm mb-1">Sort by</label>
-          <SelectOption :id="'sort-type'" :bg-color-class="'bg-neutral-50 dark:bg-neutral-900'" :options="sortTypes" />
-        </div>
-        <div class="flex flex-col">
-          <label for="sort-dir" class="text-xs sm:text-sm mb-1">Direction</label>
-          <SelectOption :id="'sort-dir'" :bg-color-class="'bg-neutral-50 dark:bg-neutral-900'"
-            :options="sortDirections" />
-        </div>
+        <SelectOption id="sort-type" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Sort by"
+          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortTypes" />
+        <SelectOption id="sort-dir" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Direction"
+          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortDirections" />
         <DialogModal usage="filters">
           <template #trigger>
             <button type="button"

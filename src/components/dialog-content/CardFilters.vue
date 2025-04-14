@@ -22,63 +22,44 @@ const { filters } = storeToRefs(store)
       <CardCategory v-model="filters.category" />
     </div>
     <template v-if="filters.category === 'monster'">
-      <div class="mt-3">
-        <label for="monster-card" class="mr-2">Monster card</label>
-        <SelectOption :id="'monster-card'" :options="monsterCards" v-model="filters.monsterCardType" />
-      </div>
-      <div class="flex justify-between flex-wrap mt-1">
-        <div class="flex flex-col gap-0.5">
-          <label for="ability" class="mr-2">Ability</label>
-          <SelectOption :id="'ability'" :options="monsterAbilities" v-model="filters.monsterAbility" />
+      <div class="flex flex-wrap justify-between gap-3 mt-3">
+        <div class="flex flex-col gap-1">
+          <SelectOption id="monster-card" label-text="Monster card" parent-class="flex flex-col gap-0.5"
+            :options="monsterCards" v-model="filters.monsterCardType" />
+          <SelectOption id="ability" label-text="Ability" parent-class="flex flex-col gap-0.5"
+            :options="monsterAbilities" v-model="filters.monsterAbility" />
+          <SelectOption id="tuner" label-text="Tuner" parent-class="flex flex-col gap-0.5" :options="tuners"
+            v-model="filters.tunerType" />
+          <SelectOption id="pendulum" label-text="Pendulum" parent-class="flex flex-col gap-0.5" :options="pendulums"
+            v-model="filters.pendulumType" />
+          <SelectOption id="monster-type" label-text="Monster Type" parent-class="flex flex-col gap-0.5"
+            :options="monsterTypes" v-model="filters.monsterType" />
+          <SelectOption id="attribute" label-text="Attribute" parent-class="flex flex-col gap-0.5" :options="attributes"
+            v-model="filters.attribute" />
         </div>
-        <div class="flex flex-col gap-0.5">
-          <label for="tuner" class="mr-2">Tuner</label>
-          <SelectOption :id="'tuner'" :options="tuners" v-model="filters.tunerType" />
-        </div>
-        <div class="flex flex-col gap-0.5">
-          <label for="pendulum" class="mr-2">Pendulum</label>
-          <SelectOption :id="'pendulum'" :options="pendulums" v-model="filters.pendulumType" />
-        </div>
-      </div>
-      <div class="flex justify-between flex-wrap mt-2">
-        <div class="flex flex-col gap-0.5">
-          <label for="monster-type" class="mr-2">Monster Type</label>
-          <SelectOption :id="'monster-type'" :options="monsterTypes" v-model="filters.monsterType" />
-        </div>
-        <div class="flex flex-col gap-0.5">
-          <label for="attribute" class="mr-2">Attribute</label>
-          <SelectOption :id="'attribute'" :options="attributes" v-model="filters.attribute" />
-        </div>
-      </div>
-      <div class="flex flex-wrap justify-between items-center gap-3 mt-2">
         <div class="flex flex-col gap-1">
           <NumberField id="lvl-rank" :max="13" label-val="Lv/Rank" />
-          <NumberField id="scale" :max="13" label-val="Scale" class="mt-1" />
-          <NumberField id="link" :min="1" :max="6" :default-val="1" label-val="Link Rating" class="mt-1" />
+          <NumberField id="scale" :max="13" label-val="Scale" />
+          <NumberField id="link" :min="1" :max="6" :default-val="1" label-val="Link Rating" />
+          <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" :is-atk-or-def="true" />
+          <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" />
         </div>
         <div>
           <div class="flex items-start sm:items-end gap-1">
-            <span>Link Arrows</span>
+            Link Arrows
             <PopOver usage="link-arrows" />
           </div>
           <LinkArrows class="mt-1" />
         </div>
       </div>
-      <div class="flex flex-wrap justify-between gap-3 mt-4">
-        <div class="flex items-center gap-1">
-          <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" />
-          <PopOver usage="atk/def" />
-        </div>
-        <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" />
-      </div>
     </template>
-    <div v-else-if="filters.category === 'spell'" class="mt-3">
-      <label for="spell" class="mr-3">Spell Type</label>
-      <SelectOption :id="'spell'" :options="spellTypes" v-model="filters.spellType" />
-    </div>
-    <div v-else-if="filters.category === 'trap'" class="mt-3">
-      <label for="trap" class="mr-3">Trap Type</label>
-      <SelectOption :id="'trap'" :options="trapTypes" v-model="filters.trapType" />
-    </div>
+    <template v-else-if="filters.category === 'spell'">
+      <SelectOption id="spell" label-text="Spell Type" label-class="mr-3" parent-class="mt-3" :options="spellTypes"
+        v-model="filters.spellType" />
+    </template>
+    <template v-else-if="filters.category === 'trap'">
+      <SelectOption id="trap" label-text="Trap Type" label-class="mr-3" parent-class="mt-3" :options="trapTypes"
+        v-model="filters.trapType" />
+    </template>
   </div>
 </template>
