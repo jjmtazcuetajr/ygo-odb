@@ -8,15 +8,14 @@ defineProps<{
   min?: number,
   max: number,
   step?: number,
-  defaultVal?: number,
   labelVal: string,
   isAtkOrDef?: boolean
 }>()
 </script>
 
 <template>
-  <NumberFieldRoot :id="id" :min="min || 0" :max="max" :step="step || 1" :default-value="defaultVal || 0"
-    :step-snapping="false" class="flex flex-col gap-0.5">
+  <NumberFieldRoot :id="id" :min="min || 0" :max="max" :step="step || 1" :step-snapping="false"
+    class="flex flex-col gap-0.5">
     <div class="flex items-center gap-1">
       <label :for="id">{{ labelVal }}</label>
       <PopOver v-if="isAtkOrDef" usage="atk/def" />

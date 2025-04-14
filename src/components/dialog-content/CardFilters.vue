@@ -38,9 +38,9 @@ const { filters } = storeToRefs(store)
             v-model="filters.attribute" />
         </div>
         <div class="flex flex-col gap-1">
-          <NumberField id="lvl-rank" :max="13" label-val="Lv/Rank" />
+          <NumberField id="lvl-rank" :max="13" label-val="Lv/Rank" v-model="filters.lvRank" />
           <NumberField id="scale" :max="13" label-val="Scale" />
-          <NumberField id="link" :min="1" :max="6" :default-val="1" label-val="Link Rating" />
+          <NumberField id="link" :min="1" :max="6" label-val="Link Rating" />
           <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" :is-atk-or-def="true" />
           <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" />
         </div>
