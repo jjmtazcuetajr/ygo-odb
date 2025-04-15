@@ -66,7 +66,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       }
 
       const rawData: YGOCards = await response.json()
-      const filteredData = rawData.data.filter((card: YGOCardData) => card.frameType !== 'skill' && card.frameType !== 'token')
+      const filteredData = rawData.data.filter((card: YGOCardData) => !['skill', 'token'].includes(card.frameType) && !card.desc.toLowerCase().includes('you win the match'))
       cards.value = filteredData
     } catch (error) {
       if (error instanceof Error) console.error(error)
