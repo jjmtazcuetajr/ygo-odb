@@ -40,7 +40,7 @@ const { filters } = storeToRefs(store)
         <div class="flex flex-col gap-1">
           <NumberField id="level" :max="12" label-val="Level" v-model="filters.level" />
           <NumberField id="rank" :max="13" label-val="Rank" v-model="filters.rank" />
-          <NumberField id="scale" :max="13" label-val="Scale" />
+          <NumberField id="scale" :max="13" label-val="Scale" v-model="filters.scale" />
           <NumberField id="link" :min="1" :max="6" label-val="Link Rating" />
           <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" :is-atk-or-def="true" />
           <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" />

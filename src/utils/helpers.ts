@@ -106,7 +106,7 @@ export function matchTunerType(card: YGOCardData, tuner: string): boolean {
 }
 
 /**
- * Finds pendulum monster card matches
+ * Finds Pendulum Monster card matches
  * @see {@link https://yugipedia.com/wiki/Pendulum_Monster}
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
  * @param pendulum Type of Pendulum Monster card
@@ -124,10 +124,10 @@ export function matchPendulumType(card: YGOCardData, pendulum: string): boolean 
 }
 
 /**
- * Finds Xyz monster card matches based on rank
+ * Finds Xyz Monster card matches based on Rank
  * @see {@link https://yugipedia.com/wiki/Rank}
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
- * @param rank Rank of Xyz Monster from 0 - 13
+ * @param rank Rank of an Xyz Monster from 0 - 13
  */
 export function matchRank(card: YGOCardData, rank: number): boolean {
   if (!Number.isNaN(rank)) {
@@ -137,6 +137,25 @@ export function matchRank(card: YGOCardData, rank: number): boolean {
     }
     const isSpecialXyzMonster = specialXyzMonsters[rank]?.includes(card.name)
     return (['xyz', 'xyz_pendulum'].includes(card.frameType) && card.level === rank) || isSpecialXyzMonster
+  }
+  return true
+}
+
+/**
+ * Finds Pendulum Monster card matches based on Pendulum Scale
+ * @see {@link https://yugipedia.com/wiki/Pendulum_Scale}
+ * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
+ * @param scale Pendulum Scale of a Pendulum Monster from 0 - 13
+ */
+export function matchPendulumScale(card: YGOCardData, scale: number): boolean {
+  if (!Number.isNaN(scale)) {
+    // this is needed because D/D/D Vice King Requiem's scale is 8 instead of 4 and Speedroid Wing Synchron has no scale in the YGOPRODeck API
+    const specialPendulumScales: Record<number, string[]> = {
+      4: ['D/D/D Vice King Requiem', 'Speedroid Wing Synchron']
+    }
+    const isSpecialPendulumScale = specialPendulumScales[scale]?.includes(card.name)
+    const exclude = scale === 8 && card.name === 'D/D/D Vice King Requiem' ? false : true
+    return (card.scale === scale && exclude) || isSpecialPendulumScale
   }
   return true
 }
