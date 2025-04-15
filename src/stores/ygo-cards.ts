@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions } from "@/utils/interfaces"
-import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType } from "@/utils/helpers"
+import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank } from "@/utils/helpers"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
@@ -42,9 +42,10 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesMonsterType = filters.value.monsterType ? !['spell', 'trap'].includes(card.frameType) && card.race.toLowerCase() === filters.value.monsterType : true
       const matchesAttribute = filters.value.attribute ? card.attribute?.toLowerCase() === filters.value.attribute : true
       const matchesLevel = !Number.isNaN(filters.value.level) ? !['xyz', 'xyz_pendulum', 'link'].includes(card.frameType) && card.level === filters.value.level : true
+      const matchesRank = matchRank(card, filters.value.rank)
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
-        && matchesMonsterType && matchesAttribute && matchesLevel
+        && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank
     })
   })
 

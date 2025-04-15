@@ -122,3 +122,21 @@ export function matchPendulumType(card: YGOCardData, pendulum: string): boolean 
   }
   return true
 }
+
+/**
+ * Finds Xyz monster card matches based on rank
+ * @see {@link https://yugipedia.com/wiki/Rank}
+ * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
+ * @param rank Rank of Xyz Monster from 0 - 13
+ */
+export function matchRank(card: YGOCardData, rank: number): boolean {
+  if (!Number.isNaN(rank)) {
+    // this is needed because Materiactor Exagard has level null instead of 3 in the YGOPRODeck API
+    const specialXyzMonsters: Record<number, string[]> = {
+      3: ['Materiactor Exagard']
+    }
+    const isSpecialXyzMonster = specialXyzMonsters[rank]?.includes(card.name)
+    return (['xyz', 'xyz_pendulum'].includes(card.frameType) && card.level === rank) || isSpecialXyzMonster
+  }
+  return true
+}
