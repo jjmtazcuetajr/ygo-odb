@@ -15,7 +15,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     pendulumType: '',
     monsterType: '',
     attribute: '',
-    lvRank: NaN,
+    level: NaN,
+    rank: NaN,
     scale: 0,
     linkRating: 0,
     linkArrows: [],
@@ -40,10 +41,10 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesPendulumType = matchPendulumType(card, filters.value.pendulumType)
       const matchesMonsterType = filters.value.monsterType ? !['spell', 'trap'].includes(card.frameType) && card.race.toLowerCase() === filters.value.monsterType : true
       const matchesAttribute = filters.value.attribute ? card.attribute?.toLowerCase() === filters.value.attribute : true
-      const matchesLvRank = !Number.isNaN(filters.value.lvRank) ? card.frameType !== 'link' && card.level === filters.value.lvRank : true
+      const matchesLevel = !Number.isNaN(filters.value.level) ? !['xyz', 'xyz_pendulum', 'link'].includes(card.frameType) && card.level === filters.value.level : true
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
-        && matchesMonsterType && matchesAttribute && matchesLvRank
+        && matchesMonsterType && matchesAttribute && matchesLevel
     })
   })
 
@@ -84,7 +85,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       filters.value.pendulumType = ''
       filters.value.monsterType = ''
       filters.value.attribute = ''
-      filters.value.lvRank = NaN
+      filters.value.level = NaN
+      filters.value.rank = NaN
       filters.value.scale = 0
       filters.value.linkRating = 0
       filters.value.linkArrows = []

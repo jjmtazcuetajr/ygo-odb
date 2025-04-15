@@ -73,7 +73,10 @@ function handleSearch(ev: Event) {
           <img src="https://images.ygoprodeck.com/images/cards_small/5043010.jpg" alt="Firewall Dragon"
             class="rounded-sm aspect-[268/391]">
         </template> -->
-        <div class="break-all" v-for="card in getFilteredCards" :key="card.id">{{ card.name }}</div>
+        <div class="break-all border px-1" v-for="card in getFilteredCards" :key="card.id">
+          <span class="text-xs font-bold">{{ card.name }}</span> -
+          <span class="text-xs">{{ card.frameType }}</span>
+        </div>
       </div>
     </div>
   </div>
