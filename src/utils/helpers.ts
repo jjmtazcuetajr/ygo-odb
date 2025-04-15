@@ -33,7 +33,7 @@ export function matchMonsterAbility(card: YGOCardData, ability: string): boolean
   if (card.typeline) {
     type AbilityProperties = {
       typeline: string
-      names?: string[],
+      ids?: number[],
       checkDesc?: boolean
     }
 
@@ -41,28 +41,29 @@ export function matchMonsterAbility(card: YGOCardData, ability: string): boolean
     const abilityMapping: Record<string, AbilityProperties> = {
       flip: {
         typeline: 'Flip',
-        names: ['Deus X-Krawler'],
+        ids: [62587693], // Deus X-Krawler
         checkDesc: true
       },
       gemini: { typeline: 'Gemini' },
       spirit: {
         typeline: 'Spirit',
-        names: ['Han-Shi Kyudo Spirit', 'Kai-Den Kendo Spirit', 'Kuro-Obi Karate Spirit', 'Shinobaron Peacock', 'Shinobaron Shade Peacock', 'Shinobaroness Peacock', 'Shinobaroness Shade Peacock', 'Yoko-Zuna Sumo Spirit']
+        ids: [53270092, 71614230, 77511331, 52900000, 60823690, 25415052, 33325951, 40516623],
+        // Han-Shi Kyudo Spirit, Kai-Den Kendo Spirit, Kuro-Obi Karate Spirit, Shinobaron Peacock, Shinobaron Shade Peacock, Shinobaroness Peacock, Shinobaroness Shade Peacock, Yoko-Zuna Sumo Spirit
       },
       toon: { typeline: 'Toon' },
       union: {
         typeline: 'Union',
-        names: ['Torque Tune Gear']
+        ids: [79538761], // Torque Tune Gear
       }
     }
 
     const abilityInfo = abilityMapping[ability]
     if (abilityInfo) {
       const hasTypeline = card.typeline.includes(abilityInfo.typeline)
-      const isSpecialName = abilityInfo.names?.includes(card.name)
+      const isSpecialId = abilityInfo.ids?.includes(card.id)
       const hasDescCheck = abilityInfo.checkDesc ? card.desc.includes('FLIP:') : false
 
-      return hasTypeline || isSpecialName || hasDescCheck
+      return hasTypeline || isSpecialId || hasDescCheck
     }
   }
   return true
@@ -76,11 +77,11 @@ export function matchMonsterAbility(card: YGOCardData, ability: string): boolean
  */
 export function matchTunerType(card: YGOCardData, tuner: string): boolean {
   if (card.typeline && tuner !== '') {
-    // this is needed because the API lacks the 'Tuner' type in the typeline data for these monsters
-    const specialTuners: Record<string, string[]> = {
-      effect: ['Turbo-Tainted Hot Rod GT19'],
-      fusion: ['Magikey Beast - Ansyalabolas', 'Magistus Chorozo'],
-      pendulum: ['Superheavy Samurai Prodigy Wakaushi', 'Supreme King Dragon Lightwurm', 'Symphonic Warrior Guitariss']
+    // this is needed because the YGOPRODeck API lacks the 'Tuner' type in the typeline data for these monsters
+    const specialTuners: Record<string, number[]> = {
+      effect: [16769305], // Turbo-Tainted Hot Rod GT19
+      fusion: [45655875, 66532962], // Magikey Beast - Ansyalabolas, Magistus Chorozo
+      pendulum: [82112494, 41908872, 43210483] // Superheavy Samurai Prodigy Wakaushi, Supreme King Dragon Lightwurm, Symphonic Warrior Guitariss
     }
 
     const frameTypeMapping: Record<string, string[]> = {
@@ -94,10 +95,10 @@ export function matchTunerType(card: YGOCardData, tuner: string): boolean {
 
     const isTuner = card.typeline.includes('Tuner')
     const frameMatch = frameTypeMapping[tuner]?.includes(card.frameType)
-    const specialTunerMatch = specialTuners[tuner]?.includes(card.name)
+    const specialTunerMatch = specialTuners[tuner]?.includes(card.id)
     
     if (tuner === 'effect') {
-      const effectTuners = specialTuners['effect'].concat(specialTuners['pendulum']).includes(card.name)
+      const effectTuners = specialTuners['effect'].concat(specialTuners['pendulum']).includes(card.id)
       return (isTuner && frameMatch) || effectTuners
     }
     return (isTuner && frameMatch) || specialTunerMatch
@@ -114,10 +115,8 @@ export function matchTunerType(card: YGOCardData, tuner: string): boolean {
 export function matchPendulumType(card: YGOCardData, pendulum: string): boolean {
   if (pendulum !== '') {
     // this is needed because Supreme King Z-ARC - Synchro Universe isn't labeled as a Synchro Pendulum monster
-    const specialPendulums: Record<string, string[]> = {
-      synchro_pendulum: ['Supreme King Z-ARC - Synchro Universe']
-    }
-    const isSpecialPendulum = specialPendulums[pendulum]?.includes(card.name)
+    const specialPendulums: Record<string, number[]> = { synchro_pendulum: [48654267] }
+    const isSpecialPendulum = specialPendulums[pendulum]?.includes(card.id)
     return card.frameType === pendulum || isSpecialPendulum
   }
   return true
@@ -131,11 +130,9 @@ export function matchPendulumType(card: YGOCardData, pendulum: string): boolean 
  */
 export function matchRank(card: YGOCardData, rank: number): boolean {
   if (!Number.isNaN(rank)) {
-    // this is needed because Materiactor Exagard has level null instead of 3 in the YGOPRODeck API
-    const specialXyzMonsters: Record<number, string[]> = {
-      3: ['Materiactor Exagard']
-    }
-    const isSpecialXyzMonster = specialXyzMonsters[rank]?.includes(card.name)
+    // this is needed because Materiactor Exagard has level=null instead of 3 in the YGOPRODeck API
+    const specialXyzMonsters: Record<number, number[]> = { 3: [72409226] }
+    const isSpecialXyzMonster = specialXyzMonsters[rank]?.includes(card.id)
     return (['xyz', 'xyz_pendulum'].includes(card.frameType) && card.level === rank) || isSpecialXyzMonster
   }
   return true
@@ -150,11 +147,9 @@ export function matchRank(card: YGOCardData, rank: number): boolean {
 export function matchPendulumScale(card: YGOCardData, scale: number): boolean {
   if (!Number.isNaN(scale)) {
     // this is needed because D/D/D Vice King Requiem's scale is 8 instead of 4 and Speedroid Wing Synchron has no scale in the YGOPRODeck API
-    const specialPendulumScales: Record<number, string[]> = {
-      4: ['D/D/D Vice King Requiem', 'Speedroid Wing Synchron']
-    }
-    const isSpecialPendulumScale = specialPendulumScales[scale]?.includes(card.name)
-    const exclude = scale === 8 && card.name === 'D/D/D Vice King Requiem' ? false : true
+    const specialPendulumScales: Record<number, number[]> = { 4: [25857977, 2254222] }
+    const isSpecialPendulumScale = specialPendulumScales[scale]?.includes(card.id)
+    const exclude = scale === 8 && card.id === 25857977 ? false : true
     return (card.scale === scale && exclude) || isSpecialPendulumScale
   }
   return true
