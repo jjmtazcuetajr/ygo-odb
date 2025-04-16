@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions } from "@/utils/interfaces"
-import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale } from "@/utils/helpers"
+import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk } from "@/utils/helpers"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
@@ -20,7 +20,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     scale: NaN,
     linkRating: NaN,
     linkArrows: [],
-    atk: 0,
+    atk: NaN,
     def: 0,
     spellType: '',
     trapType: ''
@@ -45,9 +45,10 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesRank = matchRank(card, filters.value.rank)
       const matchesPendulumScale = matchPendulumScale(card, filters.value.scale)
       const matchesLinkRating = !Number.isNaN(filters.value.linkRating) ? card.linkval === filters.value.linkRating : true
+      const matchesAtk = matchAtk(card, filters.value.atk)
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
-        && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating
+        && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk
     })
   })
 
@@ -93,7 +94,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       filters.value.scale = NaN
       filters.value.linkRating = NaN
       filters.value.linkArrows = []
-      filters.value.atk = 0
+      filters.value.atk = NaN
       filters.value.def = 0
       if (category === 'spell') filters.value.trapType = ''
       else if (category === 'trap') filters.value.spellType = ''

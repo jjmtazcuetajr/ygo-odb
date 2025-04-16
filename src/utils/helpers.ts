@@ -154,3 +154,18 @@ export function matchPendulumScale(card: YGOCardData, scale: number): boolean {
   }
   return true
 }
+
+/**
+ * Finds Monster card matches based on ATK
+ * @see {@link https://yugipedia.com/wiki/ATK}
+ * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
+ * @param atk Attack value of a Monster card
+ */
+export function matchAtk(card: YGOCardData, atk: number): boolean {
+  if (!Number.isNaN(atk)) {
+    // this is needed because the ATK of Goblin Biker Mean Merciless should be 1400 instead of 1300
+    const exclude = atk === 1300 && card.id === 64257161 ? false : true
+    return card.atk === atk && exclude
+  }
+  return true
+}

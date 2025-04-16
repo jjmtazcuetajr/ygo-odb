@@ -42,7 +42,8 @@ const { filters } = storeToRefs(store)
           <NumberField id="rank" :max="13" label-val="Rank" v-model="filters.rank" />
           <NumberField id="scale" :max="13" label-val="Scale" v-model="filters.scale" />
           <NumberField id="link" :min="1" :max="6" label-val="Link Rating" v-model="filters.linkRating" />
-          <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" :is-atk-or-def="true" />
+          <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" :is-atk-or-def="true"
+            v-model="filters.atk" />
           <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" />
         </div>
         <div>
