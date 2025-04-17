@@ -162,12 +162,16 @@ export function matchPendulumScale(card: YGOCardData, scale: number): boolean {
  * @param atk Attack value of a Monster card
  */
 export function matchAtk(card: YGOCardData, atk: number): boolean {
-  if (!Number.isNaN(atk)) {
-    // this is needed because the ATK of Goblin Biker Mean Merciless should be 1400 instead of 1300
-    const exclude = atk === 1300 && card.id === 64257161 ? false : true
-    return card.atk === atk && exclude
-  }
-  return true
+  if (Number.isNaN(atk)) return true
+
+  // this is needed because the ATK of Goblin Biker Mean Merciless should be 1400 instead of 1300
+  const exclusions = [{ atk: 1300, id: 64257161 }]
+  const isExcluded = exclusions.some(exclusion => exclusion.atk === atk && exclusion.id === card.id)
+
+  const correctAtkData: Record<number, number[]> = { 1400: [64257161] }
+  const isCorrectAtkData = correctAtkData[atk]?.includes(card.id)
+
+  return (card.atk === atk && !isExcluded) || isCorrectAtkData
 }
 
 /**
