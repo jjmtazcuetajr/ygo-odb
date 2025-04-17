@@ -169,3 +169,37 @@ export function matchAtk(card: YGOCardData, atk: number): boolean {
   }
   return true
 }
+
+/**
+ * Finds Monster card matches based on DEF
+ * @see {@link https://yugipedia.com/wiki/DEF}
+ * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
+ * @param def Defense value of a Monster card
+ */
+export function matchDef(card: YGOCardData, def: number): boolean {
+  if (Number.isNaN(def)) return true
+
+  // this is needed because some monsters have wrong defense values from the API
+  const exclusions = [
+    { def: 800, id: 26270847 }, // Performapal Silver Claw
+    { def: 1200, id: 21368273 }, // Mannadium Trisukta
+    { def: 1600, id: 10602628 }, // Blackwing - Boreastorm the Wicked Wind
+    { def: 1600, id: 86239173 }, // Horned Saurus
+    { def: 2000, id: 77754169 }, // Super Armored Robot Armed Black Iron "C"
+    { def: 2100, id: 16037007 }, // Number 74: Master of Blades
+    { def: 2900, id: 27134209 }, // Beargram, Shelled Emperor of the Forest Crown
+  ]
+  const isExcluded = exclusions.some(exclusion => exclusion.def === def && exclusion.id === card.id)
+
+  const correctDefData: Record<number, number[]> = {
+    700: [26270847], // Performapal Silver Claw
+    1200: [10602628], // Blackwing - Boreastorm the Wicked Wind
+    1300: [21368273], // Mannadium Trisukta
+    1800: [86239173], // Horned Saurus
+    2300: [16037007], // Number 74: Master of Blades
+    2800: [77754169, 27134209] // Super Armored Robot Armed Black Iron "C"; Beargram, Shelled Emperor of the Forest Crown
+  }
+  const isCorrectDefData = correctDefData[def]?.includes(card.id)
+
+  return (card.def === def && !isExcluded) || isCorrectDefData
+}
