@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ToggleGroupItem, ToggleGroupRoot } from 'reka-ui'
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ArrowUpLeft, ArrowUpRight, ArrowDownLeft, ArrowDownRight } from 'lucide-vue-next';
-import { ref } from 'vue'
-
-const toggleStateMultiple = ref([])
 
 const toggleButtonStyles = 'cursor-pointer flex justify-center items-center rounded-full size-[24px] shadow-sm data-[state=on]:inset-shadow-sm data-[state=on]:shadow-none transition-[color,background-color,box-shadow] duration-300'
 const lightThemeColors = ' bg-neutral-200 hover:enabled:data-[state=off]:bg-neutral-300 shadow-neutral-400 data-[state=on]:bg-neutral-400 data-[state=on]:inset-shadow-neutral-600'
@@ -13,8 +10,7 @@ const toggleGroupItemClasses = toggleButtonStyles + lightThemeColors + darkTheme
 </script>
 
 <template>
-  <ToggleGroupRoot v-model="toggleStateMultiple" type="multiple"
-    class="flex flex-col justify-between size-[100px] dark:text-neutral-200">
+  <ToggleGroupRoot type="multiple" class="flex flex-col justify-between size-[100px] dark:text-neutral-200">
     <div class="flex justify-between">
       <ToggleGroupItem value="Top-Left" aria-label="Top-Left Link Arrow" :class="toggleGroupItemClasses">
         <ArrowUpLeft :size="16" />
