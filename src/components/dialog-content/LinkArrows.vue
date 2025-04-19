@@ -16,32 +16,32 @@ const toggleGroupItemClasses = toggleButtonStyles + lightThemeColors + darkTheme
   <ToggleGroupRoot v-model="toggleStateMultiple" type="multiple"
     class="flex flex-col justify-between size-[100px] dark:text-neutral-200">
     <div class="flex justify-between">
-      <ToggleGroupItem value="top-left" aria-label="Top-Left Link Arrow" :class="toggleGroupItemClasses">
+      <ToggleGroupItem value="Top-Left" aria-label="Top-Left Link Arrow" :class="toggleGroupItemClasses">
         <ArrowUpLeft :size="16" />
       </ToggleGroupItem>
-      <ToggleGroupItem value="top" aria-label="Top Link Arrow" :class="toggleGroupItemClasses">
+      <ToggleGroupItem value="Top" aria-label="Top Link Arrow" :class="toggleGroupItemClasses">
         <ArrowUp :size="16" />
       </ToggleGroupItem>
-      <ToggleGroupItem value="top-right" aria-label="Top-Right Link Arrow" :class="toggleGroupItemClasses">
+      <ToggleGroupItem value="Top-Right" aria-label="Top-Right Link Arrow" :class="toggleGroupItemClasses">
         <ArrowUpRight :size="16" />
       </ToggleGroupItem>
     </div>
     <div class="flex justify-between">
-      <ToggleGroupItem value="left" aria-label="Left Link Arrow" :class="toggleGroupItemClasses">
+      <ToggleGroupItem value="Left" aria-label="Left Link Arrow" :class="toggleGroupItemClasses">
         <ArrowLeft :size="16" />
       </ToggleGroupItem>
-      <ToggleGroupItem value="right" aria-label="Right Link Arrow" :class="toggleGroupItemClasses">
+      <ToggleGroupItem value="Right" aria-label="Right Link Arrow" :class="toggleGroupItemClasses">
         <ArrowRight :size="16" />
       </ToggleGroupItem>
     </div>
     <div class="flex justify-between">
-      <ToggleGroupItem value="bottom-left" aria-label="Bottom-Left Link Arrow" :class="toggleGroupItemClasses">
+      <ToggleGroupItem value="Bottom-Left" aria-label="Bottom-Left Link Arrow" :class="toggleGroupItemClasses">
         <ArrowDownLeft :size="16" />
       </ToggleGroupItem>
-      <ToggleGroupItem value="bottom" aria-label="Bottom Link Arrow" :class="toggleGroupItemClasses">
+      <ToggleGroupItem value="Bottom" aria-label="Bottom Link Arrow" :class="toggleGroupItemClasses">
         <ArrowDown :size="16" />
       </ToggleGroupItem>
-      <ToggleGroupItem value="bottom-right" aria-label="Bottom-Right Link Arrow" :class="toggleGroupItemClasses">
+      <ToggleGroupItem value="Bottom-Right" aria-label="Bottom-Right Link Arrow" :class="toggleGroupItemClasses">
         <ArrowDownRight :size="16" />
       </ToggleGroupItem>
     </div>

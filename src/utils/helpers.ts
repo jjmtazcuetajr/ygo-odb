@@ -207,3 +207,19 @@ export function matchDef(card: YGOCardData, def: number): boolean {
 
   return (card.def === def && !isExcluded) || isCorrectDefData
 }
+
+/**
+ * Finds Link Monster card matches based on Link Arrows
+ * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
+ * @param linkArrows A string array of a Link Monster's Link Arrows
+ */
+export function matchLinkArrows(card: YGOCardData, linkArrows: string[]): boolean {
+  if (linkArrows.length === 0) return true
+  
+  // this is needed because Marincess Great Bubble Reef's bottom-right link arrow should be bottom-left
+  const specificCard = card.id === 47910940
+  const exclude = !(linkArrows.includes('Bottom-Right') && specificCard)
+  const include = linkArrows.every(linkArrow => ['Left', 'Right', 'Bottom', 'Bottom-Left'].includes(linkArrow)) && specificCard
+  const allMatch = linkArrows.every(linkArrow => card.linkmarkers?.includes(linkArrow))
+  return (card.frameType === 'link' && allMatch && exclude) || include
+}

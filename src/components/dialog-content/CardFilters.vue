@@ -51,7 +51,7 @@ const { filters } = storeToRefs(store)
             Link Arrows
             <PopOver usage="link-arrows" />
           </div>
-          <LinkArrows class="mt-1" />
+          <LinkArrows class="mt-1" v-model="filters.linkArrows" />
         </div>
       </div>
     </template>
