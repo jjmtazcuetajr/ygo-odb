@@ -18,8 +18,12 @@ export function matchCategory(card: YGOCardData, category: string | undefined): 
  * @param cardType Monster card type based on frame color
  */
 export function matchMonsterCardType(card: YGOCardData, cardType: string): boolean {
-  if (cardType === 'pendulum') return card.frameType.includes(cardType)
-  else if (cardType !== '' && cardType !== 'pendulum') return card.frameType === cardType
+  // this is needed because Supreme King Z-ARC - Synchro Universe should be a Synchro Pendulum monster, not Synchro only
+  const specificCard = card.id === 48654267
+  const exclude = cardType === 'synchro' && specificCard
+  const include = cardType === 'pendulum' && specificCard
+  if (cardType === 'pendulum') return card.frameType.includes(cardType) || include
+  else if (cardType !== '' && cardType !== 'pendulum') return card.frameType === cardType && !exclude
   return true
 }
 
@@ -146,7 +150,7 @@ export function matchRank(card: YGOCardData, rank: number): boolean {
  */
 export function matchPendulumScale(card: YGOCardData, scale: number): boolean {
   if (!Number.isNaN(scale)) {
-    // this is needed because the scale of D/D/D Vice King Requiem should be 4 instead of 8 and Speedroid Wing Synchron has no scale in the YGOPRODeck API
+    // this is needed because the scale of D/D/D Vice King Requiem should be 4, not 8 and Speedroid Wing Synchron has no scale in the YGOPRODeck API
     const specialPendulumScales: Record<number, number[]> = { 4: [25857977, 2254222] }
     const isSpecialPendulumScale = specialPendulumScales[scale]?.includes(card.id)
     const exclude = !(scale === 8 && card.id === 25857977)
@@ -164,7 +168,7 @@ export function matchPendulumScale(card: YGOCardData, scale: number): boolean {
 export function matchAtk(card: YGOCardData, atk: number): boolean {
   if (Number.isNaN(atk)) return true
 
-  // this is needed because the ATK of Goblin Biker Mean Merciless should be 1400 instead of 1300
+  // this is needed because the ATK of Goblin Biker Mean Merciless should be 1400, not 1300
   const exclusions = [{ atk: 1300, id: 64257161 }]
   const isExcluded = exclusions.some(exclusion => exclusion.atk === atk && exclusion.id === card.id)
 
