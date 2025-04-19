@@ -146,10 +146,10 @@ export function matchRank(card: YGOCardData, rank: number): boolean {
  */
 export function matchPendulumScale(card: YGOCardData, scale: number): boolean {
   if (!Number.isNaN(scale)) {
-    // this is needed because D/D/D Vice King Requiem's scale is 8 instead of 4 and Speedroid Wing Synchron has no scale in the YGOPRODeck API
+    // this is needed because the scale of D/D/D Vice King Requiem should be 4 instead of 8 and Speedroid Wing Synchron has no scale in the YGOPRODeck API
     const specialPendulumScales: Record<number, number[]> = { 4: [25857977, 2254222] }
     const isSpecialPendulumScale = specialPendulumScales[scale]?.includes(card.id)
-    const exclude = scale === 8 && card.id === 25857977 ? false : true
+    const exclude = !(scale === 8 && card.id === 25857977)
     return (card.scale === scale && exclude) || isSpecialPendulumScale
   }
   return true
@@ -184,16 +184,15 @@ export function matchDef(card: YGOCardData, def: number): boolean {
   if (Number.isNaN(def)) return true
 
   // this is needed because some monsters have wrong defense values from the API
-  const exclusions = [
-    { def: 800, id: 26270847 }, // Performapal Silver Claw
-    { def: 1200, id: 21368273 }, // Mannadium Trisukta
-    { def: 1600, id: 10602628 }, // Blackwing - Boreastorm the Wicked Wind
-    { def: 1600, id: 86239173 }, // Horned Saurus
-    { def: 2000, id: 77754169 }, // Super Armored Robot Armed Black Iron "C"
-    { def: 2100, id: 16037007 }, // Number 74: Master of Blades
-    { def: 2900, id: 27134209 }, // Beargram, Shelled Emperor of the Forest Crown
-  ]
-  const isExcluded = exclusions.some(exclusion => exclusion.def === def && exclusion.id === card.id)
+  const exclusions: Record<number, number[]> = {
+    800: [26270847], // Performapal Silver Claw
+    1200: [21368273], // Mannadium Trisukta
+    1600: [10602628, 86239173], // Blackwing - Boreastorm the Wicked Wind, Horned Saurus
+    2000: [77754169], // Super Armored Robot Armed Black Iron "C"
+    2100: [16037007], // Number 74: Master of Blades
+    2900: [27134209] // Beargram, Shelled Emperor of the Forest Crown
+  }
+  const isExcluded = exclusions[def]?.includes(card.id)
 
   const correctDefData: Record<number, number[]> = {
     700: [26270847], // Performapal Silver Claw
