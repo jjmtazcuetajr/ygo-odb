@@ -2,10 +2,13 @@
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger } from 'reka-ui'
 import { X } from 'lucide-vue-next'
 import CardFilters from './dialog-content/CardFilters.vue';
+import { useYgoCardsStore } from "@/stores/ygo-cards"
 
 defineProps<{
   usage: 'filters' | 'clear-all' | 'help'
 }>()
+
+const { resetFilters } = useYgoCardsStore()
 </script>
 
 <template>
@@ -29,7 +32,7 @@ defineProps<{
             Tips and hints to be added soon.
           </span>
           <div class="mt-5 mr-1 flex justify-end" :class="usage === 'clear-all' ? 'gap-2' : ''">
-            <button v-if="usage === 'filters'" type="button"
+            <button v-if="usage === 'filters'" type="button" @click="resetFilters"
               class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-neutral-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color] duration-200">
               Reset filters
             </button>

@@ -103,5 +103,28 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     }
   }
 
-  return { cards, filters, getFilteredCards, fetchCards, resetCardCategory }
+  /**
+   * Reset all filters
+   */
+  function resetFilters() {
+    filters.value.search = ''
+    filters.value.category = undefined
+    filters.value.monsterCardType = ''
+    filters.value.monsterAbility = ''
+    filters.value.tunerType == ''
+    filters.value.pendulumType = ''
+    filters.value.monsterType = ''
+    filters.value.attribute = ''
+    filters.value.level = NaN
+    filters.value.rank = NaN
+    filters.value.scale = NaN
+    filters.value.linkRating = NaN
+    filters.value.linkArrows = []
+    filters.value.atk = NaN
+    filters.value.def = NaN
+    filters.value.spellType = ''
+    filters.value.trapType = ''
+  }
+
+  return { cards, filters, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
 })
