@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { YGOCardData, YGOCards, FilterOptions } from "@/utils/interfaces"
+import type { YGOCardData, YGOCards, FilterOptions, SortDirection } from "@/utils/interfaces"
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows } from "@/utils/helpers"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
@@ -26,7 +26,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     trapType: ''
   })
   const sortBy = ref('name')
-  const sortDir = ref('desc')
+  const sortDir = ref<SortDirection>('asc')
 
   // getters
   const getFilteredCards = computed(() => {
@@ -55,8 +55,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk && matchesDef && matchesLinkArrows
     }).sort((a, b) => {
       if (sortBy.value === 'name') {
-        if (sortDir.value === 'desc') return a.name.localeCompare(b.name)
-        else return b.name.localeCompare(a.name)
+        if (sortDir.value === 'asc') return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+        else return b.name.toLowerCase().localeCompare(a.name.toLowerCase())
       }
       return 0
     })

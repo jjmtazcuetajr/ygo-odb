@@ -92,3 +92,5 @@ export interface FilterOptions {
   spellType: string,
   trapType: string
 }
+
+export type SortDirection = 'asc' | 'desc'
