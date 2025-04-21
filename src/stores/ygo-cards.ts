@@ -1,7 +1,8 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection } from "@/utils/interfaces"
-import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows } from "@/utils/helpers"
+import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
+  sortByAtk } from "@/utils/helpers"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
@@ -57,6 +58,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       if (sortBy.value === 'name') {
         if (sortDir.value === 'asc') return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
         else return b.name.toLowerCase().localeCompare(a.name.toLowerCase())
+      } else if (sortBy.value === 'atk') {
+        return sortByAtk(a, b, sortDir.value)
       }
       return 0
     })

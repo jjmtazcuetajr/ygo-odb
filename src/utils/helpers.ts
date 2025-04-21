@@ -1,4 +1,4 @@
-import type { YGOCardData } from "@/utils/interfaces"
+import type { YGOCardData, SortDirection } from "@/utils/interfaces"
 
 /**
  * Finds card matches based on card category
@@ -225,4 +225,28 @@ export function matchLinkArrows(card: YGOCardData, linkArrows: string[]): boolea
   const include = linkArrows.every(linkArrow => ['Left', 'Right', 'Bottom', 'Bottom-Left'].includes(linkArrow)) && specificCard
   const allMatch = linkArrows.every(linkArrow => card.linkmarkers?.includes(linkArrow))
   return (card.frameType === 'link' && allMatch && exclude) || include
+}
+
+export function sortByAtk(cardA: YGOCardData, cardB: YGOCardData, dir: SortDirection) {
+  const collator = new Intl.Collator('en', { sensitivity: 'base' });
+
+  const isPrevMonster = cardA.frameType !== 'spell' && cardA.frameType !== 'trap'
+  const isNextMonster = cardB.frameType !== 'spell' && cardB.frameType !== 'trap'
+
+  // monsters come first
+  if (isPrevMonster && !isNextMonster) return -1 // prev monster comes first
+  if (!isPrevMonster && isNextMonster) return 1 // then next monster
+
+  // monsters sorted by ATK
+  if (isPrevMonster && isNextMonster) {
+    const atkComparison = (cardA.atk ?? 0) - (cardB.atk ?? 0)
+    if (atkComparison !== 0) return dir === 'asc' ? atkComparison : -atkComparison
+  }
+
+  // spells come first before traps
+  if (cardA.frameType === 'spell' && cardB.frameType === 'trap') return -1 // spells first
+  if (cardA.frameType === 'trap' && cardB.frameType === 'spell') return 1 // then traps
+
+  // for spells and traps, just sort by name alphabetically regardless of sort direction because atk is being sorted anyway
+  return collator.compare(cardA.name, cardB.name)
 }
