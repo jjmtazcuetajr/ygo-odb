@@ -25,6 +25,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     spellType: '',
     trapType: ''
   })
+  const sortBy = ref('name')
+  const sortDir = ref('desc')
 
   // getters
   const getFilteredCards = computed(() => {
@@ -51,6 +53,12 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
         && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk && matchesDef && matchesLinkArrows
+    }).sort((a, b) => {
+      if (sortBy.value === 'name') {
+        if (sortDir.value === 'desc') return a.name.localeCompare(b.name)
+        else return b.name.localeCompare(a.name)
+      }
+      return 0
     })
   })
 
@@ -126,5 +134,5 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     filters.value.trapType = ''
   }
 
-  return { cards, filters, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
+  return { cards, filters, sortBy, sortDir, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
 })

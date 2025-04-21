@@ -7,7 +7,7 @@ import { useYgoCardsStore } from "@/stores/ygo-cards"
 import { storeToRefs } from "pinia"
 
 const store = useYgoCardsStore()
-const { filters, getFilteredCards } = storeToRefs(store)
+const { filters, sortBy, sortDir, getFilteredCards } = storeToRefs(store)
 
 /**
  * Removes any extra whitespace from a string
@@ -55,9 +55,10 @@ function handleSearch(ev: Event) {
         class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
       <div class="flex flex-wrap items-end gap-2">
         <SelectOption id="sort-type" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Sort by"
-          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortTypes" />
+          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortTypes" v-model="sortBy" />
         <SelectOption id="sort-dir" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Direction"
-          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortDirections" />
+          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortDirections"
+          v-model="sortDir" />
         <DialogModal usage="filters">
           <template #trigger>
             <button type="button"
