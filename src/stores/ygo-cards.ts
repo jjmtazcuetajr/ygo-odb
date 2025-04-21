@@ -56,8 +56,9 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk && matchesDef && matchesLinkArrows
     }).sort((a, b) => {
       if (sortBy.value === 'name') {
-        if (sortDir.value === 'asc') return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-        else return b.name.toLowerCase().localeCompare(a.name.toLowerCase())
+        const collator = new Intl.Collator('en', { sensitivity: 'base' })
+        const nameComparison = collator.compare(a.name, b.name)
+        return sortDir.value === 'asc' ? nameComparison : -nameComparison;
       } else if (sortBy.value === 'atk') {
         return sortByAtk(a, b, sortDir.value)
       }
