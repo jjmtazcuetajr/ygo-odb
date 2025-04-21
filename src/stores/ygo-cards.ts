@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection } from "@/utils/interfaces"
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
-  sortByAtk } from "@/utils/helpers"
+  sortByMonsterStat } from "@/utils/helpers"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
@@ -60,7 +60,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         const nameComparison = collator.compare(a.name, b.name)
         return sortDir.value === 'asc' ? nameComparison : -nameComparison;
       } else if (sortBy.value === 'atk') {
-        return sortByAtk(a, b, sortDir.value)
+        return sortByMonsterStat(a, b, 'atk', sortDir.value)
       }
       return 0
     })

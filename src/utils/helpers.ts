@@ -1,4 +1,4 @@
-import type { YGOCardData, SortDirection } from "@/utils/interfaces"
+import type { YGOCardData, SortDirection, SortByMonsterStat } from "@/utils/interfaces"
 
 /**
  * Finds card matches based on card category
@@ -227,8 +227,15 @@ export function matchLinkArrows(card: YGOCardData, linkArrows: string[]): boolea
   return (card.frameType === 'link' && allMatch && exclude) || include
 }
 
-export function sortByAtk(cardA: YGOCardData, cardB: YGOCardData, dir: SortDirection) {
-  const collator = new Intl.Collator('en', { sensitivity: 'base' });
+/**
+ * Sort monster cards by a given stat
+ * @param cardA Current/previous card used for comparison
+ * @param cardB Next card used for comparison
+ * @param stat Monster stat to use for sorting. Either `atk`, `def`, `level`, `rank`, `scale`, or `link-rating`
+ * @param dir Sort direction. Either ascending (`asc`) or descending (`desc`)
+ */
+export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: SortByMonsterStat, dir: SortDirection): number {
+  const collator = new Intl.Collator('en', { sensitivity: 'base' })
 
   const isPrevMonster = cardA.frameType !== 'spell' && cardA.frameType !== 'trap'
   const isNextMonster = cardB.frameType !== 'spell' && cardB.frameType !== 'trap'
@@ -237,16 +244,22 @@ export function sortByAtk(cardA: YGOCardData, cardB: YGOCardData, dir: SortDirec
   if (isPrevMonster && !isNextMonster) return -1 // prev monster comes first
   if (!isPrevMonster && isNextMonster) return 1 // then next monster
 
-  // monsters sorted by ATK
   if (isPrevMonster && isNextMonster) {
-    const atkComparison = (cardA.atk ?? 0) - (cardB.atk ?? 0)
-    if (atkComparison !== 0) return dir === 'asc' ? atkComparison : -atkComparison
+    switch (stat) {
+      case 'atk':
+        const atkComparison = (cardA.atk ?? 0) - (cardB.atk ?? 0)
+        if (atkComparison !== 0) return dir === 'asc' ? atkComparison : -atkComparison
+        break
+    
+      default:
+        break
+    }
   }
 
-  // spells come first before traps
+  // after monsters, spells come first before traps
   if (cardA.frameType === 'spell' && cardB.frameType === 'trap') return -1 // spells first
   if (cardA.frameType === 'trap' && cardB.frameType === 'spell') return 1 // then traps
 
-  // for spells and traps, just sort by name alphabetically regardless of sort direction because atk is being sorted anyway
+  // for spells and traps, just sort by name alphabetically regardless of sort direction
   return collator.compare(cardA.name, cardB.name)
 }

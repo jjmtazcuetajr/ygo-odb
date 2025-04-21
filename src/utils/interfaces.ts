@@ -94,3 +94,4 @@ export interface FilterOptions {
 }
 
 export type SortDirection = 'asc' | 'desc'
+export type SortByMonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'link-rating'
