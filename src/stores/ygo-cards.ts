@@ -61,6 +61,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         return sortDir.value === 'asc' ? nameComparison : -nameComparison;
       } else if (sortBy.value === 'atk') {
         return sortByMonsterStat(a, b, 'atk', sortDir.value)
+      } else if (sortBy.value === 'def') {
+        return sortByMonsterStat(a, b, 'def', sortDir.value)
       }
       return 0
     })

@@ -250,7 +250,14 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         const atkComparison = (cardA.atk ?? 0) - (cardB.atk ?? 0)
         if (atkComparison !== 0) return dir === 'asc' ? atkComparison : -atkComparison
         break
-    
+      case 'def':
+        // monsters that have defense come first, then link monsters (because they don't have defense) 
+        if (cardA.frameType !== 'link' && cardB.frameType === 'link') return -1
+        if (cardA.frameType === 'link' && cardB.frameType !== 'link') return 1
+
+        const defComparison = (cardA.def ?? 0) - (cardB.def ?? 0)
+        if (defComparison !== 0) return dir === 'asc' ? defComparison : -defComparison
+        break
       default:
         break
     }
