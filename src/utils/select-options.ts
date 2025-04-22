@@ -31,7 +31,7 @@ export const sortTypes = [
   { val: 'name', textContent: 'Name' },
   { val: 'atk', textContent: 'Attack' },
   { val: 'def', textContent: 'Defense' },
-  { val: 'lvl', textContent: 'Level/Rank' }
+  { val: 'level', textContent: 'Level' }
 ]
 
 export const sortDirections = [

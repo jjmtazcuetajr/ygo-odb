@@ -258,6 +258,16 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         const defComparison = (cardA.def ?? 0) - (cardB.def ?? 0)
         if (defComparison !== 0) return dir === 'asc' ? defComparison : -defComparison
         break
+      case 'level':
+        // monsters that aren't Xyz, Xyz Pendulum, and Link come first before them
+        const nonXyzAndLinkCardA = !cardA.frameType.includes('xyz') && cardA.frameType !== 'link'
+        const nonXyzAndLinkCardB = !cardB.frameType.includes('xyz') && cardB.frameType !== 'link'
+        if (nonXyzAndLinkCardA && !nonXyzAndLinkCardB) return -1
+        if (!nonXyzAndLinkCardA && nonXyzAndLinkCardB) return 1
+
+        const levelComparison = (cardA.level ?? 0) - (cardB.level ?? 0)
+        if (levelComparison !== 0) return dir === 'asc' ? levelComparison : -levelComparison
+        break
       default:
         break
     }

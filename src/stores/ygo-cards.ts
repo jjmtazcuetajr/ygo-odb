@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { YGOCardData, YGOCards, FilterOptions, SortDirection } from "@/utils/interfaces"
+import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat } from "@/utils/interfaces"
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
   sortByMonsterStat } from "@/utils/helpers"
 
@@ -26,7 +26,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     spellType: '',
     trapType: ''
   })
-  const sortBy = ref('name')
+  const sortBy = ref<SortByMonsterStat | 'name'>('name')
   const sortDir = ref<SortDirection>('asc')
 
   // getters
@@ -63,6 +63,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         return sortByMonsterStat(a, b, 'atk', sortDir.value)
       } else if (sortBy.value === 'def') {
         return sortByMonsterStat(a, b, 'def', sortDir.value)
+      } else if (sortBy.value === 'level') {
+        return sortByMonsterStat(a, b, 'level', sortDir.value)
       }
       return 0
     })
