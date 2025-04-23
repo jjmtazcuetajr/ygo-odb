@@ -69,6 +69,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         return sortByMonsterStat(a, b, 'rank', sortDir.value)
       } else if (sortBy.value === 'scale') {
         return sortByMonsterStat(a, b, 'scale', sortDir.value)
+      } else if (sortBy.value === 'link-rating') {
+        return sortByMonsterStat(a, b, 'link-rating', sortDir.value)
       }
       return 0
     })

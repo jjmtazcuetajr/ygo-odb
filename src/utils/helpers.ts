@@ -336,6 +336,14 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         const scaleComparison = getCorrectScale(cardA) - getCorrectScale(cardB)
         if (scaleComparison !== 0) return dir === 'asc' ? scaleComparison : -scaleComparison
         break
+      case "link-rating":
+        // Link monsters come first than everything else
+        if (cardA.frameType === 'link' && cardB.frameType !== 'link') return -1
+        if (cardA.frameType !== 'link' && cardB.frameType === 'link') return 1
+
+        const linkRatingComparison = (cardA.linkval ?? 0) - (cardB.linkval ?? 0)
+        if (linkRatingComparison !== 0) return dir === 'asc' ? linkRatingComparison : -linkRatingComparison
+        break
       default:
         break
     }
