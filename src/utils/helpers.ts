@@ -247,7 +247,16 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
   if (isPrevMonster && isNextMonster) {
     switch (stat) {
       case 'atk':
-        const atkComparison = (cardA.atk ?? 0) - (cardB.atk ?? 0)
+        /**
+         * Returns the correct Atk value for certain Monsters
+         * @param card Yu-Gi-Oh! card data
+         */
+        function getCorrectAtk(card: YGOCardData): number {
+          // this is the correct Atk value of Goblin Biker Mean Merciless
+          if (card.id === 64257161) return 1400
+          return card.atk ?? 0
+        }
+        const atkComparison = getCorrectAtk(cardA) - getCorrectAtk(cardB)
         if (atkComparison !== 0) return dir === 'asc' ? atkComparison : -atkComparison
         break
       case 'def':
