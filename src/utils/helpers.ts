@@ -314,6 +314,28 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
           if (rankComparison !== 0) return dir === 'asc' ? rankComparison : -rankComparison
         }
         break
+      case 'scale':
+        // Pendulum monsters come first than everything else
+        // Supreme King Z-ARC - Synchro Universe somehow isn't labeled as a Pendulum Monster, hence the card id checking
+        const pendulumCardA = cardA.frameType.includes('pendulum') || cardA.id === 48654267
+        const pendulumCardB = cardB.frameType.includes('pendulum') || cardB.id === 48654267
+        if (pendulumCardA && !pendulumCardB) return -1
+        if (!pendulumCardA && pendulumCardB) return 1
+
+        /**
+         * Returns the correct Pendulum Scale value for certain Pendulum Monsters
+         * @param card Yu-Gi-Oh! card data
+         */
+        function getCorrectScale(card: YGOCardData): number {
+          const scaleOverrides: Record<number, number> = {
+            25857977: 4, // D/D/D Vice King Requiem
+            2254222: 4 // Speedroid Wing Synchron
+          }
+          return scaleOverrides[card.id] ?? card.scale ?? 0
+        }
+        const scaleComparison = getCorrectScale(cardA) - getCorrectScale(cardB)
+        if (scaleComparison !== 0) return dir === 'asc' ? scaleComparison : -scaleComparison
+        break
       default:
         break
     }
