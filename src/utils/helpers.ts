@@ -268,6 +268,25 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         const levelComparison = (cardA.level ?? 0) - (cardB.level ?? 0)
         if (levelComparison !== 0) return dir === 'asc' ? levelComparison : -levelComparison
         break
+      case 'rank':
+        // Xyz monsters come first than everything else
+        if (cardA.frameType.includes('xyz') && !cardB.frameType.includes('xyz')) return -1
+        if (!cardA.frameType.includes('xyz') && cardB.frameType.includes('xyz')) return 1
+
+        if (cardA.frameType.includes('xyz') && cardB.frameType.includes('xyz')) {
+          /**
+           * Returns the correct Rank value for certain Xyz Monsters
+           * @param card Yu-Gi-Oh! card data
+           */
+          function getCorrectRank(card: YGOCardData): number {
+            // this is the correct Rank value of Materiactor Exagard
+            if (card.id === 72409226) return 3
+            return card.level ?? 0
+          }
+          const rankComparison = getCorrectRank(cardA) - getCorrectRank(cardB)
+          if (rankComparison !== 0) return dir === 'asc' ? rankComparison : -rankComparison
+        }
+        break
       default:
         break
     }
