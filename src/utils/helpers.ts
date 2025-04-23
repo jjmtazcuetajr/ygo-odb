@@ -248,7 +248,7 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
     switch (stat) {
       case 'atk':
         /**
-         * Returns the correct Atk value for certain Monsters
+         * Returns the correct Attack value for certain Monsters
          * @param card Yu-Gi-Oh! card data
          */
         function getCorrectAtk(card: YGOCardData): number {
@@ -264,7 +264,23 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         if (cardA.frameType !== 'link' && cardB.frameType === 'link') return -1
         if (cardA.frameType === 'link' && cardB.frameType !== 'link') return 1
 
-        const defComparison = (cardA.def ?? 0) - (cardB.def ?? 0)
+        /**
+         * Returns the correct Defense value for certain Monsters
+         * @param card Yu-Gi-Oh! card data
+         */
+        function getCorrectDef(card: YGOCardData): number {
+          const defenseOverrides: Record<number, number> = {
+            26270847: 700, // Performapal Silver Claw
+            10602628: 1200, // Blackwing - Boreastorm the Wicked Wind
+            21368273: 1300, // Mannadium Trisukta
+            86239173: 1800, // Horned Saurus
+            16037007: 2300, // Number 74: Master of Blades
+            77754169: 2800, // Super Armored Robot Armed Black Iron "C"
+            27134209: 2800 // Beargram, Shelled Emperor of the Forest Crown
+          }
+          return defenseOverrides[card.id] ?? card.def ?? 0
+        }
+        const defComparison = getCorrectDef(cardA) - getCorrectDef(cardB)
         if (defComparison !== 0) return dir === 'asc' ? defComparison : -defComparison
         break
       case 'level':
