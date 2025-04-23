@@ -290,8 +290,10 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         if (nonXyzAndLinkCardA && !nonXyzAndLinkCardB) return -1
         if (!nonXyzAndLinkCardA && nonXyzAndLinkCardB) return 1
 
-        const levelComparison = (cardA.level ?? 0) - (cardB.level ?? 0)
-        if (levelComparison !== 0) return dir === 'asc' ? levelComparison : -levelComparison
+        if (nonXyzAndLinkCardA && nonXyzAndLinkCardB) {
+          const levelComparison = (cardA.level ?? 0) - (cardB.level ?? 0)
+          if (levelComparison !== 0) return dir === 'asc' ? levelComparison : -levelComparison
+        }
         break
       case 'rank':
         // Xyz monsters come first than everything else
