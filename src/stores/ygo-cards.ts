@@ -58,19 +58,11 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       if (sortBy.value === 'name') {
         const collator = new Intl.Collator('en', { sensitivity: 'base' })
         const nameComparison = collator.compare(a.name, b.name)
-        return sortDir.value === 'asc' ? nameComparison : -nameComparison;
-      } else if (sortBy.value === 'atk') {
-        return sortByMonsterStat(a, b, 'atk', sortDir.value)
-      } else if (sortBy.value === 'def') {
-        return sortByMonsterStat(a, b, 'def', sortDir.value)
-      } else if (sortBy.value === 'level') {
-        return sortByMonsterStat(a, b, 'level', sortDir.value)
-      } else if (sortBy.value === 'rank') {
-        return sortByMonsterStat(a, b, 'rank', sortDir.value)
-      } else if (sortBy.value === 'scale') {
-        return sortByMonsterStat(a, b, 'scale', sortDir.value)
-      } else if (sortBy.value === 'link-rating') {
-        return sortByMonsterStat(a, b, 'link-rating', sortDir.value)
+        return sortDir.value === 'asc' ? nameComparison : -nameComparison
+      } else {
+        // Handle all numeric stats
+        const statProperties = ['atk', 'def', 'level', 'rank', 'scale', 'link-rating']
+        if (statProperties.includes(sortBy.value)) return sortByMonsterStat(a, b, sortBy.value, sortDir.value)
       }
       return 0
     })

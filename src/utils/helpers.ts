@@ -237,25 +237,26 @@ export function matchLinkArrows(card: YGOCardData, linkArrows: string[]): boolea
 export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: SortByMonsterStat, dir: SortDirection): number {
   const collator = new Intl.Collator('en', { sensitivity: 'base' })
 
-  const isPrevMonster = cardA.frameType !== 'spell' && cardA.frameType !== 'trap'
-  const isNextMonster = cardB.frameType !== 'spell' && cardB.frameType !== 'trap'
+  /**
+   * Determine if card is a Monster card
+   * @param card Yu-Gi-Oh! card data
+   */
+  const isMonster = (card: YGOCardData): boolean => card.frameType !== 'spell' && card.frameType !== 'trap'
 
   // monsters come first
-  if (isPrevMonster && !isNextMonster) return -1 // prev monster comes first
-  if (!isPrevMonster && isNextMonster) return 1 // then next monster
+  if (isMonster(cardA) && !isMonster(cardB)) return -1 // prev monster comes first
+  if (!isMonster(cardA) && isMonster(cardB)) return 1 // then next monster
 
-  if (isPrevMonster && isNextMonster) {
+  if (isMonster(cardA) && isMonster(cardB)) {
     switch (stat) {
       case 'atk':
         /**
          * Returns the correct Attack value for certain Monsters
+         * 
+         * **Note**: this should handle the correct Atk value of `Goblin Biker Mean Merciless`
          * @param card Yu-Gi-Oh! card data
          */
-        function getCorrectAtk(card: YGOCardData): number {
-          // this is the correct Atk value of Goblin Biker Mean Merciless
-          if (card.id === 64257161) return 1400
-          return card.atk ?? 0
-        }
+        const getCorrectAtk = (card: YGOCardData): number => card.id === 64257161 ? 1400 : (card.atk ?? 0)
         const atkComparison = getCorrectAtk(cardA) - getCorrectAtk(cardB)
         if (atkComparison !== 0) return dir === 'asc' ? atkComparison : -atkComparison
         break
@@ -284,13 +285,17 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         if (defComparison !== 0) return dir === 'asc' ? defComparison : -defComparison
         break
       case 'level':
-        // monsters that aren't Xyz, Xyz Pendulum, and Link come first before them
-        const nonXyzAndLinkCardA = !cardA.frameType.includes('xyz') && cardA.frameType !== 'link'
-        const nonXyzAndLinkCardB = !cardB.frameType.includes('xyz') && cardB.frameType !== 'link'
-        if (nonXyzAndLinkCardA && !nonXyzAndLinkCardB) return -1
-        if (!nonXyzAndLinkCardA && nonXyzAndLinkCardB) return 1
+        /**
+         * Determine if card is a not a Xyz and Link Monster
+         * @param card Yu-Gi-Oh! card data
+         */
+        const isNotXyzAndLink = (card: YGOCardData): boolean => !card.frameType.includes('xyz') && card.frameType !== 'link'
 
-        if (nonXyzAndLinkCardA && nonXyzAndLinkCardB) {
+        // monsters that aren't Xyz, Xyz Pendulum, and Link come first before them
+        if (isNotXyzAndLink(cardA) && !isNotXyzAndLink(cardB)) return -1
+        if (!isNotXyzAndLink(cardA) && isNotXyzAndLink(cardB)) return 1
+
+        if (isNotXyzAndLink(cardA) && isNotXyzAndLink(cardB)) {
           const levelComparison = (cardA.level ?? 0) - (cardB.level ?? 0)
           if (levelComparison !== 0) return dir === 'asc' ? levelComparison : -levelComparison
         }
@@ -303,24 +308,27 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         if (cardA.frameType.includes('xyz') && cardB.frameType.includes('xyz')) {
           /**
            * Returns the correct Rank value for certain Xyz Monsters
+           * 
+           * **Note**: this should handle the correct Rank value of `Materiactor Exagard`
            * @param card Yu-Gi-Oh! card data
            */
-          function getCorrectRank(card: YGOCardData): number {
-            // this is the correct Rank value of Materiactor Exagard
-            if (card.id === 72409226) return 3
-            return card.level ?? 0
-          }
+          const getCorrectRank = (card: YGOCardData): number => card.id === 72409226 ? 3 : (card.level ?? 0)
           const rankComparison = getCorrectRank(cardA) - getCorrectRank(cardB)
           if (rankComparison !== 0) return dir === 'asc' ? rankComparison : -rankComparison
         }
         break
       case 'scale':
+        /**
+         * Determine if card is a Pendulum Monster
+         * 
+         * **Note**: the card id checking should correctly label `Supreme King Z-ARC - Synchro Universe` as a Pendulum Monster
+         * @param card Yu-Gi-Oh! card data
+         */
+        const isPendulumMonster = (card: YGOCardData): boolean => card.frameType.includes('pendulum') || card.id === 48654267
+
         // Pendulum monsters come first than everything else
-        // Supreme King Z-ARC - Synchro Universe somehow isn't labeled as a Pendulum Monster, hence the card id checking
-        const pendulumCardA = cardA.frameType.includes('pendulum') || cardA.id === 48654267
-        const pendulumCardB = cardB.frameType.includes('pendulum') || cardB.id === 48654267
-        if (pendulumCardA && !pendulumCardB) return -1
-        if (!pendulumCardA && pendulumCardB) return 1
+        if (isPendulumMonster(cardA) && !isPendulumMonster(cardB)) return -1
+        if (!isPendulumMonster(cardA) && isPendulumMonster(cardB)) return 1
 
         /**
          * Returns the correct Pendulum Scale value for certain Pendulum Monsters
