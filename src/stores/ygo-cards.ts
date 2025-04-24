@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat } from "@/utils/interfaces"
+import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory } from "@/utils/interfaces"
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
   sortByMonsterStat } from "@/utils/helpers"
 
@@ -94,7 +94,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
    * Reset certain filters depending on the card category
    * @param category Either monster, spell, or trap card
    */
-  function resetCardCategory(category: string) {
+  function resetCardCategory(category: CardCategory) {
     if (category === 'monster') {
       filters.value.spellType = ''
       filters.value.trapType = ''

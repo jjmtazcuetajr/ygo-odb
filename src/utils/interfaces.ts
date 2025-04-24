@@ -75,7 +75,7 @@ export interface YGOCards {
 
 export interface FilterOptions {
   search: string,
-  category: string | undefined,
+  category: CardCategory | undefined,
   monsterCardType: string,
   monsterAbility: string,
   tunerType: string,
@@ -93,5 +93,6 @@ export interface FilterOptions {
   trapType: string
 }
 
+export type CardCategory = 'monster' | 'spell' | 'trap'
 export type SortDirection = 'asc' | 'desc'
 export type SortByMonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'link-rating'

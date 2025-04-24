@@ -1,13 +1,13 @@
-import type { YGOCardData, SortDirection, SortByMonsterStat } from "@/utils/interfaces"
+import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory } from "@/utils/interfaces"
 
 /**
  * Finds card matches based on card category
  * @param card  Yu-Gi-Oh! card data from the YGOPRODeck API
  * @param category Either monster, spell, or trap card
  */
-export function matchCategory(card: YGOCardData, category: string | undefined): boolean {
-  if (category && category === 'monster') return card.frameType !== 'spell' && card.frameType !== 'trap'
-  else if (category && (category === 'spell' || category === 'trap')) return card.frameType === category
+export function matchCategory(card: YGOCardData, category: CardCategory | undefined): boolean {
+  if (category === 'monster') return card.frameType !== 'spell' && card.frameType !== 'trap'
+  else if (category === 'spell' || category === 'trap') return card.frameType === category
   return true
 }
 
