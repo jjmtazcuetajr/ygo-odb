@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory } from "@/utils/interfaces"
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
   sortByMonsterStat } from "@/utils/helpers"
+import { usePaginationStore } from "./pagination";
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
@@ -115,6 +116,9 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       if (category === 'spell') filters.value.trapType = ''
       else if (category === 'trap') filters.value.spellType = ''
     }
+
+    const { toFirst } = usePaginationStore()
+    toFirst()
   }
 
   /**
@@ -138,6 +142,9 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     filters.value.def = NaN
     filters.value.spellType = ''
     filters.value.trapType = ''
+    
+    const { toFirst } = usePaginationStore()
+    toFirst()
   }
 
   return { cards, filters, sortBy, sortDir, getFilteredCards, fetchCards, resetCardCategory, resetFilters }

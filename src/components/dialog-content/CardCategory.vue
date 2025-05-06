@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ToggleGroupItem, ToggleGroupRoot } from 'reka-ui'
 import { useYgoCardsStore } from "@/stores/ygo-cards"
-import type { CardCategory } from "@/utils/interfaces";
+import type { CardCategory } from "@/utils/interfaces"
 
 const toggleButtonStyles = 'cursor-pointer px-2 py-0.5 rounded-full w-[60px] sm:w-[80px] text-xs sm:text-base shadow-sm data-[state=on]:inset-shadow-sm data-[state=on]:shadow-none transition-[color,background-color,box-shadow] duration-300'
 const lightThemeColors = ' bg-neutral-200 hover:bg-neutral-300 shadow-neutral-400 data-[state=on]:bg-neutral-400 data-[state=on]:inset-shadow-neutral-600'
