@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { X, Filter } from 'lucide-vue-next';
-import DialogModal from './DialogModal.vue';
-import SelectOption from './SelectOption.vue';
+import { X, Filter } from 'lucide-vue-next'
+import DialogModal from './DialogModal.vue'
+import SelectOption from './SelectOption.vue'
+import Pagination from './Pagination.vue'
 import { sortTypes, sortDirections } from "@/utils/select-options"
 import { useYgoCardsStore } from "@/stores/ygo-cards"
+import { usePaginationStore } from "@/stores/pagination"
 import { storeToRefs } from "pinia"
 
-const store = useYgoCardsStore()
-const { filters, sortBy, sortDir, getFilteredCards } = storeToRefs(store)
+const cardStore = useYgoCardsStore()
+const { filters, sortBy, sortDir, getFilteredCards } = storeToRefs(cardStore)
+
+const paginationStore = usePaginationStore()
+const { currentPage, paginatedResults } = storeToRefs(paginationStore)
 
 /**
  * Removes any extra whitespace from a string
@@ -74,11 +79,12 @@ function handleSearch(ev: Event) {
           <img src="https://images.ygoprodeck.com/images/cards_small/5043010.jpg" alt="Firewall Dragon"
             class="rounded-sm aspect-[268/391]">
         </template> -->
-        <div class="break-all border px-1" v-for="card in getFilteredCards" :key="card.id">
+        <div class="break-all border px-1" v-for="card in paginatedResults" :key="card.id">
           <span class="text-xs font-bold">{{ card.name }}</span> -
           <span class="text-xs">{{ card.frameType }}</span>
         </div>
       </div>
+      <Pagination v-model="currentPage" :total="getFilteredCards.length" />
     </div>
   </div>
 </template>
