@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import CardCategory from './CardCategory.vue';
-import SelectOption from '../SelectOption.vue';
-import NumberField from '../NumberField.vue';
-import LinkArrows from './LinkArrows.vue';
-import PopOver from './PopOver.vue';
+import CardCategory from './CardCategory.vue'
+import SelectOption from '../SelectOption.vue'
+import NumberField from '../NumberField.vue'
+import LinkArrows from './LinkArrows.vue'
+import PopOver from './PopOver.vue'
 import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tuners, pendulums, attributes } from '@/utils/select-options'
 import { useYgoCardsStore } from "@/stores/ygo-cards"
+import { usePaginationStore } from "@/stores/pagination"
 import { storeToRefs } from "pinia"
 
 const store = useYgoCardsStore()
 const { filters } = storeToRefs(store)
+
+const { toFirst } = usePaginationStore()
 </script>
 
 <template>
@@ -25,43 +28,45 @@ const { filters } = storeToRefs(store)
       <div class="flex flex-wrap justify-between gap-3 mt-3">
         <div class="flex flex-col gap-1">
           <SelectOption id="monster-card" label-text="Monster card" parent-class="flex flex-col gap-0.5"
-            :options="monsterCards" v-model="filters.monsterCardType" />
+            :options="monsterCards" v-model="filters.monsterCardType" @change="toFirst" />
           <SelectOption id="ability" label-text="Ability" parent-class="flex flex-col gap-0.5"
-            :options="monsterAbilities" v-model="filters.monsterAbility" />
+            :options="monsterAbilities" v-model="filters.monsterAbility" @change="toFirst" />
           <SelectOption id="tuner" label-text="Tuner" parent-class="flex flex-col gap-0.5" :options="tuners"
-            v-model="filters.tunerType" />
+            v-model="filters.tunerType" @change="toFirst" />
           <SelectOption id="pendulum" label-text="Pendulum" parent-class="flex flex-col gap-0.5" :options="pendulums"
-            v-model="filters.pendulumType" />
+            v-model="filters.pendulumType" @change="toFirst" />
           <SelectOption id="monster-type" label-text="Monster Type" parent-class="flex flex-col gap-0.5"
-            :options="monsterTypes" v-model="filters.monsterType" />
+            :options="monsterTypes" v-model="filters.monsterType" @change="toFirst" />
           <SelectOption id="attribute" label-text="Attribute" parent-class="flex flex-col gap-0.5" :options="attributes"
-            v-model="filters.attribute" />
+            v-model="filters.attribute" @change="toFirst" />
         </div>
         <div class="flex flex-col gap-1">
-          <NumberField id="level" :max="12" label-val="Level" v-model="filters.level" />
-          <NumberField id="rank" :max="13" label-val="Rank" v-model="filters.rank" />
-          <NumberField id="scale" :max="13" label-val="Scale" v-model="filters.scale" />
-          <NumberField id="link" :min="1" :max="6" label-val="Link Rating" v-model="filters.linkRating" />
+          <NumberField id="level" :max="12" label-val="Level" v-model="filters.level" @change="toFirst" />
+          <NumberField id="rank" :max="13" label-val="Rank" v-model="filters.rank" @change="toFirst" />
+          <NumberField id="scale" :max="13" label-val="Scale" v-model="filters.scale" @change="toFirst" />
+          <NumberField id="link" :min="1" :max="6" label-val="Link Rating" v-model="filters.linkRating"
+            @change="toFirst" />
           <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" :is-atk-or-def="true"
-            v-model="filters.atk" />
-          <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" v-model="filters.def" />
+            v-model="filters.atk" @change="toFirst" />
+          <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" v-model="filters.def"
+            @change="toFirst" />
         </div>
         <div>
           <div class="flex items-start sm:items-end gap-1">
             Link Arrows
             <PopOver usage="link-arrows" />
           </div>
-          <LinkArrows class="mt-1" v-model="filters.linkArrows" />
+          <LinkArrows class="mt-1" v-model="filters.linkArrows" @update:model-value="toFirst" />
         </div>
       </div>
     </template>
     <template v-else-if="filters.category === 'spell'">
       <SelectOption id="spell" label-text="Spell Type" label-class="mr-3" parent-class="mt-3" :options="spellTypes"
-        v-model="filters.spellType" />
+        v-model="filters.spellType" @change="toFirst" />
     </template>
     <template v-else-if="filters.category === 'trap'">
       <SelectOption id="trap" label-text="Trap Type" label-class="mr-3" parent-class="mt-3" :options="trapTypes"
-        v-model="filters.trapType" />
+        v-model="filters.trapType" @change="toFirst" />
     </template>
   </div>
 </template>
