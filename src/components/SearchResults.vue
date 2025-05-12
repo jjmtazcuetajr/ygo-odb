@@ -9,7 +9,7 @@ import { usePaginationStore } from "@/stores/pagination"
 import { storeToRefs } from "pinia"
 
 const cardStore = useYgoCardsStore()
-const { filters, sortBy, sortDir, getFilteredCards } = storeToRefs(cardStore)
+const { filters, sortBy, sortDir } = storeToRefs(cardStore)
 
 const paginationStore = usePaginationStore()
 const { currentPage, paginatedResults } = storeToRefs(paginationStore)
@@ -84,7 +84,7 @@ function handleSearch(ev: Event) {
           <span class="text-xs">{{ card.frameType }}</span>
         </div>
       </div>
-      <Pagination v-model="currentPage" :total="getFilteredCards.length" />
+      <Pagination v-model="currentPage" />
     </div>
   </div>
 </template>

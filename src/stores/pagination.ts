@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
-import { useYgoCardsStore } from "./ygo-cards";
+import { useYgoCardsStore } from "./ygo-cards"
 
 export const usePaginationStore = defineStore('pagination', () => {
   const ygoCardsStore = useYgoCardsStore()
@@ -10,11 +10,13 @@ export const usePaginationStore = defineStore('pagination', () => {
   // state
   const currentPage = ref(1)
 
-  // getter
+  // getters
   const paginatedResults = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage
     return getFilteredCards.value.slice(start, start + itemsPerPage)
   })
+
+  const totalPages = computed(() => Math.ceil(getFilteredCards.value.length / itemsPerPage))
 
   // actions
   /**
@@ -36,7 +38,7 @@ export const usePaginationStore = defineStore('pagination', () => {
    * Go to the next page from the current page of the paginated cards
    */
   function next() {
-    if (currentPage.value < Math.ceil(getFilteredCards.value.length / itemsPerPage)) currentPage.value++
+    if (currentPage.value < totalPages.value) currentPage.value++
   }
 
   /**
@@ -47,9 +49,7 @@ export const usePaginationStore = defineStore('pagination', () => {
   /**
    * Go to the last page of the paginated cards
    */
-  function toLast() {
-    currentPage.value = Math.ceil(getFilteredCards.value.length / itemsPerPage)
-  }
+  function toLast() { currentPage.value = totalPages.value }
 
-  return { currentPage, paginatedResults, toPage, prev, next, toFirst, toLast }
+  return { currentPage, paginatedResults, totalPages, toPage, prev, next, toFirst, toLast }
 })

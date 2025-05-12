@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory } from "@/utils/interfaces"
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
   sortByMonsterStat } from "@/utils/helpers"
-import { usePaginationStore } from "./pagination";
+import { usePaginationStore } from "./pagination"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // state
