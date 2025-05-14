@@ -3,6 +3,7 @@ import { X, Filter } from 'lucide-vue-next'
 import DialogModal from './DialogModal.vue'
 import SelectOption from './SelectOption.vue'
 import Pagination from './Pagination.vue'
+import ButtonCTA from './ButtonCTA.vue'
 import { sortTypes, sortDirections } from "@/utils/select-options"
 import { useYgoCardsStore } from "@/stores/ygo-cards"
 import { usePaginationStore } from "@/stores/pagination"
@@ -66,10 +67,11 @@ function handleSearch(ev: Event) {
           v-model="sortDir" />
         <DialogModal usage="filters">
           <template #trigger>
-            <button type="button"
-              class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-300 hover:bg-gray-400 active:bg-gray-500 dark:bg-zinc-600 dark:hover:bg-zinc-500 dark:active:bg-zinc-400 transition-[background-color,color] duration-200">
-              <Filter class="mr-1" :size="16" /> Filters
-            </button>
+            <ButtonCTA variant="neutral-2" has-icon>
+              <template #textWithIcon>
+                <Filter :size="16" /> Filters
+              </template>
+            </ButtonCTA>
           </template>
         </DialogModal>
       </div>

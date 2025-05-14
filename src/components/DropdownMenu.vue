@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { FileInput, FileOutput, ChevronDown, ArrowDownUp, X } from 'lucide-vue-next'
 import { DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger, DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger } from 'reka-ui'
+import ButtonCTA from './ButtonCTA.vue'
 
 defineProps<{
   type: 'Import' | 'Export' | 'Sort'
@@ -106,15 +107,9 @@ function persistDialog(event: PointerDownOutsideEvent) {
             </div>
           </div>
           <div class="mt-5 mr-1 flex justify-end gap-2">
-            <button type="button"
-              class="px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-emerald-300 hover:bg-emerald-400 active:bg-emerald-500 dark:bg-emerald-900 dark:hover:bg-emerald-800 dark:active:bg-emerald-700 transition-[background-color] duration-200">
-              Import
-            </button>
+            <ButtonCTA variant="emerald" text-content="Import" />
             <DialogClose as-child>
-              <button type="button"
-                class="px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-neutral-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color] duration-200">
-                Cancel
-              </button>
+              <ButtonCTA variant="neutral-1" text-content="Cancel" />
             </DialogClose>
           </div>
           <DialogClose aria-label="Close"

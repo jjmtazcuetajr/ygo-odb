@@ -3,6 +3,7 @@ import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, Di
 import { X } from 'lucide-vue-next'
 import CardFilters from './dialog-content/CardFilters.vue'
 import NumberField from './NumberField.vue'
+import ButtonCTA from './ButtonCTA.vue'
 import { useYgoCardsStore } from "@/stores/ygo-cards"
 import { usePaginationStore } from "@/stores/pagination"
 import { ref } from 'vue'
@@ -81,41 +82,24 @@ function handleKeyDown(ev: KeyboardEvent) {
               @keydown="handleKeyDown" />
           </div>
           <div class="mt-5 mr-1 flex justify-end gap-2">
-            <button v-if="usage === 'filters'" type="button" @click="resetFilters"
-              class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-neutral-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color] duration-200">
-              Reset filters
-            </button>
+            <ButtonCTA variant="neutral-1" text-content="Reset filters" v-if="usage === 'filters'"
+              @click="resetFilters" />
             <template v-else-if="usage === 'clear-all'">
-              <button type="button"
-                class="px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-red-400 hover:bg-red-500 active:bg-red-600/70 dark:bg-red-800 dark:hover:bg-red-700 dark:active:bg-red-600 transition-[background-color] duration-200">
-                Clear
-              </button>
+              <ButtonCTA variant="red" text-content="Clear" />
               <DialogClose as-child>
-                <button type="button"
-                  class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-neutral-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color] duration-200">
-                  Cancel
-                </button>
+                <ButtonCTA variant="neutral-1" text-content="Cancel" />
               </DialogClose>
             </template>
             <template v-else-if="usage === 'pagination'">
               <DialogClose as-child>
-                <button type="button" @click="toPage(pageInputValue)"
-                  class="px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-emerald-300 hover:bg-emerald-400 active:bg-emerald-500 dark:bg-emerald-900 dark:hover:bg-emerald-800 dark:active:bg-emerald-700 transition-[background-color] duration-200">
-                  Jump
-                </button>
+                <ButtonCTA variant="emerald" text-content="Jump" @click="toPage(pageInputValue)" />
               </DialogClose>
               <DialogClose as-child>
-                <button type="button"
-                  class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-neutral-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color] duration-200">
-                  Cancel
-                </button>
+                <ButtonCTA variant="neutral-1" text-content="Cancel" />
               </DialogClose>
             </template>
             <DialogClose as-child v-else>
-              <button type="button"
-                class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-neutral-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color] duration-200">
-                Close
-              </button>
+              <ButtonCTA variant="neutral-1" text-content="Close" />
             </DialogClose>
           </div>
           <DialogClose aria-label="Close"

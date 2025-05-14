@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import DeckType from '@/components/DeckType.vue';
-import DropdownMenu from '@/components/DropdownMenu.vue';
-import SearchResults from '@/components/SearchResults.vue';
-import DialogModal from '@/components/DialogModal.vue';
-import { Trash2, CircleHelp, Search } from 'lucide-vue-next';
-import { ref, onMounted } from 'vue';
+import DeckType from '@/components/DeckType.vue'
+import DropdownMenu from '@/components/DropdownMenu.vue'
+import SearchResults from '@/components/SearchResults.vue'
+import DialogModal from '@/components/DialogModal.vue'
+import ButtonCTA from '@/components/ButtonCTA.vue'
+import { Trash2, CircleHelp, Search } from 'lucide-vue-next'
+import { ref, onMounted } from 'vue'
 
 const isSideDrawerShown = ref(false)
 
@@ -39,24 +40,27 @@ onMounted(() => {
         <div class="flex gap-2">
           <DialogModal usage="clear-all">
             <template #trigger>
-              <button type="button"
-                class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color,color] duration-200">
-                <Trash2 class="mr-1" :size="16" /> Clear
-              </button>
+              <ButtonCTA variant="neutral-1" has-icon>
+                <template #textWithIcon>
+                  <Trash2 :size="16" /> Clear
+                </template>
+              </ButtonCTA>
             </template>
           </DialogModal>
           <DialogModal usage="help">
             <template #trigger>
-              <button type="button"
-                class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color,color] duration-200">
-                <CircleHelp class="mr-1" :size="16" /> Help
-              </button>
+              <ButtonCTA variant="neutral-1" has-icon>
+                <template #textWithIcon>
+                  <CircleHelp :size="16" /> Help
+                </template>
+              </ButtonCTA>
             </template>
           </DialogModal>
-          <button type="button" @click="isSideDrawerShown = true"
-            class="flex lg:hidden place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color,color] duration-200">
-            <Search class="mr-1" :size="16" /> Search
-          </button>
+          <ButtonCTA variant="neutral-1" has-icon only-in-mobile @click="isSideDrawerShown = true">
+            <template #textWithIcon>
+              <Search :size="16" /> Search
+            </template>
+          </ButtonCTA>
         </div>
       </div>
     </div>
