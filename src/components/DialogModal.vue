@@ -103,7 +103,7 @@ function handleKeyDown(ev: KeyboardEvent) {
             </DialogClose>
           </div>
           <DialogClose aria-label="Close"
-            class="absolute top-[10px] right-[10px] self-start p-1 size-[24px] rounded-full cursor-pointer dark:text-neutral-300 hover:bg-neutral-200 active:bg-gray-400 dark:hover:bg-neutral-700 dark:active:bg-neutral-500 transition-[background-color] duration-200">
+            class="absolute top-[10px] right-[10px] self-start p-1 size-[24px] rounded-full cursor-pointer dark:text-white hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
             <X :size="16" />
           </DialogClose>
         </DialogContent>

@@ -44,14 +44,13 @@ function persistDialog(event: PointerDownOutsideEvent) {
 <template>
   <DialogRoot>
     <DropdownMenuRoot v-model:open="toggleState" :modal="false">
-      <DropdownMenuTrigger
-        class="flex place-items-center px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-gray-200 hover:bg-gray-300 active:bg-gray-400 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-500 transition-[background-color,color] duration-200"
-        :aria-label="type + ' options'">
-        <FileInput v-if="type === 'Import'" class="mr-1" :size="16" />
-        <FileOutput v-else-if="type === 'Export'" class="mr-1" :size="16" />
-        <ArrowDownUp v-else class="mr-1" :size="16" />
+      <DropdownMenuTrigger :aria-label="type + ' options'"
+        class="flex place-items-center gap-1 px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base dark:text-white bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:active:bg-neutral-500 transition-[background-color,color] duration-200">
+        <FileInput v-if="type === 'Import'" :size="16" />
+        <FileOutput v-else-if="type === 'Export'" :size="16" />
+        <ArrowDownUp v-else :size="16" />
         {{ type }}
-        <ChevronDown class="ml-1" :size="16" />
+        <ChevronDown :size="16" />
       </DropdownMenuTrigger>
 
       <DropdownMenuPortal>
@@ -113,7 +112,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
             </DialogClose>
           </div>
           <DialogClose aria-label="Close"
-            class="absolute top-[10px] right-[10px] self-start p-1 size-[24px] rounded-full cursor-pointer dark:text-neutral-300 hover:bg-neutral-200 active:bg-gray-400 dark:hover:bg-neutral-700 dark:active:bg-neutral-500 transition-[background-color] duration-200">
+            class="absolute top-[10px] right-[10px] self-start p-1 size-[24px] rounded-full cursor-pointer dark:text-white hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
             <X :size="16" />
           </DialogClose>
         </DialogContent>
