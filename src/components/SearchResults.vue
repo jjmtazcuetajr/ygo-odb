@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { X, Filter } from 'lucide-vue-next'
+import { X, Filter, Search } from 'lucide-vue-next'
 import DialogModal from './DialogModal.vue'
 import SelectOption from './SelectOption.vue'
 import Pagination from './Pagination.vue'
@@ -56,9 +56,12 @@ onMounted(() => { searchValue.value = filters.value.search })
           <X :size="16" />
         </button>
       </div>
-      <input id="search-input" type="text" :value="displayValue" @input="handleSearch"
-        placeholder="Enter a card name or effect..." aria-label="Enter a card name or effect"
-        class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
+      <div class="relative">
+        <input id="search-input" type="text" :value="displayValue" @input="handleSearch"
+          placeholder="Enter a card name or effect..." aria-label="Enter a card name or effect"
+          class="w-full text-sm sm:text-base rounded-md pl-7 pr-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
+        <Search class="absolute top-[50%] transform-[translateY(-50%)] left-2 pointer-events-none" :size="16" />
+      </div>
       <div class="flex flex-wrap items-end gap-2">
         <SelectOption id="sort-type" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Sort by"
           label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortTypes" v-model="sortBy" />
