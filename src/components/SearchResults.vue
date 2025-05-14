@@ -15,6 +15,7 @@ const { filters, sortBy, sortDir } = storeToRefs(cardStore)
 
 const paginationStore = usePaginationStore()
 const { currentPage, paginatedResults } = storeToRefs(paginationStore)
+const { toFirst } = paginationStore
 
 const searchValue = ref('')
 const displayValue = computed(() => searchValue.value)
@@ -36,7 +37,10 @@ function handleSearch(ev: Event) {
 
   // filter cards if the search term character length is at least 3. If the search term is cleared then show all cards
   const length = searchValue.value.length
-  if (length > 2 || length === 0) filters.value.search = searchValue.value
+  if (length > 2 || length === 0) {
+    if (currentPage.value > 1) toFirst()
+    filters.value.search = searchValue.value
+  }
 
   // update the input value if it's different from the current value that went through the white space rules
   if (target.value !== value) target.value = value
