@@ -8,6 +8,7 @@ import { sortTypes, sortDirections } from "@/utils/select-options"
 import { useYgoCardsStore } from "@/stores/ygo-cards"
 import { usePaginationStore } from "@/stores/pagination"
 import { storeToRefs } from "pinia"
+import { ref, computed, onMounted } from "vue"
 
 const cardStore = useYgoCardsStore()
 const { filters, sortBy, sortDir } = storeToRefs(cardStore)
@@ -15,34 +16,33 @@ const { filters, sortBy, sortDir } = storeToRefs(cardStore)
 const paginationStore = usePaginationStore()
 const { currentPage, paginatedResults } = storeToRefs(paginationStore)
 
-/**
- * Removes any extra whitespace from a string
- * @param input The string input
- */
-function sanitizeInput(input: string): string {
-  // prevent whitespace if the input is empty
-  if (input === ' ') input = ''
-
-  // prevent leading whitespace
-  if (input.startsWith(' ')) input = input.trimStart()
-
-  // replace multiple spaces with a single space
-  input = input.replace(/\s+/g, ' ')
-
-  return input
-}
+const searchValue = ref('')
+const displayValue = computed(() => searchValue.value)
 
 /**
- * Handles the input element's oninput event
+ * Handles the input element's input event
  * @param ev The event object
  */
 function handleSearch(ev: Event) {
   const target = ev.target as HTMLInputElement
   let value = target.value
 
-  const input = sanitizeInput(value)
-  filters.value.search = input
+  // white space rules
+  if (value.trim() === '') value = ''
+  value = value.trimStart()
+  value = value.replace(/\s+/g, ' ')
+
+  searchValue.value = value
+
+  // filter cards if the search term character length is at least 3. If the search term is cleared then show all cards
+  const length = searchValue.value.length
+  if (length > 2 || length === 0) filters.value.search = searchValue.value
+
+  // update the input value if it's different from the current value that went through the white space rules
+  if (target.value !== value) target.value = value
 }
+
+onMounted(() => { searchValue.value = filters.value.search })
 </script>
 <template>
   <div id="overlay" @click="$emit('handleOverlayClick', $event)"
@@ -56,8 +56,8 @@ function handleSearch(ev: Event) {
           <X :size="16" />
         </button>
       </div>
-      <input id="search-input" type="text" placeholder="Enter card name or effect..." v-model="filters.search"
-        @input="handleSearch"
+      <input id="search-input" type="text" :value="displayValue" @input="handleSearch"
+        placeholder="Enter a card name or effect..." aria-label="Enter a card name or effect"
         class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
       <div class="flex flex-wrap items-end gap-2">
         <SelectOption id="sort-type" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Sort by"
