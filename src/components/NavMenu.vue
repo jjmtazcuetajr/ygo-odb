@@ -2,7 +2,7 @@
 import { RouterLink } from 'vue-router'
 import { SwitchRoot, SwitchThumb } from 'reka-ui'
 import { ref, onBeforeMount } from 'vue'
-import { Sun, Moon } from 'lucide-vue-next';
+import { Sun, Moon } from 'lucide-vue-next'
 
 const switchState = ref(false)
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ToggleGroupItem, ToggleGroupRoot } from 'reka-ui'
-import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ArrowUpLeft, ArrowUpRight, ArrowDownLeft, ArrowDownRight } from 'lucide-vue-next';
+import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, ArrowUpLeft, ArrowUpRight, ArrowDownLeft, ArrowDownRight } from 'lucide-vue-next'
 
 const toggleButtonStyles = 'cursor-pointer flex justify-center items-center rounded-full size-[24px] shadow-sm data-[state=on]:inset-shadow-sm data-[state=on]:shadow-none transition-[color,background-color,box-shadow] duration-300'
 const lightThemeColors = ' bg-neutral-200 hover:enabled:data-[state=off]:bg-neutral-300 shadow-neutral-400 data-[state=on]:bg-neutral-400 data-[state=on]:inset-shadow-neutral-600'
