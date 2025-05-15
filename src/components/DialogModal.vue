@@ -44,15 +44,12 @@ function handleDialogOpen(isOpen: boolean) {
 
 /**
  * Handle the number field's enter key event. Used only for pagination purposes.
- * @param ev Keyboard event object
  */
-function handleKeyDown(ev: KeyboardEvent) {
-  if (ev.key === 'Enter') {
-    setTimeout(() => {
-      toPage(pageInputValue.value)
-      isDialogOpen.value = false
-    }, 100)
-  }
+function handleKeyDown() {
+  setTimeout(() => {
+    toPage(pageInputValue.value)
+    isDialogOpen.value = false
+  }, 100)
 }
 </script>
 
@@ -79,7 +76,7 @@ function handleKeyDown(ev: KeyboardEvent) {
           <div class="flex justify-center dark:text-neutral-300 text-xs sm:text-base"
             v-else-if="usage === 'pagination'">
             <NumberField id="page" :min="1" :max="totalPages" label-val="Page Number" v-model="pageInputValue"
-              @keydown="handleKeyDown" />
+              @keydown.enter="handleKeyDown" />
           </div>
           <div class="mt-5 mr-1 flex justify-end gap-2">
             <ButtonCTA variant="neutral-1" text-content="Reset filters" v-if="usage === 'filters'"
