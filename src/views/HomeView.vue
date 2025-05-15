@@ -71,8 +71,8 @@ onMounted(() => {
         <DeckType type="Side" />
       </div>
       <transition name="nested">
-        <SearchResults v-if="isSideDrawerShown" @handleOverlayClick="closeSideDrawer"
-          @handleCloseSideDrawer="isSideDrawerShown = false" />
+        <SearchResults v-if="isSideDrawerShown" @handle-overlay-click="closeSideDrawer"
+          @handle-close-side-drawer="isSideDrawerShown = false" />
       </transition>
     </div>
   </main>
