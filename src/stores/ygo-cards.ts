@@ -6,7 +6,7 @@ import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerTyp
 import { usePaginationStore } from "./pagination"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
-  // state
+  // states
   const cards = ref<YGOCardData[]>([])
   const filters = ref<FilterOptions>({
     search: '',
@@ -29,6 +29,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   })
   const sortBy = ref<SortByMonsterStat | 'name'>('name')
   const sortDir = ref<SortDirection>('asc')
+  const isLoading = ref(false)
+  const isError = ref(false)
 
   // getters
   const getFilteredCards = computed(() => {
@@ -75,6 +77,11 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
    * @see {@link https://ygoprodeck.com/api-guide}
    */
   async function fetchCards() {
+    if (isLoading.value) return
+
+    isLoading.value = true
+    isError.value = false
+
     const url = 'http://localhost:5173/src/utils/response.json'
     //const url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php'
     try {
@@ -87,7 +94,10 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const filteredData = rawData.data.filter((card: YGOCardData) => !['skill', 'token'].includes(card.frameType) && !card.desc.toLowerCase().includes('you win the match'))
       cards.value = filteredData
     } catch (error) {
+      isError.value = true
       if (error instanceof Error) console.error(error)
+    } finally {
+      isLoading.value = false
     }
   }
 
@@ -147,5 +157,5 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     toFirst()
   }
 
-  return { cards, filters, sortBy, sortDir, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
+  return { cards, filters, sortBy, sortDir, isLoading, isError, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
 })

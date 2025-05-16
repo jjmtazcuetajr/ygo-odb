@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { X, Filter, Search } from 'lucide-vue-next'
+import { X, Filter, Search, LoaderCircle } from 'lucide-vue-next'
 import DialogModal from './DialogModal.vue'
 import SelectOption from './SelectOption.vue'
 import Pagination from './Pagination.vue'
 import ButtonCTA from './ButtonCTA.vue'
-import { sortTypes, sortDirections } from "@/utils/select-options"
-import { useYgoCardsStore } from "@/stores/ygo-cards"
-import { usePaginationStore } from "@/stores/pagination"
-import { storeToRefs } from "pinia"
-import { ref, computed, onMounted } from "vue"
+import { sortTypes, sortDirections } from '@/utils/select-options'
+import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { usePaginationStore } from '@/stores/pagination'
+import { storeToRefs } from 'pinia'
+import { ref, computed, onMounted } from 'vue'
 
 const cardStore = useYgoCardsStore()
-const { filters, sortBy, sortDir } = storeToRefs(cardStore)
+const { filters, sortBy, sortDir, isLoading, isError } = storeToRefs(cardStore)
 
 const paginationStore = usePaginationStore()
 const { currentPage, paginatedResults } = storeToRefs(paginationStore)
@@ -82,18 +82,38 @@ onMounted(() => { searchValue.value = filters.value.search })
           </template>
         </DialogModal>
       </div>
-      <div
-        class="grid grid-cols-3 sm:grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 sm:px-2 mt-6 content-start dark:[color-scheme:dark]">
-        <!-- <template v-for="_ in 14">
-          <img src="https://images.ygoprodeck.com/images/cards_small/5043010.jpg" alt="Firewall Dragon"
-            class="rounded-sm aspect-[268/391]">
-        </template> -->
-        <div class="break-all border px-1" v-for="card in paginatedResults" :key="card.id">
-          <span class="text-xs font-bold">{{ card.name }}</span> -
-          <span class="text-xs">{{ card.frameType }}</span>
+      <div class="flex justify-center items-center h-full" v-if="isLoading && !paginatedResults.length">
+        <div class="flex flex-wrap gap-2">
+          <LoaderCircle class="animate-spin" :size="24" :stroke-width="3" />
+          Loading cards...
         </div>
       </div>
-      <Pagination v-model="currentPage" />
+      <div class="flex justify-center items-center h-full" v-else-if="isError">
+        <span class="font-bold text-red-700 dark:text-red-400 transition-[color] duration-400">
+          Failed to fetch card data.
+        </span>
+      </div>
+      <div class="flex justify-center items-center h-full" v-else-if="!paginatedResults.length">
+        <span class="font-bold">No cards found.</span>
+      </div>
+      <div class="flex flex-col h-full" v-else>
+        <div
+          class="grid grid-cols-3 sm:grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 sm:px-2 mt-6 content-start dark:[color-scheme:dark]">
+          <!-- <template v-for="_ in 14">
+            <img src="https://images.ygoprodeck.com/images/cards_small/5043010.jpg" alt="Firewall Dragon"
+              class="rounded-sm aspect-[268/391]">
+          </template> -->
+          <div class="break-all border px-1" v-for="card in paginatedResults" :key="card.id">
+            <span class="text-xs font-bold">{{ card.name }}</span> -
+            <span class="text-xs">{{ card.frameType }}</span>
+          </div>
+          <!-- <div class="px-1" v-for="card in paginatedResults" :key="card.id">
+            <img :src="card.card_images[0].image_url_small" :alt="card.name" class="rounded-sm aspect-[268/391]"
+              loading="lazy">
+          </div> -->
+        </div>
+        <Pagination v-model="currentPage" />
+      </div>
     </div>
   </div>
 </template>
