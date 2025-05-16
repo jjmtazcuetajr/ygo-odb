@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface SelectOption {
-  val: string,
+  val: string
   textContent: string
 }
 
