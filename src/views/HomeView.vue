@@ -5,7 +5,7 @@ import SearchResults from '@/components/SearchResults.vue'
 import DialogModal from '@/components/DialogModal.vue'
 import ButtonCTA from '@/components/ButtonCTA.vue'
 import { Trash2, CircleHelp, Search } from 'lucide-vue-next'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const isSideDrawerShown = ref(false)
 
@@ -25,6 +25,8 @@ onMounted(() => {
   showSideDrawerOnLargeScreens()
   window.addEventListener('resize', showSideDrawerOnLargeScreens)
 })
+
+onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeScreens) })
 </script>
 <template>
   <main class="p-5 dark:text-neutral-300 transition-[color] duration-400">
