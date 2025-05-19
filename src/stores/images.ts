@@ -36,7 +36,7 @@ export const useImagesStore = defineStore('images', () => {
     // clear any existing queue items that haven't started loading yet
     imageQueue.value = imageQueue.value.filter(item => item.status === 'loading')
 
-    // check if all images are already loaded
+    // check if all current page images are already loaded
     let allLoaded = true
     currentPageUrls.value.forEach(url => {
       if (!loadedImages.value.has(url)) allLoaded = false

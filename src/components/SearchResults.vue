@@ -7,15 +7,20 @@ import ButtonCTA from './ButtonCTA.vue'
 import { sortTypes, sortDirections } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
+import { useImagesStore } from '@/stores/images'
 import { storeToRefs } from 'pinia'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 
 const cardStore = useYgoCardsStore()
-const { filters, sortBy, sortDir, isLoading, isError } = storeToRefs(cardStore)
+const { filters, sortBy, sortDir, isLoading, isError, getFilteredCards } = storeToRefs(cardStore)
 
 const paginationStore = usePaginationStore()
 const { currentPage, paginatedResults } = storeToRefs(paginationStore)
 const { toFirst } = paginationStore
+
+const imagesStore = useImagesStore()
+const { allCurrentPageImagesLoaded } = storeToRefs(imagesStore)
+const { queueImagesForCurrentPage, processImageQueue, reset } = useImagesStore()
 
 const searchValue = ref('')
 const displayValue = computed(() => searchValue.value)
@@ -45,6 +50,15 @@ function handleSearch(ev: Event) {
   // update the input value if it's different from the current value that went through the white space rules
   if (target.value !== value) target.value = value
 }
+
+// reset image loading state when changing page or when filtered results change, then queue and process the images for the current page
+watch([currentPage, getFilteredCards], () => {
+  reset()
+  if (!allCurrentPageImagesLoaded.value) {
+    queueImagesForCurrentPage()
+    processImageQueue()
+  }
+}, { immediate: true })
 
 onMounted(() => { searchValue.value = filters.value.search })
 </script>
@@ -99,18 +113,16 @@ onMounted(() => { searchValue.value = filters.value.search })
       <div class="flex flex-col h-full" v-else>
         <div
           class="grid grid-cols-3 sm:grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 sm:px-2 mt-6 content-start dark:[color-scheme:dark]">
-          <!-- <template v-for="_ in 14">
-            <img src="https://images.ygoprodeck.com/images/cards_small/5043010.jpg" alt="Firewall Dragon"
-              class="rounded-sm aspect-[268/391]">
-          </template> -->
-          <div class="break-all border px-1" v-for="card in paginatedResults" :key="card.id">
-            <span class="text-xs font-bold">{{ card.name }}</span> -
-            <span class="text-xs">{{ card.frameType }}</span>
+          <div v-for="card in paginatedResults" :key="card.id">
+            <div v-if="!allCurrentPageImagesLoaded"
+              class="flex justify-center items-center rounded-sm aspect-[268/391] bg-neutral-300 dark:bg-neutral-700 transition-[background-color] duration-400">
+              <div
+                class="animate-pulse rounded-[50%] grow-[.35] shrink basis-0 aspect-[1/2] bg-neutral-400/50 dark:bg-neutral-600 transition-[background-color] duration-400">
+              </div>
+            </div>
+            <img v-else :src="card.card_images[0].image_url_small" :alt="card.name"
+              class="rounded-sm aspect-[268/391] text-xs" loading="lazy">
           </div>
-          <!-- <div class="px-1" v-for="card in paginatedResults" :key="card.id">
-            <img :src="card.card_images[0].image_url_small" :alt="card.name" class="rounded-sm aspect-[268/391]"
-              loading="lazy">
-          </div> -->
         </div>
         <Pagination v-model="currentPage" />
       </div>
