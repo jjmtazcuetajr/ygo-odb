@@ -10,15 +10,11 @@ import { ref, onMounted, onUnmounted } from 'vue'
 const isSideDrawerShown = ref(false)
 
 function closeSideDrawer(ev: MouseEvent) {
-  if (ev && (ev.target as HTMLElement).id === 'overlay' && isSideDrawerShown.value) {
-    isSideDrawerShown.value = false
-  }
+  if (ev && (ev.target as HTMLElement).id === 'overlay' && isSideDrawerShown.value) isSideDrawerShown.value = false
 }
 
 function showSideDrawerOnLargeScreens() {
-  if (window.innerWidth >= 640 && !isSideDrawerShown.value) {
-    isSideDrawerShown.value = true
-  }
+  if (window.innerWidth >= 1024 && !isSideDrawerShown.value) isSideDrawerShown.value = true
 }
 
 onMounted(() => {
