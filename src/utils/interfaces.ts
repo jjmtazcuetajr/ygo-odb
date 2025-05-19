@@ -93,6 +93,12 @@ export interface FilterOptions {
   trapType: string
 }
 
+export interface LoadingImage {
+  pageIndex: number
+  imageUrl: string
+  status: 'pending' | 'loading' | 'loaded' | 'error'
+}
+
 export type CardCategory = 'monster' | 'spell' | 'trap'
 export type SortDirection = 'asc' | 'desc'
 export type SortByMonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'link-rating'
