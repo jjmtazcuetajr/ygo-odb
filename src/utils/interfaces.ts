@@ -1,7 +1,7 @@
 interface BanlistInfo {
-  ban_ocg?: string
-  ban_tcg?: string
-  ban_goat?: string
+  ban_ocg?: BanStatus
+  ban_tcg?: BanStatus
+  ban_goat?: BanStatus
 }
 
 interface CardImages {
@@ -102,3 +102,4 @@ export interface LoadingImage {
 export type CardCategory = 'monster' | 'spell' | 'trap'
 export type SortDirection = 'asc' | 'desc'
 export type SortByMonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'link-rating'
+export type BanStatus = 'Forbidden' | 'Limited' | 'Semi-Limited'

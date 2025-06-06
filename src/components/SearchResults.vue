@@ -4,6 +4,7 @@ import DialogModal from './DialogModal.vue'
 import SelectOption from './SelectOption.vue'
 import Pagination from './Pagination.vue'
 import ButtonCTA from './ButtonCTA.vue'
+import CardTooltip from './CardTooltip.vue'
 import { sortTypes, sortDirections } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
@@ -120,8 +121,7 @@ onMounted(() => { searchValue.value = filters.value.search })
                 class="animate-pulse rounded-[50%] grow-[.35] shrink basis-0 aspect-[1/2] bg-neutral-400/50 dark:bg-neutral-600 transition-[background-color] duration-400">
               </div>
             </div>
-            <img v-else :src="card.card_images[0].image_url_small" :alt="card.name"
-              class="rounded-sm aspect-[268/391] text-xs" loading="lazy">
+            <CardTooltip v-else :card="card" />
           </div>
         </div>
         <Pagination v-model="currentPage" />
