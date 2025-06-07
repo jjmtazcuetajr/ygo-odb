@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory } from "@/utils/interfaces"
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
-  sortByMonsterStat } from "@/utils/helpers"
+  sortByMonsterStat, matchTrapType } from "@/utils/helpers"
 import { usePaginationStore } from "./pagination"
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
@@ -40,7 +40,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         : true
       const matchesCategory = matchCategory(card, filters.value.category)
       const matchesSpellType = filters.value.spellType ? card.frameType === 'spell' && card.race.toLowerCase() === filters.value.spellType : true
-      const matchesTrapType = filters.value.trapType ? card.frameType === 'trap' && card.race.toLowerCase() === filters.value.trapType : true
+      const matchesTrapType = matchTrapType(card, filters.value.trapType)
       const matchesMonsterCardType = matchMonsterCardType(card, filters.value.monsterCardType)
       const matchesMonsterAbility = matchMonsterAbility(card, filters.value.monsterAbility)
       const matchesTunerType = matchTunerType(card, filters.value.tunerType)

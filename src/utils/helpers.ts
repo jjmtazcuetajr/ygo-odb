@@ -12,6 +12,22 @@ export function matchCategory(card: YGOCardData, category: CardCategory | undefi
 }
 
 /**
+ * Finds trap card matches based on its type
+ * @see {@link https://yugipedia.com/wiki/Trap_Card#Types}
+ * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
+ * @param type Type of Trap Card
+ */
+export function matchTrapType(card: YGOCardData, type: string): boolean {
+  if (type !== '') {
+    // this is needed because Maliss C GWC-06 has no value for race (or probably an empty string)
+    const specialTraps: Record<string, number[]> = { normal: [20726052] }
+    const isSpecialTrap = specialTraps[type]?.includes(card.id)
+    return (card.frameType === 'trap' && card.race.toLowerCase() === type) || isSpecialTrap
+  }
+  return true
+}
+
+/**
  * Finds monster card matches based on frame color
  * @see {@link https://ygoprodeck.com/api-guide}
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
@@ -319,8 +335,7 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
          */
         function getCorrectScale(card: YGOCardData): number {
           const scaleOverrides: Record<number, number> = {
-            25857977: 4, // D/D/D Vice King Requiem
-            2254222: 4 // Speedroid Wing Synchron
+            25857977: 4 // D/D/D Vice King Requiem
           }
           return scaleOverrides[card.id] ?? card.scale ?? 0
         }
