@@ -36,6 +36,15 @@ function handleBanStatusColor(banStatus: BanStatus | undefined): string {
       return 'text-emerald-700 dark:text-emerald-500'
   }
 }
+
+/**
+ * Remove two single quotes at the start and end of a string
+ * @param str Flavor text of Normal and Normal Pendulum monsters
+ */
+function removeSingleQuotes(str: string): string {
+  if (str.startsWith("''") && str.endsWith("''") && str.length >= 4) return str.slice(2, -2)
+  return str
+}
 </script>
 <template>
   <TooltipProvider :delay-duration="100" :disable-hoverable-content="true">
@@ -80,15 +89,17 @@ function handleBanStatusColor(banStatus: BanStatus | undefined): string {
                 <span class="font-semibold text-amber-700 dark:text-amber-600">
                   [{{ card.frameType === 'normal_pendulum' ? 'Flavor Text' : 'Monster Effect' }}]
                 </span>
-                <span :class="card.frameType === 'normal_pendulum' ? 'italic' : ''">{{ card.monster_desc }}</span>
+                <span :class="card.frameType === 'normal_pendulum' ? 'italic' : ''">
+                  {{ card.frameType === 'normal_pendulum' ? removeSingleQuotes(card.monster_desc) : card.monster_desc }}
+                </span>
               </div>
               <div :class="card.frameType === 'normal_pendulum' ? 'italic' : ''"
                 v-if="card.pend_desc == null && card.monster_desc == null">
-                {{ card.desc }}
+                {{ card.frameType === 'normal_pendulum' ? removeSingleQuotes(card.desc) : card.desc }}
               </div>
             </div>
             <span v-else class="leading-tight whitespace-pre-line" :class="card.frameType === 'normal' ? 'italic' : ''">
-              {{ card.desc }}
+              {{ card.frameType === 'normal' ? removeSingleQuotes(card.desc) : card.desc }}
             </span>
             <div v-if="card.frameType !== 'spell' && card.frameType !== 'trap'" class="flex gap-2">
               <span><span class="font-bold">ATK/</span> {{ card.atk === -1 ? '?' : card.atk }}</span>
