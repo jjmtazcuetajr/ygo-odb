@@ -82,8 +82,8 @@ function handleBanStatusColor(banStatus: BanStatus | undefined): string {
                 </span>
                 <span :class="card.frameType === 'normal_pendulum' ? 'italic' : ''">{{ card.monster_desc }}</span>
               </div>
-              <div class="italic"
-                v-if="card.frameType === 'normal_pendulum' && card.pend_desc == null && card.monster_desc == null">
+              <div :class="card.frameType === 'normal_pendulum' ? 'italic' : ''"
+                v-if="card.pend_desc == null && card.monster_desc == null">
                 {{ card.desc }}
               </div>
             </div>
