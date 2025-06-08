@@ -52,7 +52,7 @@ defineProps<{ card: YGOCardData }>()
       </span>
       <span v-if="card.linkval != null" class="font-bold">LINK - {{ card.linkval }}</span>
     </div>
-    <div v-if="card.banlist_info" class="flex flex-wrap gap-2">
+    <div v-if="card.banlist_info?.ban_ocg != null || card.banlist_info?.ban_tcg != null" class="flex flex-wrap gap-2">
       <span>
         <span class="font-bold">OCG: </span>
         <span :class="handleBanStatusColor(card.banlist_info.ban_ocg)">
