@@ -10,7 +10,7 @@ defineProps<{ card: YGOCardData }>()
     <TooltipRoot>
       <TooltipTrigger as-child>
         <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
-          class="rounded-sm aspect-[268/391] text-xs hidden lg:block">
+          class="rounded-sm aspect-[268/391] text-xs hidden lg:block active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
       </TooltipTrigger>
       <TooltipPortal disabled>
         <TooltipContent :side-offset="5" side="left" :avoid-collisions="true"

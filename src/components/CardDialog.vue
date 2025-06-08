@@ -20,7 +20,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
   <DialogRoot v-model:open="isDialogOpen">
     <DialogTrigger as-child>
       <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
-        class="rounded-sm aspect-[268/391] text-xs lg:hidden">
+        class="rounded-sm aspect-[268/391] text-xs lg:hidden active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
     </DialogTrigger>
     <DialogPortal disabled>
       <DialogOverlay
