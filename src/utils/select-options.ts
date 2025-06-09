@@ -111,3 +111,9 @@ export const attributes = [
   { val: 'dark', textContent: 'DARK' },
   { val: 'divine', textContent: 'DIVINE' }
 ]
+
+export const banRegion = [
+  { val: 'none', textContent: 'None' },
+  { val: 'ocg', textContent: 'OCG' },
+  { val: 'tcg', textContent: 'TCG' }
+]

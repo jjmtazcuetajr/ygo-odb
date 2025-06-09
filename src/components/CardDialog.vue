@@ -3,9 +3,13 @@ import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, Di
 import { X } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
 import CardInfo from './tooltip-content/CardInfo.vue'
-import type { YGOCardData } from '@/utils/interfaces'
+import BanStatus from './BanStatus.vue'
+import type { YGOCardData, BanList } from '@/utils/interfaces'
 
-defineProps<{ card: YGOCardData }>()
+defineProps<{
+  card: YGOCardData,
+  banList: BanList
+}>()
 
 const isDialogOpen = ref(false)
 
@@ -19,8 +23,13 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
 <template>
   <DialogRoot v-model:open="isDialogOpen">
     <DialogTrigger as-child>
-      <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
-        class="rounded-sm aspect-[268/391] text-xs lg:hidden active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+      <div
+        class="relative lg:hidden active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+        <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
+          class="rounded-sm aspect-[268/391] text-xs">
+        <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
+        <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
+      </div>
     </DialogTrigger>
     <DialogPortal disabled>
       <DialogOverlay

@@ -1,16 +1,27 @@
 <script setup lang="ts">
 import { TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRoot, TooltipTrigger } from 'reka-ui'
 import CardInfo from './tooltip-content/CardInfo.vue'
-import type { YGOCardData } from '@/utils/interfaces'
+import BanStatus from './BanStatus.vue'
+import type { YGOCardData, BanList } from '@/utils/interfaces'
 
-defineProps<{ card: YGOCardData }>()
+defineProps<{
+  card: YGOCardData,
+  banList: BanList
+}>()
 </script>
 <template>
   <TooltipProvider :delay-duration="100" :disable-hoverable-content="true">
     <TooltipRoot>
       <TooltipTrigger as-child>
-        <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
-          class="rounded-sm aspect-[268/391] text-xs hidden lg:block active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+        <div class="hidden lg:block">
+          <div
+            class="relative active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+            <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
+              class="rounded-sm aspect-[268/391] text-xs">
+            <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
+            <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
+          </div>
+        </div>
       </TooltipTrigger>
       <TooltipPortal disabled>
         <TooltipContent :side-offset="5" side="left" :avoid-collisions="true"

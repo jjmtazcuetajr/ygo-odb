@@ -1,9 +1,9 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory } from "@/utils/interfaces"
+import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory, BanList } from '@/utils/interfaces'
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
-  sortByMonsterStat, matchTrapType } from "@/utils/helpers"
-import { usePaginationStore } from "./pagination"
+  sortByMonsterStat, matchTrapType } from '@/utils/helpers'
+import { usePaginationStore } from './pagination'
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // states
@@ -31,6 +31,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   const sortDir = ref<SortDirection>('asc')
   const isLoading = ref(false)
   const isError = ref(false)
+  const banList = ref<BanList>('ocg')
 
   // getters
   const getFilteredCards = computed(() => {
@@ -157,5 +158,5 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     toFirst()
   }
 
-  return { cards, filters, sortBy, sortDir, isLoading, isError, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
+  return { cards, filters, sortBy, sortDir, isLoading, isError, banList, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
 })
