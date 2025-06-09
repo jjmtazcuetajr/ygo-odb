@@ -15,7 +15,7 @@ defineProps<{ card: YGOCardData }>()
         <div v-if="card.level != null && card.frameType !== 'link'" class="flex items-center gap-0.5">
           <Star :size="16" />{{ card.level }}
         </div>
-        <div v-if="card.scale != null" class="flex items-center gap-0.5">
+        <div v-if="card.scale != null && card.frameType.includes('pendulum')" class="flex items-center gap-0.5">
           <Diamond :size="16" />{{ card.scale }}
         </div>
       </div>
@@ -25,20 +25,21 @@ defineProps<{ card: YGOCardData }>()
     </span>
     <div v-if="card.frameType.toLowerCase().includes('pendulum')"
       class="flex flex-col gap-1 leading-tight whitespace-pre-line">
-      <div v-if="card.pend_desc != null" class="flex flex-col gap-1">
-        <span class="font-semibold text-emerald-700 dark:text-emerald-600">[Pendulum Effect]</span>
-        <span>{{ card.pend_desc }}</span>
-      </div>
-      <div v-if="card.monster_desc != null" class="flex flex-col gap-1">
-        <span class="font-semibold text-amber-700 dark:text-amber-600">
-          [{{ card.frameType === 'normal_pendulum' ? 'Flavor Text' : 'Monster Effect' }}]
-        </span>
-        <span :class="card.frameType === 'normal_pendulum' ? 'italic' : ''">
-          {{ card.frameType === 'normal_pendulum' ? removeSingleQuotes(card.monster_desc) : card.monster_desc }}
-        </span>
-      </div>
-      <div :class="card.frameType === 'normal_pendulum' ? 'italic' : ''"
-        v-if="card.pend_desc == null && card.monster_desc == null">
+      <template v-if="card.pend_desc != null && card.monster_desc != null">
+        <div class="flex flex-col gap-1">
+          <span class="font-semibold text-emerald-700 dark:text-emerald-600">[Pendulum Effect]</span>
+          <span>{{ card.pend_desc }}</span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="font-semibold text-amber-700 dark:text-amber-600">
+            [{{ card.frameType === 'normal_pendulum' ? 'Flavor Text' : 'Monster Effect' }}]
+          </span>
+          <span :class="card.frameType === 'normal_pendulum' ? 'italic' : ''">
+            {{ card.frameType === 'normal_pendulum' ? removeSingleQuotes(card.monster_desc) : card.monster_desc }}
+          </span>
+        </div>
+      </template>
+      <div v-else :class="card.frameType === 'normal_pendulum' ? 'italic' : ''">
         {{ card.frameType === 'normal_pendulum' ? removeSingleQuotes(card.desc) : card.desc }}
       </div>
     </div>
@@ -50,7 +51,7 @@ defineProps<{ card: YGOCardData }>()
       <span v-if="card.def != null && card.frameType !== 'link'">
         <span class="font-bold">DEF/</span> {{ card.def === -1 ? '?' : card.def }}
       </span>
-      <span v-if="card.linkval != null" class="font-bold">LINK - {{ card.linkval }}</span>
+      <span v-else-if="card.frameType === 'link'" class="font-bold">LINK - {{ card.linkval }}</span>
     </div>
     <div v-if="card.banlist_info?.ban_ocg != null || card.banlist_info?.ban_tcg != null" class="flex flex-wrap gap-2">
       <span>
