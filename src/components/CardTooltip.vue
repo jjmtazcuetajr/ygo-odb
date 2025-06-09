@@ -15,7 +15,7 @@ defineProps<{
       <TooltipTrigger as-child>
         <div class="hidden lg:block">
           <div
-            class="relative active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+            class="relative rounded-sm active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
             <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
               class="rounded-sm aspect-[268/391] text-xs">
             <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />

@@ -6,7 +6,7 @@ import Pagination from './Pagination.vue'
 import ButtonCTA from './ButtonCTA.vue'
 import CardTooltip from './CardTooltip.vue'
 import CardDialog from './CardDialog.vue'
-import { sortTypes, sortDirections, banRegion } from '@/utils/select-options'
+import { sortTypes, sortDirections } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { useImagesStore } from '@/stores/images'
@@ -88,8 +88,6 @@ onMounted(() => { searchValue.value = filters.value.search })
         <SelectOption id="sort-dir" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Direction"
           label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortDirections"
           v-model="sortDir" />
-        <SelectOption id="ban-list" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Ban List"
-          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="banRegion" v-model="banList" />
         <DialogModal usage="filters">
           <template #trigger>
             <ButtonCTA variant="neutral-2" has-icon>
@@ -116,7 +114,7 @@ onMounted(() => { searchValue.value = filters.value.search })
       </div>
       <div class="flex flex-col h-full" v-else>
         <div
-          class="grid grid-cols-3 sm:grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 sm:px-2 mt-6 content-start dark:[color-scheme:dark]">
+          class="grid grid-cols-3 sm:grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-2 sm:px-2 mt-6 content-start dark:[color-scheme:dark]">
           <div v-for="card in paginatedResults" :key="card.id">
             <div v-if="!allCurrentPageImagesLoaded"
               class="flex justify-center items-center rounded-sm aspect-[268/391] bg-neutral-300 dark:bg-neutral-700 transition-[background-color] duration-400">

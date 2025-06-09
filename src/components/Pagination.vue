@@ -10,7 +10,7 @@ const { prev, next, toFirst, toLast } = store
 </script>
 
 <template>
-  <div class="flex justify-center">
+  <div class="flex justify-center mt-2">
     <nav class="flex overflow-x-auto">
       <div class="flex items-center gap-1 p-1 dark:text-white">
         <button type="button" aria-label="First Page" @click="toFirst" :disabled="currentPage === 1"

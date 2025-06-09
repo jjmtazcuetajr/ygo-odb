@@ -4,8 +4,15 @@ import DropdownMenu from '@/components/DropdownMenu.vue'
 import SearchResults from '@/components/SearchResults.vue'
 import DialogModal from '@/components/DialogModal.vue'
 import ButtonCTA from '@/components/ButtonCTA.vue'
+import SelectOption from '@/components/SelectOption.vue'
 import { Trash2, CircleHelp, Search } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
+import { banRegion } from '@/utils/select-options'
+import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { storeToRefs } from 'pinia'
+
+const store = useYgoCardsStore()
+const { banList } = storeToRefs(store)
 
 const isSideDrawerShown = ref(false)
 
@@ -64,6 +71,8 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
     </div>
     <div class="flex gap-4 mt-3">
       <div class="flex flex-col gap-3 grow">
+        <SelectOption id="ban-list" label-text="Ban List" parent-class="flex items-center gap-1" :options="banRegion"
+          v-model="banList" />
         <DeckType type="Main" />
         <DeckType type="Extra" />
         <DeckType type="Side" />
