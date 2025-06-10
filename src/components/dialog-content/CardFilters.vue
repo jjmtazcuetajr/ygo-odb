@@ -4,7 +4,7 @@ import SelectOption from '../SelectOption.vue'
 import NumberField from '../NumberField.vue'
 import LinkArrows from './LinkArrows.vue'
 import PopOver from './PopOver.vue'
-import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tuners, pendulums, attributes } from '@/utils/select-options'
+import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tuners, pendulums, attributes, banStatus } from '@/utils/select-options'
 import { useYgoCardsStore } from "@/stores/ygo-cards"
 import { usePaginationStore } from "@/stores/pagination"
 import { storeToRefs } from "pinia"
@@ -17,6 +17,8 @@ const { toFirst } = usePaginationStore()
 
 <template>
   <div class="flex flex-col mt-3 p-1 dark:text-neutral-300 text-xs sm:text-base">
+    <SelectOption id="monster-card" label-text="Ban Status" parent-class="flex items-center gap-1 mb-2"
+      :options="banStatus" v-model="filters.banStatus" @change="toFirst" />
     <div class="flex items-center flex-wrap gap-2">
       <div class="flex items-start sm:items-end gap-1">
         Card Category

@@ -117,3 +117,11 @@ export const banRegion = [
   { val: 'ocg', textContent: 'OCG' },
   { val: 'tcg', textContent: 'TCG' }
 ]
+
+export const banStatus = [
+  { val: '', textContent: 'None' },
+  { val: 'Forbidden', textContent: 'Forbidden' },
+  { val: 'Limited', textContent: 'Limited' },
+  { val: 'Semi-Limited', textContent: 'Semi-Limited' },
+  { val: 'Unrestricted', textContent: 'Unrestricted' }
+]

@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory, BanList } from '@/utils/interfaces'
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
-  sortByMonsterStat, matchTrapType } from '@/utils/helpers'
+  sortByMonsterStat, matchTrapType, matchBanStatus } from '@/utils/helpers'
 import { usePaginationStore } from './pagination'
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
@@ -25,7 +25,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     atk: NaN,
     def: NaN,
     spellType: '',
-    trapType: ''
+    trapType: '',
+    banStatus: ''
   })
   const sortBy = ref<SortByMonsterStat | 'name'>('name')
   const sortDir = ref<SortDirection>('asc')
@@ -55,9 +56,11 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesAtk = matchAtk(card, filters.value.atk)
       const matchesDef = matchDef(card, filters.value.def)
       const matchesLinkArrows = matchLinkArrows(card, filters.value.linkArrows)
+      const matchesBanStatus = matchBanStatus(card, banList.value, filters.value.banStatus)
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
         && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk && matchesDef && matchesLinkArrows
+        && matchesBanStatus
     }).sort((a, b) => {
       if (sortBy.value === 'name') {
         const collator = new Intl.Collator('en', { sensitivity: 'base' })

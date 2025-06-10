@@ -91,6 +91,7 @@ export interface FilterOptions {
   def: number
   spellType: string
   trapType: string
+  banStatus: BanStatus | 'Unrestricted' | ''
 }
 
 export interface LoadingImage {

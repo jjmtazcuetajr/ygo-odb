@@ -1,4 +1,4 @@
-import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory } from "@/utils/interfaces"
+import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory, BanList, BanStatus } from "@/utils/interfaces"
 
 /**
  * Finds card matches based on card category
@@ -226,6 +226,23 @@ export function matchLinkArrows(card: YGOCardData, linkArrows: string[]): boolea
   const include = linkArrows.every(linkArrow => ['Left', 'Right', 'Bottom', 'Bottom-Left'].includes(linkArrow)) && specificCard
   const allMatch = linkArrows.every(linkArrow => card.linkmarkers?.includes(linkArrow))
   return (card.frameType === 'link' && allMatch && exclude) || include
+}
+
+/**
+ * Filter cards based on format and limit
+ * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
+ * @param format Either OCG, TCG, or none
+ * @param status Either Forbidden, Limited, or Semi-Limited
+ */
+export function matchBanStatus(card: YGOCardData, format: BanList, status: BanStatus | 'Unrestricted' | ''): boolean {
+  if (format === 'ocg') {
+    if (status !== '' && status !== 'Unrestricted') return card.banlist_info?.ban_ocg === status
+    else if (status === 'Unrestricted') return card.banlist_info?.ban_ocg === undefined
+  } else if (format === 'tcg') {
+    if (status !== '' && status !== 'Unrestricted') return card.banlist_info?.ban_tcg === status
+    else if (status === 'Unrestricted') return card.banlist_info?.ban_tcg === undefined
+  }
+  return true
 }
 
 /**
