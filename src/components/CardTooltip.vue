@@ -2,18 +2,99 @@
 import { TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRoot, TooltipTrigger } from 'reka-ui'
 import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
-import type { YGOCardData, BanList } from '@/utils/interfaces'
+import type { YGOCardData, BanList, DragState } from '@/utils/interfaces'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 defineProps<{
   card: YGOCardData,
   banList: BanList
 }>()
+
+const dragState = ref<DragState>({
+  isDragging: false,
+  dragClone: null,
+  offsetX: 0,
+  offsetY: 0
+})
+
+function handleMouseDown(e: MouseEvent) {
+  e.preventDefault()
+
+  const target = e.currentTarget as HTMLElement
+  const imgElement = target.querySelector('img') as HTMLImageElement
+
+  if (!imgElement) return
+
+  // calculate offset from mouse to top-left of image
+  const rect = imgElement.getBoundingClientRect()
+  dragState.value.offsetX = e.clientX - rect.left
+  dragState.value.offsetY = e.clientY - rect.top
+
+  // create clone
+  const clone = imgElement.cloneNode(true) as HTMLImageElement
+  clone.className = 'fixed pointer-events-none z-[9999] opacity-80 rounded-sm aspect-[268/391] text-xs shadow-md shadow-neutral-400 dark:shadow-neutral-950'
+  clone.width = rect.width
+  clone.style.left = `${e.clientX - dragState.value.offsetX}px`
+  clone.style.top = `${e.clientY - dragState.value.offsetY}px`
+
+  document.body.appendChild(clone)
+
+  // update drag state
+  dragState.value.isDragging = true
+  dragState.value.dragClone = clone
+
+  // add visual feedback to original
+  target.style.opacity = '0.5'
+  target.style.transform = 'scale(0.95)'
+}
+
+function handleMouseMove(e: MouseEvent) {
+  if (!dragState.value.isDragging || !dragState.value.dragClone) return
+
+  dragState.value.dragClone.style.left = `${e.clientX - dragState.value.offsetX}px`
+  dragState.value.dragClone.style.top = `${e.clientY - dragState.value.offsetY}px`
+}
+
+function handleMouseUp() {
+  if (!dragState.value.isDragging) return
+
+  // cleanup clone
+  if (dragState.value.dragClone) {
+    document.body.removeChild(dragState.value.dragClone)
+    dragState.value.dragClone = null
+  }
+
+  // reset original image appearance
+  const imageItems = document.querySelectorAll('.draggable')
+  imageItems.forEach(item => {
+    const element = item as HTMLElement
+    element.removeAttribute('style')
+  })
+
+  // reset drag state
+  dragState.value.isDragging = false
+}
+
+onMounted(() => {
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('mouseup', handleMouseUp)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('mousemove', handleMouseMove)
+  document.removeEventListener('mouseup', handleMouseUp)
+
+  // cleanup any remaining clone
+  if (dragState.value.dragClone) {
+    document.body.removeChild(dragState.value.dragClone)
+  }
+})
 </script>
 <template>
   <TooltipProvider :delay-duration="100" :disable-hoverable-content="true">
     <TooltipRoot>
       <TooltipTrigger as-child>
-        <div class="hidden lg:block">
+        <div class="hidden lg:block draggable" @mousedown.left="handleMouseDown">
           <div
             class="relative rounded-sm active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
             <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"

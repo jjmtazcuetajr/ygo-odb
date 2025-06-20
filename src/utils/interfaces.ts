@@ -100,6 +100,13 @@ export interface LoadingImage {
   status: 'pending' | 'loading' | 'loaded' | 'error'
 }
 
+export interface DragState {
+  isDragging: boolean
+  dragClone: HTMLImageElement | null
+  offsetX: number
+  offsetY: number
+}
+
 export type CardCategory = 'monster' | 'spell' | 'trap'
 export type SortDirection = 'asc' | 'desc'
 export type SortByMonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'link-rating'
