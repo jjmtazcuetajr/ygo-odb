@@ -5,7 +5,7 @@ import BanStatus from './BanStatus.vue'
 import type { YGOCardData, BanList, DragState } from '@/utils/interfaces'
 import { ref, onMounted, onUnmounted } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   card: YGOCardData,
   banList: BanList
 }>()
@@ -32,8 +32,9 @@ function handleMouseDown(e: MouseEvent) {
 
   // create clone
   const clone = imgElement.cloneNode(true) as HTMLImageElement
-  clone.className = 'fixed pointer-events-none z-[9999] opacity-80 rounded-sm aspect-[268/391] text-xs shadow-md shadow-neutral-400 dark:shadow-neutral-950'
+  clone.className = 'fixed z-[9999] opacity-80 rounded-sm aspect-[268/391] text-xs shadow-md shadow-neutral-400 dark:shadow-neutral-950'
   clone.width = rect.width
+  clone.style.cursor = 'grabbing'
   clone.style.left = `${e.clientX - dragState.value.offsetX}px`
   clone.style.top = `${e.clientY - dragState.value.offsetY}px`
 
@@ -51,8 +52,33 @@ function handleMouseDown(e: MouseEvent) {
 function handleMouseMove(e: MouseEvent) {
   if (!dragState.value.isDragging || !dragState.value.dragClone) return
 
+  // temporarily disable pointer events
+  dragState.value.dragClone.style.pointerEvents = 'none'
+
+  // get element under cursor
+  const elementBelow = document.elementFromPoint(e.clientX, e.clientY)
+
+  // re-enable pointer events
+  dragState.value.dragClone.style.pointerEvents = 'auto'
+
+  // update position
   dragState.value.dragClone.style.left = `${e.clientX - dragState.value.offsetX}px`
   dragState.value.dragClone.style.top = `${e.clientY - dragState.value.offsetY}px`
+
+  // cursor feedback depending on card type and hovered deck type
+  if (elementBelow) {
+    const isMainDeck = elementBelow.id === 'main-deck'
+    const isExtraDeck = elementBelow.id === 'extra-deck'
+
+    const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
+    const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
+
+    if ((isExtraDeck && mainDeckCards.includes(props.card.frameType)) || (isMainDeck && extraDeckCards.includes(props.card.frameType))) {
+      dragState.value.dragClone.style.cursor = 'not-allowed'
+    } else {
+      dragState.value.dragClone.style.cursor = 'grabbing'
+    }
+  }
 }
 
 function handleMouseUp() {
@@ -85,16 +111,14 @@ onUnmounted(() => {
   document.removeEventListener('mouseup', handleMouseUp)
 
   // cleanup any remaining clone
-  if (dragState.value.dragClone) {
-    document.body.removeChild(dragState.value.dragClone)
-  }
+  if (dragState.value.dragClone) document.body.removeChild(dragState.value.dragClone)
 })
 </script>
 <template>
   <TooltipProvider :delay-duration="100" :disable-hoverable-content="true">
     <TooltipRoot>
       <TooltipTrigger as-child>
-        <div class="hidden lg:block draggable" @mousedown.left="handleMouseDown">
+        <div class="hidden lg:block cursor-grab draggable" @mousedown.left="handleMouseDown">
           <div
             class="relative rounded-sm active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
             <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
