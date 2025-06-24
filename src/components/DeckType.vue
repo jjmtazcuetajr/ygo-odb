@@ -16,17 +16,17 @@ function determineDeckTypeId(decktype: string) {
     <div class="flex flex-wrap items-center gap-x-4">
       <span class="text-lg sm:text-xl font-bold">{{ type }} Deck</span>
       <span class="text-xs sm:text-base">
-        <span :id="determineDeckTypeId(type) + '-deck-count'">0 Cards</span>
+        <span>0 Cards</span>
         (<template v-if="type === 'Main' || type === 'Side'">
-          <span :id="(type === 'Main' ? 'md' : 'sd') + '-monster-count'">0 Monsters</span> |
-          <span :id="(type === 'Main' ? 'md' : 'sd') + '-spell-count'">0 Spells</span> |
-          <span :id="(type === 'Main' ? 'md' : 'sd') + '-trap-count'">0 Traps</span>
+          <span>0 Monsters</span> |
+          <span>0 Spells</span> |
+          <span>0 Traps</span>
         </template>
         <template v-else>
-          <span id="fusion-count">0 Fusion</span> |
-          <span id="synchro-count">0 Synchro</span> |
-          <span id="xyz-count">0 Xyz</span> |
-          <span id="link-count">0 Link</span>
+          <span>0 Fusion</span> |
+          <span>0 Synchro</span> |
+          <span>0 Xyz</span> |
+          <span>0 Link</span>
         </template>)
       </span>
     </div>
