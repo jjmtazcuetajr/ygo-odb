@@ -9,10 +9,14 @@ import { Trash2, CircleHelp, Search } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { banRegion } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 
-const store = useYgoCardsStore()
-const { banList } = storeToRefs(store)
+const cardsStore = useYgoCardsStore()
+const { banList } = storeToRefs(cardsStore)
+
+const deckStore = useDeckStore()
+const { mainDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, sideDeck, sideDeckMonsters, sideDeckSpells, sideDeckTraps } = storeToRefs(deckStore)
 
 const isSideDrawerShown = ref(false)
 
@@ -73,9 +77,11 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
       <div class="flex flex-col gap-3 grow shrink basis-0">
         <SelectOption id="ban-list" label-text="Ban List" parent-class="flex items-center gap-1" :options="banRegion"
           v-model="banList" />
-        <DeckType type="main" />
-        <DeckType type="extra" />
-        <DeckType type="side" />
+        <DeckType type="main" :deck="mainDeck" :monster-count="mainDeckMonsters.length"
+          :spell-count="mainDeckSpells.length" :trap-count="mainDeckTraps.length" />
+        <DeckType type="extra" :deck="[]" />
+        <DeckType type="side" :deck="sideDeck" :monster-count="sideDeckMonsters.length"
+          :spell-count="sideDeckSpells.length" :trap-count="sideDeckTraps.length" />
       </div>
       <transition name="nested">
         <SearchResults v-if="isSideDrawerShown" @handle-overlay-click="closeSideDrawer"

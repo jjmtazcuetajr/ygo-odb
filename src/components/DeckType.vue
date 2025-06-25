@@ -1,7 +1,23 @@
 <script setup lang="ts">
+import CardTooltip from './CardTooltip.vue'
+import type { YGOCardData } from '@/utils/interfaces'
+import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { storeToRefs } from 'pinia'
+
 defineProps<{
   type: 'main' | 'extra' | 'side'
+  deck: YGOCardData[]
+  monsterCount?: number
+  spellCount?: number
+  trapCount?: number
+  fusionCount?: number
+  synchroCount?: number
+  xyzCount?: number
+  linkCount?: number
 }>()
+
+const cardsStore = useYgoCardsStore()
+const { banList } = storeToRefs(cardsStore)
 
 type DeckProps = {
   name: string
@@ -27,22 +43,24 @@ const deckTypeMap: Record<string, DeckProps> = {
     <div class="flex flex-wrap items-center gap-x-4">
       <span class="text-lg sm:text-xl font-bold">{{ deckTypeMap[type].name }} Deck</span>
       <span class="text-xs sm:text-base">
-        <span>0 Cards</span>
+        <span>{{ deck.length }} Cards</span>
         (<template v-if="type === 'main' || type === 'side'">
-          <span>0 Monsters</span> |
-          <span>0 Spells</span> |
-          <span>0 Traps</span>
+          <span>{{ monsterCount }} Monsters</span> |
+          <span>{{ spellCount }} Spells</span> |
+          <span>{{ trapCount }} Traps</span>
         </template>
         <template v-else>
-          <span>0 Fusion</span> |
-          <span>0 Synchro</span> |
-          <span>0 Xyz</span> |
-          <span>0 Link</span>
+          <span>{{ fusionCount }} Fusion</span> |
+          <span>{{ synchroCount }} Synchro</span> |
+          <span>{{ xyzCount }} Xyz</span> |
+          <span>{{ linkCount }} Link</span>
         </template>)
       </span>
     </div>
     <div :id="type + '-deck'" :class="deckTypeMap[type].colors"
       class="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-15 gap-1 sm:gap-1.5 p-1 sm:p-1.5 content-start mt-1 border rounded-md transition-colors duration-400 min-h-30">
+      <CardTooltip v-for="(card, index) in deck" :key="index" :card="card" :ban-list="banList" :from="type"
+        :index="index" />
     </div>
   </div>
 </template>
