@@ -70,12 +70,12 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
       </div>
     </div>
     <div class="flex gap-4 mt-3">
-      <div class="flex flex-col gap-3 grow">
+      <div class="flex flex-col gap-3 grow shrink basis-0">
         <SelectOption id="ban-list" label-text="Ban List" parent-class="flex items-center gap-1" :options="banRegion"
           v-model="banList" />
-        <DeckType type="Main" />
-        <DeckType type="Extra" />
-        <DeckType type="Side" />
+        <DeckType type="main" />
+        <DeckType type="extra" />
+        <DeckType type="side" />
       </div>
       <transition name="nested">
         <SearchResults v-if="isSideDrawerShown" @handle-overlay-click="closeSideDrawer"
