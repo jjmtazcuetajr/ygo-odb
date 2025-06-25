@@ -66,7 +66,7 @@ onMounted(() => { searchValue.value = filters.value.search })
 </script>
 <template>
   <div id="overlay" @click="$emit('handleOverlayClick', $event)"
-    class="fixed lg:static inset-0 lg:w-[35%] xl:w-[30%] bg-neutral-700/70 dark:bg-neutral-950/70 lg:bg-[unset] dark:lg:bg-[unset]">
+    class="fixed lg:static inset-0 lg:w-[35%] xl:w-[30%] bg-neutral-700/70 dark:bg-neutral-950/70 lg:bg-[unset] dark:lg:bg-[unset] 2xl:max-h-[784px]">
     <div
       class="inner flex flex-col gap-2 p-3 bg-neutral-100 dark:bg-neutral-800 border-r lg:border-r-0 border-y lg:border-y-0 rounded-r-lg lg:rounded-l-lg border-neutral-400 dark:border-neutral-500 shadow-[5px_15px_15px_5px_#555] dark:shadow-[5px_15px_15px_5px_#000] lg:shadow-[unset] dark:lg:shadow-[unset] w-[70%] sm:w-[60%] md:w-[50%] lg:w-full h-full transition-[background-color,border-color,box-shadow] duration-400">
       <div class="flex lg:hidden items-center">
@@ -114,7 +114,7 @@ onMounted(() => { searchValue.value = filters.value.search })
       </div>
       <div class="flex flex-col h-full" v-else>
         <div
-          class="grid grid-cols-3 sm:grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-2 sm:px-2 mt-6 content-start dark:[color-scheme:dark]">
+          class="grid grid-cols-3 sm:grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-2 sm:px-2 mt-3 content-start dark:[color-scheme:dark]">
           <div v-for="card in paginatedResults" :key="card.id">
             <div v-if="!allCurrentPageImagesLoaded"
               class="flex justify-center items-center rounded-sm aspect-[268/391] bg-neutral-300 dark:bg-neutral-700 transition-[background-color] duration-400">

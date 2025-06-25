@@ -32,7 +32,7 @@ onMounted(() => {
 onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeScreens) })
 </script>
 <template>
-  <main class="p-5 dark:text-neutral-300 transition-[color] duration-400">
+  <main class="flex flex-col h-full p-5 dark:text-neutral-300 transition-[color] duration-400">
     <div class="flex justify-between flex-wrap gap-3">
       <div>
         <h2 class="text-3xl font-medium">YGO ODB</h2>
@@ -69,7 +69,7 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
         </div>
       </div>
     </div>
-    <div class="flex gap-4 mt-3">
+    <div class="flex gap-4 mt-3 h-full">
       <div class="flex flex-col gap-3 grow shrink basis-0">
         <SelectOption id="ban-list" label-text="Ban List" parent-class="flex items-center gap-1" :options="banRegion"
           v-model="banList" />
