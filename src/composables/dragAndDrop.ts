@@ -1,15 +1,46 @@
 import { ref } from 'vue'
 import type { DragState, YGOCardData } from '@/utils/interfaces'
+import { useDeckStore } from '@/stores/deck'
+import { storeToRefs } from 'pinia'
 
 export function useDragAndDrop() {
   const dragState = ref<DragState>({
     isDragging: false,
     dragClone: null,
     offsetX: 0,
-    offsetY: 0
+    offsetY: 0,
+    draggedFrom: null,
+    draggedFromIndex: null,
+    currentDropTarget: null,
+    insertBeforeIndex: null
   })
 
-  function handleMouseDown(e: MouseEvent, card: YGOCardData) {
+  const deckStore = useDeckStore()
+  const { mainDeck, extraDeck, sideDeck } = storeToRefs(deckStore)
+
+  function setDropTarget(target: 'main' | 'extra' | 'side' | null, insertIndex: number | null) {
+    dragState.value.currentDropTarget = target
+    dragState.value.insertBeforeIndex = insertIndex
+  }
+
+  function findInsertIndex(dropzone: Element, mouseY: number, zoneName: 'main' | 'extra' | 'side'): number | null {
+    const draggables = Array.from(dropzone.querySelectorAll('.draggable'))
+    const zoneDraggables = zoneName === 'main' ? deckStore.mainDeck : zoneName === 'extra' ? deckStore.extraDeck : deckStore.sideDeck
+
+    if ((dragState.value.draggedFrom === zoneName && zoneDraggables.length < 2) || dragState.value.draggedFrom === 'grid') return null
+
+    for (let index = 0; index < draggables.length; index++) {
+      const draggable = draggables[index]
+      const rect = draggable.getBoundingClientRect()
+      const midY = rect.top + rect.height / 2
+
+      if (mouseY < midY) return index
+    }
+
+    return null
+  }
+
+  function handleMouseDown(e: MouseEvent, card: YGOCardData, from: 'grid' | 'main' | 'extra' | 'side', index: number) {
     e.preventDefault()
 
     const target = e.currentTarget as HTMLElement
@@ -43,6 +74,9 @@ export function useDragAndDrop() {
     function handleMouseMove(e: MouseEvent) {
       if (!dragState.value.isDragging || !dragState.value.dragClone) return
 
+      dragState.value.draggedFrom = from
+      dragState.value.draggedFromIndex = index
+
       // temporarily disable pointer events
       dragState.value.dragClone.style.pointerEvents = 'none'
 
@@ -60,6 +94,7 @@ export function useDragAndDrop() {
       if (elementBelow) {
         const isMainDeck = elementBelow.id === 'main-deck'
         const isExtraDeck = elementBelow.id === 'extra-deck'
+        const isSideDeck = elementBelow.id === 'side-deck'
 
         const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
         const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
@@ -68,6 +103,17 @@ export function useDragAndDrop() {
           dragState.value.dragClone.style.cursor = 'not-allowed'
         } else {
           dragState.value.dragClone.style.cursor = 'grabbing'
+
+          if (isMainDeck) {
+            const insertIndex = findInsertIndex(elementBelow, e.clientY, 'main')
+            setDropTarget('main', insertIndex)
+          } else if (isExtraDeck) {
+            const insertIndex = findInsertIndex(elementBelow, e.clientY, 'extra')
+            setDropTarget('extra', insertIndex)
+          } else if (isSideDeck) {
+            const insertIndex = findInsertIndex(elementBelow, e.clientY, 'side')
+            setDropTarget('side', insertIndex)
+          }
         }
       }
     }
@@ -88,8 +134,34 @@ export function useDragAndDrop() {
         element.removeAttribute('style')
       })
 
+      const targetZone = dragState.value.currentDropTarget
+      const insertIndex = dragState.value.insertBeforeIndex
+
+      if (dragState.value.draggedFrom === 'main') {
+        mainDeck.value.splice(dragState.value.draggedFromIndex!, 1)
+      } else if (dragState.value.draggedFrom === 'extra') {
+        extraDeck.value.splice(dragState.value.draggedFromIndex!, 1)
+      } else if (dragState.value.draggedFrom === 'side') {
+        sideDeck.value.splice(dragState.value.draggedFromIndex!, 1)
+      }
+
+      if (targetZone === 'main') {
+        if (insertIndex !== null) mainDeck.value.splice(insertIndex, 0, card)
+        else mainDeck.value.push(card)
+      } else if (targetZone === 'extra') {
+        if (insertIndex !== null) extraDeck.value.splice(insertIndex, 0, card)
+        else extraDeck.value.push(card)
+      } else if (targetZone === 'side') {
+        if (insertIndex !== null) sideDeck.value.splice(insertIndex, 0, card)
+        else sideDeck.value.push(card)
+      }
+
       // reset drag state
       dragState.value.isDragging = false
+      dragState.value.draggedFrom = null
+      dragState.value.draggedFromIndex = null
+      dragState.value.currentDropTarget = null
+      dragState.value.insertBeforeIndex = null
 
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)

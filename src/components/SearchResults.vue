@@ -115,7 +115,7 @@ onMounted(() => { searchValue.value = filters.value.search })
       <div class="flex flex-col h-full" v-else>
         <div
           class="grid grid-cols-3 sm:grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-2 sm:px-2 mt-3 content-start dark:[color-scheme:dark]">
-          <div v-for="card in paginatedResults" :key="card.id">
+          <div v-for="(card, index) in paginatedResults" :key="card.id">
             <div v-if="!allCurrentPageImagesLoaded"
               class="flex justify-center items-center rounded-sm aspect-[268/391] bg-neutral-300 dark:bg-neutral-700 transition-[background-color] duration-400">
               <div
@@ -123,7 +123,7 @@ onMounted(() => { searchValue.value = filters.value.search })
               </div>
             </div>
             <template v-else>
-              <CardTooltip :card="card" :ban-list="banList" />
+              <CardTooltip :card="card" :ban-list="banList" from="grid" :index="index" />
               <CardDialog :card="card" :ban-list="banList" />
             </template>
           </div>
