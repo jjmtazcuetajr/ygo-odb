@@ -105,6 +105,10 @@ export interface DragState {
   dragClone: HTMLImageElement | null
   offsetX: number
   offsetY: number
+  draggedFrom: 'grid' | 'main' | 'extra' | 'side' | null
+  draggedFromIndex: number | null
+  currentDropTarget: 'main' | 'extra' | 'side' | null
+  insertBeforeIndex: number | null
 }
 
 export type CardCategory = 'monster' | 'spell' | 'trap'

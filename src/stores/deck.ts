@@ -9,7 +9,6 @@ export const useDeckStore = defineStore('deck', () => {
   const sideDeck = ref<YGOCardData[]>([])
 
   // getters
-  const mainDeckCount = computed(() => { return mainDeck.value.length })
   const mainDeckMonsters = computed(() => {
     return mainDeck.value.filter((card: YGOCardData) => {
       return card.frameType !== 'spell' && card.frameType !== 'trap'
@@ -26,10 +25,21 @@ export const useDeckStore = defineStore('deck', () => {
     })
   })
 
-  // actions
-  function addToMainDeck(card: YGOCardData) {
-    mainDeck.value.push(card)
-  }
+  const sideDeckMonsters = computed(() => {
+    return sideDeck.value.filter((card: YGOCardData) => {
+      return card.frameType !== 'spell' && card.frameType !== 'trap'
+    })
+  }) 
+  const sideDeckSpells = computed(() => {
+    return sideDeck.value.filter((card: YGOCardData) => {
+      return card.frameType === 'spell'
+    })
+  })
+  const sideDeckTraps = computed(() => {
+    return sideDeck.value.filter((card: YGOCardData) => {
+      return card.frameType === 'trap'
+    })
+  })
 
-  return { mainDeck, extraDeck, sideDeck, mainDeckCount, mainDeckMonsters, mainDeckSpells, mainDeckTraps, addToMainDeck }
+  return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, sideDeckMonsters, sideDeckSpells, sideDeckTraps }
 })
