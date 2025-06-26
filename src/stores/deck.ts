@@ -25,6 +25,27 @@ export const useDeckStore = defineStore('deck', () => {
     })
   })
 
+  const fusionMonsters = computed(() => {
+    return extraDeck.value.filter((card: YGOCardData) => {
+      return card.frameType.toLowerCase().includes('fusion')
+    })
+  }) 
+  const synchroMonsters = computed(() => {
+    return extraDeck.value.filter((card: YGOCardData) => {
+      return card.frameType.toLowerCase().includes('synchro')
+    })
+  })
+  const xyzMonsters = computed(() => {
+    return extraDeck.value.filter((card: YGOCardData) => {
+      return card.frameType.toLowerCase().includes('xyz')
+    })
+  })
+  const linkMonsters = computed(() => {
+    return extraDeck.value.filter((card: YGOCardData) => {
+      return card.frameType === 'link'
+    })
+  })
+
   const sideDeckMonsters = computed(() => {
     return sideDeck.value.filter((card: YGOCardData) => {
       return card.frameType !== 'spell' && card.frameType !== 'trap'
@@ -41,5 +62,6 @@ export const useDeckStore = defineStore('deck', () => {
     })
   })
 
-  return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, sideDeckMonsters, sideDeckSpells, sideDeckTraps }
+  return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
+    sideDeckMonsters, sideDeckSpells, sideDeckTraps }
 })
