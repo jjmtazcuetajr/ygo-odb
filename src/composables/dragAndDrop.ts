@@ -102,24 +102,24 @@ export function useDragAndDrop() {
           dragState.value.dragClone.style.cursor = 'not-allowed'
         } else {
           dragState.value.dragClone.style.cursor = 'grabbing'
-        }
 
-        // find and determine dropzone
-        const mainDeckDropzone = elementBelow.closest('#main-deck')
-        const extraDeckDropzone = elementBelow.closest('#extra-deck')
-        const sideDeckDropzone = elementBelow.closest('#side-deck')
+          // find and determine dropzone
+          const mainDeckDropzone = elementBelow.closest('#main-deck')
+          const extraDeckDropzone = elementBelow.closest('#extra-deck')
+          const sideDeckDropzone = elementBelow.closest('#side-deck')
 
-        if (mainDeckDropzone) {
-          const insertIndex = findInsertIndex(mainDeckDropzone, e.clientY, 'main')
-          setDropTarget('main', insertIndex)
-        } else if (extraDeckDropzone) {
-          const insertIndex = findInsertIndex(extraDeckDropzone, e.clientY, 'extra')
-          setDropTarget('extra', insertIndex)
-        } else if (sideDeckDropzone) {
-          const insertIndex = findInsertIndex(sideDeckDropzone, e.clientY, 'side')
-          setDropTarget('side', insertIndex)
-        } else {
-          setDropTarget(null, null)
+          if (mainDeckDropzone) {
+            const insertIndex = findInsertIndex(mainDeckDropzone, e.clientY, 'main')
+            setDropTarget('main', insertIndex)
+          } else if (extraDeckDropzone) {
+            const insertIndex = findInsertIndex(extraDeckDropzone, e.clientY, 'extra')
+            setDropTarget('extra', insertIndex)
+          } else if (sideDeckDropzone) {
+            const insertIndex = findInsertIndex(sideDeckDropzone, e.clientY, 'side')
+            setDropTarget('side', insertIndex)
+          } else {
+            setDropTarget(null, null)
+          }
         }
       }
     }
