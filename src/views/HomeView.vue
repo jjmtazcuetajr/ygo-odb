@@ -16,7 +16,8 @@ const cardsStore = useYgoCardsStore()
 const { banList } = storeToRefs(cardsStore)
 
 const deckStore = useDeckStore()
-const { mainDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, sideDeck, sideDeckMonsters, sideDeckSpells, sideDeckTraps } = storeToRefs(deckStore)
+const { mainDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, sideDeck, sideDeckMonsters, sideDeckSpells, sideDeckTraps,
+  extraDeck, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters } = storeToRefs(deckStore)
 
 const isSideDrawerShown = ref(false)
 
@@ -79,7 +80,8 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
           v-model="banList" />
         <DeckType type="main" :deck="mainDeck" :monster-count="mainDeckMonsters.length"
           :spell-count="mainDeckSpells.length" :trap-count="mainDeckTraps.length" />
-        <DeckType type="extra" :deck="[]" />
+        <DeckType type="extra" :deck="extraDeck" :fusion-count="fusionMonsters.length"
+          :synchro-count="synchroMonsters.length" :xyz-count="xyzMonsters.length" :link-count="linkMonsters.length" />
         <DeckType type="side" :deck="sideDeck" :monster-count="sideDeckMonsters.length"
           :spell-count="sideDeckSpells.length" :trap-count="sideDeckTraps.length" />
       </div>
