@@ -90,11 +90,10 @@ export function useDragAndDrop() {
       dragState.value.dragClone.style.left = `${e.clientX - dragState.value.offsetX}px`
       dragState.value.dragClone.style.top = `${e.clientY - dragState.value.offsetY}px`
 
-      // cursor feedback depending on card type and hovered deck type
       if (elementBelow) {
+        // cursor feedback depending on card type and hovered deck type
         const isMainDeck = elementBelow.id === 'main-deck'
         const isExtraDeck = elementBelow.id === 'extra-deck'
-        const isSideDeck = elementBelow.id === 'side-deck'
 
         const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
         const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
@@ -103,17 +102,24 @@ export function useDragAndDrop() {
           dragState.value.dragClone.style.cursor = 'not-allowed'
         } else {
           dragState.value.dragClone.style.cursor = 'grabbing'
+        }
 
-          if (isMainDeck) {
-            const insertIndex = findInsertIndex(elementBelow, e.clientY, 'main')
-            setDropTarget('main', insertIndex)
-          } else if (isExtraDeck) {
-            const insertIndex = findInsertIndex(elementBelow, e.clientY, 'extra')
-            setDropTarget('extra', insertIndex)
-          } else if (isSideDeck) {
-            const insertIndex = findInsertIndex(elementBelow, e.clientY, 'side')
-            setDropTarget('side', insertIndex)
-          }
+        // find and determine dropzone
+        const mainDeckDropzone = elementBelow.closest('#main-deck')
+        const extraDeckDropzone = elementBelow.closest('#extra-deck')
+        const sideDeckDropzone = elementBelow.closest('#side-deck')
+
+        if (mainDeckDropzone) {
+          const insertIndex = findInsertIndex(mainDeckDropzone, e.clientY, 'main')
+          setDropTarget('main', insertIndex)
+        } else if (extraDeckDropzone) {
+          const insertIndex = findInsertIndex(extraDeckDropzone, e.clientY, 'extra')
+          setDropTarget('extra', insertIndex)
+        } else if (sideDeckDropzone) {
+          const insertIndex = findInsertIndex(sideDeckDropzone, e.clientY, 'side')
+          setDropTarget('side', insertIndex)
+        } else {
+          setDropTarget(null, null)
         }
       }
     }
@@ -137,6 +143,7 @@ export function useDragAndDrop() {
       const targetZone = dragState.value.currentDropTarget
       const insertIndex = dragState.value.insertBeforeIndex
 
+      // remove from source
       if (dragState.value.draggedFrom === 'main') {
         mainDeck.value.splice(dragState.value.draggedFromIndex!, 1)
       } else if (dragState.value.draggedFrom === 'extra') {
@@ -145,6 +152,7 @@ export function useDragAndDrop() {
         sideDeck.value.splice(dragState.value.draggedFromIndex!, 1)
       }
 
+      // drop to new dropzone
       if (targetZone === 'main') {
         if (insertIndex !== null) mainDeck.value.splice(insertIndex, 0, card)
         else mainDeck.value.push(card)
