@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { useDragStore } from '@/stores/drag'
 import { storeToRefs } from 'pinia'
+import type { YGOCardData } from '@/utils/interfaces'
 
 export function useDragAndDropV2() {
   const dragStore = useDragStore()
@@ -13,7 +14,7 @@ export function useDragAndDropV2() {
    * Start the dragging logic as soon as the `mousedown` event of a draggable is triggered
    * @param e Event object
    */
-  function handleMouseDown(e: MouseEvent) {
+  function handleMouseDown(e: MouseEvent, card: YGOCardData) {
     e.preventDefault()
 
     const target = e.currentTarget as HTMLElement
@@ -39,10 +40,12 @@ export function useDragAndDropV2() {
      */
     function handleMouseMove(e: MouseEvent) {
       if (!dragState.value.isDragging || !dragState.value.ghostElement) return
-      
+
       const positionX = e.clientX - startPos.value.x
       const positionY = e.clientY - startPos.value.y
       updateGhostPosition(positionX, positionY)
+
+      cursorFeedBack(e.clientX, e.clientY, card.frameType)
     }
 
     /**
@@ -67,6 +70,39 @@ export function useDragAndDropV2() {
 
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
+  }
+
+  /**
+   * Update cursor style based on the hovered dropzone, card type, and card limit
+   * @param x X coordinate of mouse
+   * @param y Y coordinate of mouse
+   * @param cardFrame Type of card based on its frame color
+   */
+  function cursorFeedBack(x: number, y: number, cardFrame: string) {
+    if (!dragState.value.ghostElement) return
+
+    // temporarily disable pointer events
+    dragState.value.ghostElement.style.pointerEvents = 'none'
+
+    // get element under cursor
+    const elementBelow = document.elementFromPoint(x, y)
+
+    // re-enable pointer events
+    dragState.value.ghostElement.style.pointerEvents = 'auto'
+
+    if (elementBelow) {
+      const mainDeckDropzone = elementBelow.closest('#main-deck')
+      const extraDeckDropzone = elementBelow.closest('#extra-deck')
+      const sideDeckDropzone = elementBelow.closest('#side-deck')
+      const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
+      const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
+
+      if ((extraDeckDropzone && mainDeckCards.includes(cardFrame)) || (mainDeckDropzone && extraDeckCards.includes(cardFrame))) {
+        dragState.value.ghostElement.style.cursor = 'not-allowed'
+      } else {
+        dragState.value.ghostElement.style.cursor = 'grabbing'
+      }
+    }
   }
 
   return { handleMouseDown }
