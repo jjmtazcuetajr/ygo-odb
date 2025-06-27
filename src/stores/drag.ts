@@ -6,7 +6,8 @@ export const useDragStore = defineStore('drag', () => {
   // state
   const dragState = ref<DragStateV2>({
     isDragging: false,
-    ghostElement: null
+    ghostElement: null,
+    previewElement: null
   })
 
   // actions
@@ -63,5 +64,29 @@ export const useDragStore = defineStore('drag', () => {
     }
   }
 
-  return { dragState, startDrag, endDrag, createGhostElement, updateGhostPosition, removeGhostElement }
+  /**
+   * Create a card image preview when hovering over a valid dropzone
+   */
+  function createPreview() {
+    if (dragState.value.ghostElement) {
+      const previewImg = document.createElement('img')
+      previewImg.className = 'opacity-70 rounded-sm aspect-[268/391] text-xs preview'
+      previewImg.src = dragState.value.ghostElement.src
+      previewImg.alt = dragState.value.ghostElement.alt
+      dragState.value.previewElement = previewImg
+    }
+  }
+
+  /**
+   * Remove a card image preview when hovering away to a valid dropzone
+   */
+  function removePreview() {
+    if (dragState.value.previewElement) {
+      const container = dragState.value.previewElement.parentNode
+      if (container) container.removeChild(dragState.value.previewElement)
+      dragState.value.previewElement = null
+    }
+  }
+
+  return { dragState, startDrag, endDrag, createGhostElement, updateGhostPosition, removeGhostElement, createPreview, removePreview }
 })

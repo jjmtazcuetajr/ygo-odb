@@ -6,7 +6,7 @@ import type { YGOCardData } from '@/utils/interfaces'
 export function useDragAndDropV2() {
   const dragStore = useDragStore()
   const { dragState } = storeToRefs(dragStore)
-  const { startDrag, endDrag, createGhostElement, updateGhostPosition, removeGhostElement } = useDragStore()
+  const { startDrag, endDrag, createGhostElement, updateGhostPosition, removeGhostElement, createPreview, removePreview } = useDragStore()
 
   const startPos = ref({x: 0, y: 0})
 
@@ -63,6 +63,7 @@ export function useDragAndDropV2() {
       })
 
       endDrag()
+      removePreview()
 
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
@@ -101,7 +102,39 @@ export function useDragAndDropV2() {
         dragState.value.ghostElement.style.cursor = 'not-allowed'
       } else {
         dragState.value.ghostElement.style.cursor = 'grabbing'
+
+        // manage card image previews
+        if (mainDeckDropzone) addPreviewToDropzone(mainDeckDropzone)
+        else if (extraDeckDropzone) addPreviewToDropzone(extraDeckDropzone)
+        else if (sideDeckDropzone) addPreviewToDropzone(sideDeckDropzone)
+        else removePreview()
       }
+    }
+  }
+
+  /**
+   * Insert the card image preview at the specified index
+   * @param container Dropzone to insert the preview into
+   * @param index Index to use as basis for insertion
+   */
+  function insertPreviewAtIndex(container: Element, index: number) {
+    if (!dragState.value.previewElement) return
+
+    const children = Array.from(container.children)
+    if (index >= children.length) container.appendChild(dragState.value.previewElement) // if dropzone is empty
+    else container.insertBefore(dragState.value.previewElement, children[index])
+  }
+
+  /**
+   * Add the card image preview at the valid dropzone
+   * @param container Dropzone to add the preview into
+   */
+  function addPreviewToDropzone(container: Element) {
+    const images = Array.from(container.children)
+    const previews = container.querySelectorAll('.preview')
+    if (previews.length < 1) {
+      createPreview()
+      insertPreviewAtIndex(container, images.length)
     }
   }
 
