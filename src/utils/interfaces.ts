@@ -111,6 +111,11 @@ export interface DragState {
   insertBeforeIndex: number | null
 }
 
+export interface DragStateV2 {
+  isDragging: boolean
+  ghostElement: HTMLImageElement | null
+}
+
 export type CardCategory = 'monster' | 'spell' | 'trap'
 export type SortDirection = 'asc' | 'desc'
 export type SortByMonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'link-rating'
