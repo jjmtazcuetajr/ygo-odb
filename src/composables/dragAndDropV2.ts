@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { reactive } from 'vue'
 import { useDragStore } from '@/stores/drag'
 import { storeToRefs } from 'pinia'
 import type { YGOCardData } from '@/utils/interfaces'
@@ -8,7 +8,7 @@ export function useDragAndDropV2() {
   const { dragState } = storeToRefs(dragStore)
   const { startDrag, endDrag, createGhostElement, updateGhostPosition } = useDragStore()
 
-  const startPos = ref({x: 0, y: 0})
+  const offset = reactive({x: 0, y: 0})
 
   /**
    * Start the dragging logic as soon as the `mousedown` event of a draggable is triggered
@@ -22,12 +22,12 @@ export function useDragAndDropV2() {
 
     // calculate offset from mouse to top-left of image
     const rect = imgElement.getBoundingClientRect()
-    startPos.value.x = e.clientX - rect.left
-    startPos.value.y = e.clientY - rect.top
+    offset.x = (rect.width - 20) / 2
+    offset.y = (rect.height - 20) / 2
 
     startDrag()
-    const startX = e.clientX - startPos.value.x
-    const startY = e.clientY - startPos.value.y
+    const startX = e.clientX - offset.x
+    const startY = e.clientY - offset.y
     createGhostElement(imgElement, rect.width, startX, startY)
 
     // add visual feedback to original
@@ -41,8 +41,8 @@ export function useDragAndDropV2() {
     function handleMouseMove(e: MouseEvent) {
       if (!dragState.value.isDragging || !dragState.value.ghostElement) return
 
-      const positionX = e.clientX - startPos.value.x
-      const positionY = e.clientY - startPos.value.y
+      const positionX = e.clientX - offset.x
+      const positionY = e.clientY - offset.y
       updateGhostPosition(positionX, positionY)
 
       cursorFeedBack(e.clientX, e.clientY, card.frameType)

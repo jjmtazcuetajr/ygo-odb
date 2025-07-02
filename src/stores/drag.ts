@@ -35,7 +35,7 @@ export const useDragStore = defineStore('drag', () => {
   function createGhostElement(originalElement: HTMLElement, width: number, x: number, y: number) {
     const ghost = originalElement.cloneNode(true) as HTMLImageElement
     ghost.className = 'fixed z-[9999] opacity-80 rounded-sm aspect-[268/391] text-xs shadow-md shadow-neutral-400 dark:shadow-neutral-950'
-    ghost.width = width
+    ghost.width = width - 20
     ghost.style.left = `${x}px`
     ghost.style.top = `${y}px`
     document.body.appendChild(ghost)
