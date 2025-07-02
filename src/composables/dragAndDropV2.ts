@@ -25,7 +25,7 @@ export function useDragAndDropV2() {
     offset.x = (rect.width - 20) / 2
     offset.y = (rect.height - 20) / 2
 
-    startDrag()
+    startDrag(card)
     const startX = e.clientX - offset.x
     const startY = e.clientY - offset.y
     createGhostElement(imgElement, rect.width, startX, startY)
@@ -45,7 +45,7 @@ export function useDragAndDropV2() {
       const positionY = e.clientY - offset.y
       updateGhostPosition(positionX, positionY)
 
-      cursorFeedBack(e.clientX, e.clientY, card.frameType)
+      handleDragMove(e)
     }
 
     /**
@@ -72,29 +72,27 @@ export function useDragAndDropV2() {
   }
 
   /**
-   * Update cursor style based on the hovered dropzone, card type, and card limit
-   * @param x X coordinate of mouse
-   * @param y Y coordinate of mouse
-   * @param cardFrame Type of card based on its frame color
+   * Handle logic while dragging is ongoing
+   * @param e Event object
    */
-  function cursorFeedBack(x: number, y: number, cardFrame: string) {
+  function handleDragMove(e: MouseEvent) {
     if (!dragState.value.ghostElement) return
 
     // temporarily disable pointer events
     dragState.value.ghostElement.style.pointerEvents = 'none'
 
     // get element under cursor
-    const elementBelow = document.elementFromPoint(x, y)
+    const elementBelow = document.elementFromPoint(e.clientX, e.clientY)
 
     // re-enable pointer events
     dragState.value.ghostElement.style.pointerEvents = 'auto'
 
-    if (elementBelow) {
+    if (elementBelow && dragState.value.draggedItem) {
       const mainDeckDropzone = elementBelow.closest('#main-deck')
       const extraDeckDropzone = elementBelow.closest('#extra-deck')
-      const sideDeckDropzone = elementBelow.closest('#side-deck')
       const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
       const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
+      const cardFrame = dragState.value.draggedItem.frameType
 
       if ((extraDeckDropzone && mainDeckCards.includes(cardFrame)) || (mainDeckDropzone && extraDeckCards.includes(cardFrame))) {
         dragState.value.ghostElement.style.cursor = 'not-allowed'

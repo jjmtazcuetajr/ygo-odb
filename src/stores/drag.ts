@@ -1,20 +1,22 @@
 import { ref } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
-import type { DragStateV2 } from '@/utils/interfaces'
+import type { DragStateV2, YGOCardData } from '@/utils/interfaces'
 
 export const useDragStore = defineStore('drag', () => {
   // state
   const dragState = ref<DragStateV2>({
     isDragging: false,
-    ghostElement: null
+    ghostElement: null,
+    draggedItem: null
   })
 
   // actions
   /**
    * Start the dragging process
    */
-  function startDrag() {
+  function startDrag(card: YGOCardData) {
     dragState.value.isDragging = true
+    dragState.value.draggedItem = card
   }
 
   /**
@@ -22,6 +24,7 @@ export const useDragStore = defineStore('drag', () => {
    */
   function endDrag() {
     dragState.value.isDragging = false
+    dragState.value.draggedItem = null
     removeGhostElement()
   }
 
