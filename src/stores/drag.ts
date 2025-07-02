@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { defineStore, storeToRefs } from 'pinia'
+import { defineStore } from 'pinia'
 import type { DragStateV2, YGOCardData } from '@/utils/interfaces'
 
 export const useDragStore = defineStore('drag', () => {
@@ -7,12 +7,14 @@ export const useDragStore = defineStore('drag', () => {
   const dragState = ref<DragStateV2>({
     isDragging: false,
     ghostElement: null,
-    draggedItem: null
+    draggedItem: null,
+    currentDropTarget: null
   })
 
   // actions
   /**
    * Start the dragging process
+   * @param card Object containing card info
    */
   function startDrag(card: YGOCardData) {
     dragState.value.isDragging = true
@@ -25,6 +27,7 @@ export const useDragStore = defineStore('drag', () => {
   function endDrag() {
     dragState.value.isDragging = false
     dragState.value.draggedItem = null
+    dragState.value.currentDropTarget = null
     removeGhostElement()
   }
 
@@ -68,5 +71,13 @@ export const useDragStore = defineStore('drag', () => {
     }
   }
 
-  return { dragState, startDrag, endDrag, createGhostElement, updateGhostPosition }
+  /**
+   * Set the drop target while dragging
+   * @param dropTarget Drop target of either the main, extra, side deck drop zone or outside them
+   */
+  function setDropTarget(dropTarget: 'main' | 'extra' | 'side' | null = null) {
+    dragState.value.currentDropTarget = dropTarget
+  }
+
+  return { dragState, startDrag, endDrag, createGhostElement, updateGhostPosition, setDropTarget }
 })

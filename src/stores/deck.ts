@@ -62,6 +62,31 @@ export const useDeckStore = defineStore('deck', () => {
     })
   })
 
+  // actions
+  /**
+   * Add a card to the main deck
+   * @param card Object containing card info
+   */
+  function addToMainDeck(card: YGOCardData) {
+    mainDeck.value.push(card)
+  }
+
+  /**
+   * Add a card to the extra deck
+   * @param card Object containing card info
+   */
+  function addToExtraDeck(card: YGOCardData) {
+    extraDeck.value.push(card)
+  }
+
+  /**
+   * Add a card to the side deck
+   * @param card Object containing card info
+   */
+  function addToSideDeck(card: YGOCardData) {
+    sideDeck.value.push(card)
+  }
+
   return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
-    sideDeckMonsters, sideDeckSpells, sideDeckTraps }
+    sideDeckMonsters, sideDeckSpells, sideDeckTraps, addToMainDeck, addToExtraDeck, addToSideDeck }
 })

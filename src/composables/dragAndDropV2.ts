@@ -1,12 +1,14 @@
 import { reactive } from 'vue'
 import { useDragStore } from '@/stores/drag'
+import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 import type { YGOCardData } from '@/utils/interfaces'
 
 export function useDragAndDropV2() {
   const dragStore = useDragStore()
   const { dragState } = storeToRefs(dragStore)
-  const { startDrag, endDrag, createGhostElement, updateGhostPosition } = useDragStore()
+  const { startDrag, endDrag, createGhostElement, updateGhostPosition, setDropTarget } = useDragStore()
+  const { addToMainDeck, addToExtraDeck, addToSideDeck } = useDeckStore()
 
   const offset = reactive({x: 0, y: 0})
 
@@ -54,14 +56,7 @@ export function useDragAndDropV2() {
     function handleMouseUp() {
       if (!dragState.value.isDragging) return
 
-      // reset original image appearance
-      const imageItems = document.querySelectorAll('.draggable')
-      imageItems.forEach(item => {
-        const element = item as HTMLElement
-        element.removeAttribute('style')
-      })
-
-      endDrag()
+      handleDragEnd()
 
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
@@ -90,6 +85,7 @@ export function useDragAndDropV2() {
     if (elementBelow && dragState.value.draggedItem) {
       const mainDeckDropzone = elementBelow.closest('#main-deck')
       const extraDeckDropzone = elementBelow.closest('#extra-deck')
+      const sideDeckDropzone = elementBelow.closest('#side-deck')
       const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
       const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
       const cardFrame = dragState.value.draggedItem.frameType
@@ -98,8 +94,43 @@ export function useDragAndDropV2() {
         dragState.value.ghostElement.style.cursor = 'not-allowed'
       } else {
         dragState.value.ghostElement.style.cursor = 'grabbing'
+
+        if (mainDeckDropzone) setDropTarget('main')
+        else if (extraDeckDropzone) setDropTarget('extra')
+        else if (sideDeckDropzone) setDropTarget('side')
+        else setDropTarget()
       }
     }
+  }
+
+  /**
+   * Handle logic when dragging ends
+   */
+  function handleDragEnd() {
+    if (!dragState.value.draggedItem) return
+
+    switch (dragState.value.currentDropTarget) {
+      case 'main':
+        addToMainDeck(dragState.value.draggedItem)
+        break;
+      case 'extra':
+        addToExtraDeck(dragState.value.draggedItem)
+        break;
+      case 'side':
+        addToSideDeck(dragState.value.draggedItem)
+        break;
+      default:
+        break;
+    }
+
+    // reset original image appearance
+    const imageItems = document.querySelectorAll('.draggable')
+    imageItems.forEach(item => {
+      const element = item as HTMLElement
+      element.removeAttribute('style')
+    })
+
+    endDrag()
   }
 
   return { handleMouseDown }
