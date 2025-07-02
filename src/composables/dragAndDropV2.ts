@@ -6,7 +6,7 @@ import type { YGOCardData } from '@/utils/interfaces'
 export function useDragAndDropV2() {
   const dragStore = useDragStore()
   const { dragState } = storeToRefs(dragStore)
-  const { startDrag, endDrag, createGhostElement, updateGhostPosition, removeGhostElement } = useDragStore()
+  const { startDrag, endDrag, createGhostElement, updateGhostPosition } = useDragStore()
 
   const startPos = ref({x: 0, y: 0})
 
@@ -53,7 +53,6 @@ export function useDragAndDropV2() {
      */
     function handleMouseUp() {
       if (!dragState.value.isDragging) return
-      removeGhostElement()
 
       // reset original image appearance
       const imageItems = document.querySelectorAll('.draggable')

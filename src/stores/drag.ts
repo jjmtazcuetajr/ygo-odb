@@ -22,6 +22,7 @@ export const useDragStore = defineStore('drag', () => {
    */
   function endDrag() {
     dragState.value.isDragging = false
+    removeGhostElement()
   }
 
   /**
@@ -63,5 +64,5 @@ export const useDragStore = defineStore('drag', () => {
     }
   }
 
-  return { dragState, startDrag, endDrag, createGhostElement, updateGhostPosition, removeGhostElement }
+  return { dragState, startDrag, endDrag, createGhostElement, updateGhostPosition }
 })
