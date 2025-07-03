@@ -66,25 +66,31 @@ export const useDeckStore = defineStore('deck', () => {
   /**
    * Add a card to the main deck
    * @param card Object containing card info
+   * @param index Index to insert the card into
    */
-  function addToMainDeck(card: YGOCardData) {
-    mainDeck.value.push(card)
+  function addToMainDeck(card: YGOCardData, index: number) {
+    if (index >= mainDeck.value.length || index === -1) mainDeck.value.push(card)
+    else mainDeck.value.splice(index, 0, card)
   }
 
   /**
    * Add a card to the extra deck
    * @param card Object containing card info
+   * @param index Index to insert the card into
    */
-  function addToExtraDeck(card: YGOCardData) {
-    extraDeck.value.push(card)
+  function addToExtraDeck(card: YGOCardData, index: number) {
+    if (index >= extraDeck.value.length || index === -1) extraDeck.value.push(card)
+    else extraDeck.value.splice(index, 0, card)
   }
 
   /**
    * Add a card to the side deck
    * @param card Object containing card info
+   * @param index Index to insert the card into
    */
-  function addToSideDeck(card: YGOCardData) {
-    sideDeck.value.push(card)
+  function addToSideDeck(card: YGOCardData, index: number) {
+    if (index >= sideDeck.value.length || index === -1) sideDeck.value.push(card)
+    else sideDeck.value.splice(index, 0, card)
   }
 
   return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,

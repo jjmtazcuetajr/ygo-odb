@@ -116,6 +116,7 @@ export interface DragStateV2 {
   ghostElement: HTMLImageElement | null
   draggedItem: YGOCardData | null
   currentDropTarget: 'main' | 'extra' | 'side' | null
+  toIndex: number
 }
 
 export type CardCategory = 'monster' | 'spell' | 'trap'

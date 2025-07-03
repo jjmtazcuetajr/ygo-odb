@@ -95,10 +95,25 @@ export function useDragAndDropV2() {
       } else {
         dragState.value.ghostElement.style.cursor = 'grabbing'
 
-        if (mainDeckDropzone) setDropTarget('main')
-        else if (extraDeckDropzone) setDropTarget('extra')
-        else if (sideDeckDropzone) setDropTarget('side')
-        else setDropTarget()
+        if (mainDeckDropzone) {
+          setDropTarget('main')
+          setIndexInsertion(mainDeckDropzone, e.clientX, e.clientY)
+        } else if (extraDeckDropzone) {
+          setDropTarget('extra')
+          setIndexInsertion(extraDeckDropzone, e.clientX, e.clientY)
+        } else if (sideDeckDropzone) {
+          setDropTarget('side')
+          setIndexInsertion(sideDeckDropzone, e.clientX, e.clientY)
+        } else {
+          setDropTarget()
+
+          // remove all highlights from cards when hovering away from deck dropzones
+          const imageItems = document.querySelectorAll('.draggable')
+          imageItems.forEach(item => {
+            const element = item as HTMLElement
+            element.classList.remove('outline-4', 'outline-amber-500')
+          })
+        }
       }
     }
   }
@@ -111,26 +126,57 @@ export function useDragAndDropV2() {
 
     switch (dragState.value.currentDropTarget) {
       case 'main':
-        addToMainDeck(dragState.value.draggedItem)
+        addToMainDeck(dragState.value.draggedItem, dragState.value.toIndex)
         break;
       case 'extra':
-        addToExtraDeck(dragState.value.draggedItem)
+        addToExtraDeck(dragState.value.draggedItem, dragState.value.toIndex)
         break;
       case 'side':
-        addToSideDeck(dragState.value.draggedItem)
+        addToSideDeck(dragState.value.draggedItem, dragState.value.toIndex)
         break;
       default:
         break;
     }
 
-    // reset original image appearance
+    // reset original image appearances
     const imageItems = document.querySelectorAll('.draggable')
     imageItems.forEach(item => {
       const element = item as HTMLElement
       element.removeAttribute('style')
+      element.classList.remove('outline-4', 'outline-amber-500')
     })
-
+    
     endDrag()
+  }
+
+  /**
+   * Set the index of the dragged card to be inserted to
+   * @param deckDropzone The deck dropzone
+   * @param x X-coordinate of cursor
+   * @param y Y-coordinate of cursor
+   */
+  function setIndexInsertion(deckDropzone: Element, x: number, y: number) {
+    const cards = Array.from(deckDropzone.children).filter(child => child.classList.contains('draggable')) as HTMLElement[]
+    if (cards.length > 0) {
+      let card: HTMLElement | null = null
+      for (const img of cards) {
+        const rect = img.getBoundingClientRect()
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) card = img
+        img.classList.remove('outline-4', 'outline-amber-500') // remove all highlights from cards within deck dropzones
+      }
+
+      // if not hovering a card within deck dropzones, set the index equal to the card total
+      if (!card) {
+        dragState.value.toIndex = cards.length
+        return
+      }
+
+      // add a highlight to the hovered card within deck dropzones when performing dragging
+      card.classList.add('outline-4', 'outline-amber-500')
+
+      const idx = cards.indexOf(card)
+      if (idx !== -1) dragState.value.toIndex = idx
+    }
   }
 
   return { handleMouseDown }

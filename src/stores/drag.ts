@@ -8,7 +8,8 @@ export const useDragStore = defineStore('drag', () => {
     isDragging: false,
     ghostElement: null,
     draggedItem: null,
-    currentDropTarget: null
+    currentDropTarget: null,
+    toIndex: -1
   })
 
   // actions
@@ -28,6 +29,7 @@ export const useDragStore = defineStore('drag', () => {
     dragState.value.isDragging = false
     dragState.value.draggedItem = null
     dragState.value.currentDropTarget = null
+    dragState.value.toIndex = -1
     removeGhostElement()
   }
 
