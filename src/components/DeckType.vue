@@ -60,7 +60,7 @@ const deckTypeMap: Record<string, DeckProps> = {
     </div>
     <div :id="type + '-deck'" :class="deckTypeMap[type].colors"
       class="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-15 gap-1 sm:gap-1.5 p-1 sm:p-1.5 content-start mt-1 border rounded-md transition-colors duration-400 min-h-15 sm:min-h-35 lg:min-h-20 xl:min-h-25">
-      <div v-for="(card, index) in deck" :key="index">
+      <div v-for="(card, index) in deck" :key="index" class="draggable rounded-sm">
         <CardTooltip :card="card" :ban-list="banList" :from="type" :index="index" />
         <CardDialog :card="card" :ban-list="banList" />
       </div>
