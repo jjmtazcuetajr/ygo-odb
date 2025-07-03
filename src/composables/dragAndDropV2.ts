@@ -95,6 +95,9 @@ export function useDragAndDropV2() {
       } else {
         dragState.value.ghostElement.style.cursor = 'grabbing'
 
+        // change cursor to 'copy' when dragging a card to a valid dropzone
+        if (mainDeckDropzone || extraDeckDropzone || sideDeckDropzone) dragState.value.ghostElement.style.cursor = 'copy'
+
         if (mainDeckDropzone) {
           setDropTarget('main')
           setIndexInsertion(mainDeckDropzone, e.clientX, e.clientY)
