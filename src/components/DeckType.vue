@@ -44,17 +44,17 @@ const deckTypeMap: Record<string, DeckProps> = {
     <div class="flex flex-wrap items-center gap-x-4">
       <span class="text-lg sm:text-xl font-bold">{{ deckTypeMap[type].name }} Deck</span>
       <span class="text-xs sm:text-base">
-        <span>{{ deck.length }} Cards</span>
+        <span>Cards: <strong>{{ deck.length }}</strong></span>
         (<template v-if="type === 'main' || type === 'side'">
-          <span>{{ monsterCount }} Monsters</span> |
-          <span>{{ spellCount }} Spells</span> |
-          <span>{{ trapCount }} Traps</span>
+          <span>Monsters: <strong>{{ monsterCount }}</strong></span> |
+          <span>Spells: <strong>{{ spellCount }}</strong></span> |
+          <span>Traps: <strong>{{ trapCount }}</strong></span>
         </template>
         <template v-else>
-          <span>{{ fusionCount }} Fusion</span> |
-          <span>{{ synchroCount }} Synchro</span> |
-          <span>{{ xyzCount }} Xyz</span> |
-          <span>{{ linkCount }} Link</span>
+          <span>Fusion: <strong>{{ fusionCount }}</strong></span> |
+          <span>Synchro: <strong>{{ synchroCount }}</strong></span> |
+          <span>Xyz: <strong>{{ xyzCount }}</strong></span> |
+          <span>Link: <strong>{{ linkCount }}</strong></span>
         </template>)
       </span>
     </div>
