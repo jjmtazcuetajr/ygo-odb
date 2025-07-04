@@ -3,7 +3,7 @@ import { TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRo
 import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
 import type { YGOCardData, BanList } from '@/utils/interfaces'
-import { useDragAndDropV2 } from '@/composables/dragAndDropV2'
+import { useDragAndDrop } from '@/composables/dragAndDrop'
 
 defineProps<{
   card: YGOCardData
@@ -12,7 +12,7 @@ defineProps<{
   index: number
 }>()
 
-const { handleMouseDown } = useDragAndDropV2()
+const { handleMouseDown } = useDragAndDrop()
 </script>
 <template>
   <TooltipProvider :delay-duration="100" :disable-hoverable-content="true">
