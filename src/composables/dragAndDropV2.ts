@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useDragStore } from '@/stores/drag'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
@@ -8,17 +8,24 @@ export function useDragAndDropV2() {
   const dragStore = useDragStore()
   const { dragState } = storeToRefs(dragStore)
   const { startDrag, endDrag, createGhostElement, updateGhostPosition, setDropTarget } = useDragStore()
-  const { addToMainDeck, addToExtraDeck, addToSideDeck } = useDeckStore()
+  const { addToMainDeck, addToExtraDeck, addToSideDeck, removeFromMainDeck, removeFromExtraDeck, removeFromSideDeck } = useDeckStore()
 
   const offset = reactive({x: 0, y: 0})
+  const cardIndex = ref(-1)
+  const source = ref('')
 
   /**
    * Start the dragging logic as soon as the `mousedown` event of a draggable is triggered
    * @param e Event object
+   * @param card Object containing card info
+   * @param from Source of draggable card
+   * @param fromIndex Index of draggable card from source
    */
-  function handleMouseDown(e: MouseEvent, card: YGOCardData) {
+  function handleMouseDown(e: MouseEvent, card: YGOCardData, from: 'grid' | 'main' | 'extra' | 'side', fromIndex: number) {
     e.preventDefault()
 
+    cardIndex.value = fromIndex
+    source.value = from
     const target = e.currentTarget as HTMLElement
     const imgElement = target.querySelector('img') as HTMLImageElement
 
@@ -127,18 +134,36 @@ export function useDragAndDropV2() {
   function handleDragEnd() {
     if (!dragState.value.draggedItem) return
 
+    // remove card from deck dropzone source
+    if (dragState.value.toIndex !== -1) {
+      switch (source.value) {
+        case 'main':
+          removeFromMainDeck(cardIndex.value)
+          break
+        case 'extra':
+          removeFromExtraDeck(cardIndex.value)
+          break
+        case 'side':
+          removeFromSideDeck(cardIndex.value)
+          break
+        default:
+          break
+      }
+    }
+
+    // add card to new deck dropzone
     switch (dragState.value.currentDropTarget) {
       case 'main':
         addToMainDeck(dragState.value.draggedItem, dragState.value.toIndex)
-        break;
+        break
       case 'extra':
         addToExtraDeck(dragState.value.draggedItem, dragState.value.toIndex)
-        break;
+        break
       case 'side':
         addToSideDeck(dragState.value.draggedItem, dragState.value.toIndex)
-        break;
+        break
       default:
-        break;
+        break
     }
 
     // reset original image appearances
@@ -149,14 +174,16 @@ export function useDragAndDropV2() {
       element.classList.remove('outline-4', 'outline-amber-500')
     })
     
+    cardIndex.value = -1
+    source.value = ''
     endDrag()
   }
 
   /**
    * Set the index of the dragged card to be inserted to
    * @param deckDropzone The deck dropzone
-   * @param x X-coordinate of cursor
-   * @param y Y-coordinate of cursor
+   * @param x x-coordinate of cursor
+   * @param y y-coordinate of cursor
    */
   function setIndexInsertion(deckDropzone: Element, x: number, y: number) {
     const cards = Array.from(deckDropzone.children).filter(child => child.classList.contains('draggable')) as HTMLElement[]
@@ -174,11 +201,12 @@ export function useDragAndDropV2() {
         return
       }
 
-      // add a highlight to the hovered card within deck dropzones when performing dragging
-      card.classList.add('outline-4', 'outline-amber-500')
-
       const idx = cards.indexOf(card)
-      if (idx !== -1) dragState.value.toIndex = idx
+      if (idx !== -1) {
+        // add a highlight to the hovered card within deck dropzones when performing dragging
+        if (cardIndex.value !== idx || source.value !== dragState.value.currentDropTarget) card.classList.add('outline-4', 'outline-amber-500')
+        dragState.value.toIndex = idx
+      }
     }
   }
 
