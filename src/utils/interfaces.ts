@@ -100,25 +100,6 @@ export interface LoadingImage {
   status: 'pending' | 'loading' | 'loaded' | 'error'
 }
 
-export interface DragState {
-  isDragging: boolean
-  dragClone: HTMLImageElement | null
-  offsetX: number
-  offsetY: number
-  draggedFrom: 'grid' | 'main' | 'extra' | 'side' | null
-  draggedFromIndex: number | null
-  currentDropTarget: 'main' | 'extra' | 'side' | null
-  insertBeforeIndex: number | null
-}
-
-export interface DragStateV2 {
-  isDragging: boolean
-  ghostElement: HTMLImageElement | null
-  draggedItem: YGOCardData | null
-  currentDropTarget: 'main' | 'extra' | 'side' | null
-  toIndex: number
-}
-
 export type CardCategory = 'monster' | 'spell' | 'trap'
 export type SortDirection = 'asc' | 'desc'
 export type SortByMonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'link-rating'

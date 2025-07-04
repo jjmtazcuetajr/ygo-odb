@@ -1,18 +1,18 @@
 import { reactive, ref } from 'vue'
-import { useDragStore } from '@/stores/drag'
 import { useDeckStore } from '@/stores/deck'
-import { storeToRefs } from 'pinia'
 import type { YGOCardData } from '@/utils/interfaces'
 
 export function useDragAndDrop() {
-  const dragStore = useDragStore()
-  const { dragState } = storeToRefs(dragStore)
-  const { startDrag, endDrag, createGhostElement, updateGhostPosition, setDropTarget } = useDragStore()
   const { addToMainDeck, addToExtraDeck, addToSideDeck, removeFromMainDeck, removeFromExtraDeck, removeFromSideDeck } = useDeckStore()
 
   const offset = reactive({x: 0, y: 0})
+  const isDragging = ref(false)
+  const ghostElement = ref<HTMLImageElement | null>(null)
+  const draggedCard = ref<YGOCardData | null>(null)
+  const currentDropTarget = ref<'main' | 'extra' | 'side' | null>(null)
   const cardIndex = ref(-1)
   const source = ref('')
+  const toIndex = ref(-1)
 
   /**
    * Start the dragging logic as soon as the `mousedown` event of a draggable is triggered
@@ -23,18 +23,18 @@ export function useDragAndDrop() {
    */
   function handleMouseDown(e: MouseEvent, card: YGOCardData, from: 'grid' | 'main' | 'extra' | 'side', fromIndex: number) {
     e.preventDefault()
-
+    isDragging.value = true
+    draggedCard.value = card
     cardIndex.value = fromIndex
     source.value = from
     const target = e.currentTarget as HTMLElement
     const imgElement = target.querySelector('img') as HTMLImageElement
 
-    // calculate offset from mouse to top-left of image
+    // create a ghost element that's always smaller than the original and the cursor always at its center
     const rect = imgElement.getBoundingClientRect()
     offset.x = (rect.width - 20) / 2
     offset.y = (rect.height - 20) / 2
 
-    startDrag(card)
     const startX = e.clientX - offset.x
     const startY = e.clientY - offset.y
     createGhostElement(imgElement, rect.width, startX, startY)
@@ -48,7 +48,7 @@ export function useDragAndDrop() {
      * @param e Event object
      */
     function handleMouseMove(e: MouseEvent) {
-      if (!dragState.value.isDragging || !dragState.value.ghostElement) return
+      if (!isDragging.value || !ghostElement.value) return
 
       const positionX = e.clientX - offset.x
       const positionY = e.clientY - offset.y
@@ -61,7 +61,7 @@ export function useDragAndDrop() {
      * End the dragging logic on `mouseup`
      */
     function handleMouseUp() {
-      if (!dragState.value.isDragging) return
+      if (!isDragging.value) return
 
       handleDragEnd()
 
@@ -78,32 +78,32 @@ export function useDragAndDrop() {
    * @param e Event object
    */
   function handleDragMove(e: MouseEvent) {
-    if (!dragState.value.ghostElement) return
+    if (!ghostElement.value) return
 
     // temporarily disable pointer events
-    dragState.value.ghostElement.style.pointerEvents = 'none'
+    ghostElement.value.style.pointerEvents = 'none'
 
     // get element under cursor
     const elementBelow = document.elementFromPoint(e.clientX, e.clientY)
 
     // re-enable pointer events
-    dragState.value.ghostElement.style.pointerEvents = 'auto'
+    ghostElement.value.style.pointerEvents = 'auto'
 
-    if (elementBelow && dragState.value.draggedItem) {
+    if (elementBelow && draggedCard.value) {
       const mainDeckDropzone = elementBelow.closest('#main-deck')
       const extraDeckDropzone = elementBelow.closest('#extra-deck')
       const sideDeckDropzone = elementBelow.closest('#side-deck')
       const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
       const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
-      const cardFrame = dragState.value.draggedItem.frameType
+      const cardFrame = draggedCard.value.frameType
 
       if ((extraDeckDropzone && mainDeckCards.includes(cardFrame)) || (mainDeckDropzone && extraDeckCards.includes(cardFrame))) {
-        dragState.value.ghostElement.style.cursor = 'not-allowed'
+        ghostElement.value.style.cursor = 'not-allowed'
       } else {
-        dragState.value.ghostElement.style.cursor = 'grabbing'
+        ghostElement.value.style.cursor = 'grabbing'
 
         // change cursor to 'copy' when dragging a card to a valid dropzone
-        if (mainDeckDropzone || extraDeckDropzone || sideDeckDropzone) dragState.value.ghostElement.style.cursor = 'copy'
+        if (mainDeckDropzone || extraDeckDropzone || sideDeckDropzone) ghostElement.value.style.cursor = 'copy'
 
         if (mainDeckDropzone) {
           setDropTarget('main')
@@ -132,10 +132,10 @@ export function useDragAndDrop() {
    * Handle logic when dragging ends
    */
   function handleDragEnd() {
-    if (!dragState.value.draggedItem) return
+    if (!draggedCard.value) return
 
     // remove card from deck dropzone source
-    if (dragState.value.toIndex !== -1) {
+    if (toIndex.value !== -1) {
       switch (source.value) {
         case 'main':
           removeFromMainDeck(cardIndex.value)
@@ -152,15 +152,15 @@ export function useDragAndDrop() {
     }
 
     // add card to new deck dropzone
-    switch (dragState.value.currentDropTarget) {
+    switch (currentDropTarget.value) {
       case 'main':
-        addToMainDeck(dragState.value.draggedItem, dragState.value.toIndex)
+        addToMainDeck(draggedCard.value, toIndex.value)
         break
       case 'extra':
-        addToExtraDeck(dragState.value.draggedItem, dragState.value.toIndex)
+        addToExtraDeck(draggedCard.value, toIndex.value)
         break
       case 'side':
-        addToSideDeck(dragState.value.draggedItem, dragState.value.toIndex)
+        addToSideDeck(draggedCard.value, toIndex.value)
         break
       default:
         break
@@ -174,9 +174,61 @@ export function useDragAndDrop() {
       element.classList.remove('outline-4', 'outline-amber-500')
     })
     
+    removeGhostElement()
+    draggedCard.value = null
+    currentDropTarget.value = null
     cardIndex.value = -1
     source.value = ''
-    endDrag()
+    toIndex.value = -1
+    isDragging.value = false
+  }
+
+  /**
+   * Create a ghost element that can be dragged around on `mousedown`
+   * @param originalElement Original draggable
+   * @param width Draggable width
+   * @param x x-coordinate position
+   * @param y y-coordinate position
+   */
+  function createGhostElement(originalElement: HTMLElement, width: number, x: number, y: number) {
+    const ghost = originalElement.cloneNode(true) as HTMLImageElement
+    ghost.className = 'fixed z-[9999] opacity-80 rounded-sm aspect-[268/391] text-xs shadow-md shadow-neutral-400 dark:shadow-neutral-950'
+    ghost.width = width - 20
+    ghost.style.cursor = 'grabbing'
+    ghost.style.left = `${x}px`
+    ghost.style.top = `${y}px`
+    document.body.appendChild(ghost)
+    ghostElement.value = ghost
+  }
+
+  /**
+   * Move the ghost element while on `mousemove`
+   * @param x x-coordinate position
+   * @param y y-coordinate position
+   */
+  function updateGhostPosition(x: number, y: number) {
+    if (ghostElement.value) {
+      ghostElement.value.style.left = `${x}px`
+      ghostElement.value.style.top = `${y}px`
+    }
+  }
+
+  /**
+   * Remove the ghost element on `mouseup`
+   */
+  function removeGhostElement() {
+    if (ghostElement.value) {
+      document.body.removeChild(ghostElement.value)
+      ghostElement.value = null
+    }
+  }
+
+  /**
+   * Set the drop target while dragging
+   * @param dropTarget Drop target of either the main, extra, side deck dropzone or outside them
+   */
+  function setDropTarget(dropTarget: 'main' | 'extra' | 'side' | null = null) {
+    currentDropTarget.value = dropTarget
   }
 
   /**
@@ -197,15 +249,15 @@ export function useDragAndDrop() {
 
       // if not hovering a card within deck dropzones, set the index equal to the card total
       if (!card) {
-        dragState.value.toIndex = cards.length
+        toIndex.value = cards.length
         return
       }
 
       const idx = cards.indexOf(card)
       if (idx !== -1) {
         // add a highlight to the hovered card within deck dropzones when performing dragging
-        if (cardIndex.value !== idx || source.value !== dragState.value.currentDropTarget) card.classList.add('outline-4', 'outline-amber-500')
-        dragState.value.toIndex = idx
+        if (cardIndex.value !== idx || source.value !== currentDropTarget.value) card.classList.add('outline-4', 'outline-amber-500')
+        toIndex.value = idx
       }
     }
   }
