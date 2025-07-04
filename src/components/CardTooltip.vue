@@ -2,13 +2,13 @@
 import { TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRoot, TooltipTrigger } from 'reka-ui'
 import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
-import type { YGOCardData, BanList } from '@/utils/interfaces'
+import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
 
 defineProps<{
   card: YGOCardData
   banList: BanList
-  from: 'grid' | 'main' | 'extra' | 'side'
+  from?: Dropzone
   index: number
 }>()
 

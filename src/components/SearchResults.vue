@@ -123,7 +123,7 @@ onMounted(() => { searchValue.value = filters.value.search })
               </div>
             </div>
             <template v-else>
-              <CardTooltip :card="card" :ban-list="banList" from="grid" :index="index" />
+              <CardTooltip :card="card" :ban-list="banList" :index="index" />
               <CardDialog :card="card" :ban-list="banList" />
             </template>
           </div>

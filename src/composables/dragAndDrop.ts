@@ -1,6 +1,6 @@
 import { reactive, ref } from 'vue'
 import { useDeckStore } from '@/stores/deck'
-import type { YGOCardData } from '@/utils/interfaces'
+import type { YGOCardData, Dropzone } from '@/utils/interfaces'
 
 export function useDragAndDrop() {
   const { addToMainDeck, addToExtraDeck, addToSideDeck, removeFromMainDeck, removeFromExtraDeck, removeFromSideDeck } = useDeckStore()
@@ -9,9 +9,9 @@ export function useDragAndDrop() {
   const isDragging = ref(false)
   const ghostElement = ref<HTMLImageElement | null>(null)
   const draggedCard = ref<YGOCardData | null>(null)
-  const currentDropTarget = ref<'main' | 'extra' | 'side' | null>(null)
+  const currentDropTarget = ref<Dropzone | null>(null)
   const cardIndex = ref(-1)
-  const source = ref('')
+  const source = ref<Dropzone | undefined>(undefined)
   const toIndex = ref(-1)
 
   /**
@@ -21,7 +21,7 @@ export function useDragAndDrop() {
    * @param from Source of draggable card
    * @param fromIndex Index of draggable card from source
    */
-  function handleMouseDown(e: MouseEvent, card: YGOCardData, from: 'grid' | 'main' | 'extra' | 'side', fromIndex: number) {
+  function handleMouseDown(e: MouseEvent, card: YGOCardData, from: Dropzone | undefined, fromIndex: number) {
     e.preventDefault()
     isDragging.value = true
     draggedCard.value = card
@@ -178,7 +178,7 @@ export function useDragAndDrop() {
     draggedCard.value = null
     currentDropTarget.value = null
     cardIndex.value = -1
-    source.value = ''
+    source.value = undefined
     toIndex.value = -1
     isDragging.value = false
   }
