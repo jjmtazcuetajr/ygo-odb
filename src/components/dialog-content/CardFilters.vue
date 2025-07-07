@@ -17,7 +17,7 @@ const { toFirst } = usePaginationStore()
 
 <template>
   <div class="flex flex-col mt-3 p-1 dark:text-neutral-300 text-xs sm:text-base">
-    <SelectOption id="monster-card" label-text="Ban Status" parent-class="flex items-center gap-1 mb-2"
+    <SelectOption id="ban-status" label-text="Ban Status" parent-class="flex items-center gap-1 mb-2"
       :options="banStatus" v-model="filters.banStatus" @change="toFirst" />
     <div class="flex items-center flex-wrap gap-2">
       <div class="flex items-start sm:items-end gap-1">
