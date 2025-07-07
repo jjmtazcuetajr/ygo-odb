@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
-import type { YGOCardData } from '@/utils/interfaces'
+import { defineStore, storeToRefs } from 'pinia'
+import { useYgoCardsStore } from './ygo-cards'
+import type { YGOCardData, BanStatus, Dropzone } from '@/utils/interfaces'
 
 export const useDeckStore = defineStore('deck', () => {
   // states
@@ -64,33 +65,77 @@ export const useDeckStore = defineStore('deck', () => {
 
   // actions
   /**
-   * Add a card to the main deck
+   * Add a card to a deck
    * @param card Object containing card info
    * @param index Index to insert the card into
+   * @param deckType Deck of either `main`, `extra`, or `side`
    */
-  function addToMainDeck(card: YGOCardData, index: number) {
-    if (index >= mainDeck.value.length || index === -1) mainDeck.value.push(card)
-    else mainDeck.value.splice(index, 0, card)
+  function addCardToDeck(card: YGOCardData, index: number, deckType: Dropzone) {
+    const MAIN_DECK_LIMIT = 60
+    const EXTRA_AND_SIDE_DECK_LIMIT = 15
+
+    const cardLimit = isCardWithinLimit(card, deckType)
+    if (cardLimit) {
+      const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
+      const deckLimit = deckType === 'main' ? MAIN_DECK_LIMIT : EXTRA_AND_SIDE_DECK_LIMIT
+      
+      if (array.value.length < deckLimit) {
+        if (index >= array.value.length || index === -1) array.value.push(card)
+        else array.value.splice(index, 0, card)
+      }
+    }
   }
 
   /**
-   * Add a card to the extra deck
+   * Determine if a card dragged into a deck dropzone is within the limit allowed
    * @param card Object containing card info
-   * @param index Index to insert the card into
+   * @param deckType Deck of either `main`, `extra`, or `side`
+   * @returns Boolean value
    */
-  function addToExtraDeck(card: YGOCardData, index: number) {
-    if (index >= extraDeck.value.length || index === -1) extraDeck.value.push(card)
-    else extraDeck.value.splice(index, 0, card)
-  }
+  function isCardWithinLimit(card: YGOCardData, deckType: Dropzone): boolean {
+    const FORBIDDEN_CARD_LIMIT = 0
+    const LIMITED_CARD_LIMIT = 1
+    const SEMI_LIMITED_CARD_LIMIT = 2
+    const UNRESTRICTED_CARD_LIMIT = 3
+    const { banList } = storeToRefs(useYgoCardsStore())
 
-  /**
-   * Add a card to the side deck
-   * @param card Object containing card info
-   * @param index Index to insert the card into
-   */
-  function addToSideDeck(card: YGOCardData, index: number) {
-    if (index >= sideDeck.value.length || index === -1) sideDeck.value.push(card)
-    else sideDeck.value.splice(index, 0, card)
+    // check the number of instances a card is within each of the deck types
+    const countInMainDeck = mainDeck.value.filter(c => c.id === card.id).length
+    const countInExtraDeck = extraDeck.value.filter(c => c.id === card.id).length
+    const countInSideDeck = sideDeck.value.filter(c => c.id === card.id).length
+
+    let totalCount = 0
+    switch (deckType) {
+      case 'main':
+        // check the main and side deck if its a main deck card
+        totalCount = countInMainDeck + countInSideDeck
+        break
+      case 'extra':
+        // check the extra and side deck if its an extra deck card
+        totalCount = countInExtraDeck + countInSideDeck
+        break
+      case 'side':
+        // since the side deck can contain both main & extra deck cards, check the frame type of the card
+        const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
+        totalCount = (mainDeckCards.includes(card.frameType) ? countInMainDeck : countInExtraDeck) + countInSideDeck
+        break
+      default:
+        break
+    }
+
+    // check ban status of a card (basically the card limit that can be added to the deck types)
+    const cardLimitMap: Record<BanStatus, number> = {
+      'Forbidden': FORBIDDEN_CARD_LIMIT,
+      'Limited': LIMITED_CARD_LIMIT,
+      'Semi-Limited': SEMI_LIMITED_CARD_LIMIT
+    }
+    const limitOCG = cardLimitMap[card.banlist_info?.ban_ocg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
+    const limitTCG = cardLimitMap[card.banlist_info?.ban_tcg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
+
+    if (banList.value === 'ocg' && totalCount < limitOCG) return true
+    else if (banList.value === 'tcg' && totalCount < limitTCG) return true
+    else if (banList.value === 'none' && totalCount < UNRESTRICTED_CARD_LIMIT) return true
+    return false
   }
 
   /**
@@ -118,5 +163,5 @@ export const useDeckStore = defineStore('deck', () => {
   }
 
   return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
-    sideDeckMonsters, sideDeckSpells, sideDeckTraps, addToMainDeck, addToExtraDeck, addToSideDeck, removeFromMainDeck, removeFromExtraDeck, removeFromSideDeck }
+    sideDeckMonsters, sideDeckSpells, sideDeckTraps, addCardToDeck, isCardWithinLimit, removeFromMainDeck, removeFromExtraDeck, removeFromSideDeck }
 })

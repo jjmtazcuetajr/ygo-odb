@@ -1,9 +1,11 @@
 import { reactive, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import type { YGOCardData, Dropzone } from '@/utils/interfaces'
 
 export function useDragAndDrop() {
-  const { addToMainDeck, addToExtraDeck, addToSideDeck, removeFromMainDeck, removeFromExtraDeck, removeFromSideDeck } = useDeckStore()
+  const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
+  const { addCardToDeck, isCardWithinLimit, removeFromMainDeck, removeFromExtraDeck, removeFromSideDeck } = useDeckStore()
 
   const offset = reactive({x: 0, y: 0})
   const isDragging = ref(false)
@@ -96,8 +98,36 @@ export function useDragAndDrop() {
       const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
       const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
       const cardFrame = draggedCard.value.frameType
+      const MAIN_DECK_LIMIT = 60
+      const EXTRA_AND_SIDE_DECK_LIMIT = 15
 
-      if ((extraDeckDropzone && mainDeckCards.includes(cardFrame)) || (mainDeckDropzone && extraDeckCards.includes(cardFrame))) {
+      if (
+        (extraDeckDropzone && mainDeckCards.includes(cardFrame)) || // main deck card dragged into the extra deck
+        (mainDeckDropzone && extraDeckCards.includes(cardFrame)) || // extra deck card dragged into the main deck
+        (
+          // card dragged from the paginated results to the deck dropzones has reached its limit
+          source.value === undefined &&
+          (!isCardWithinLimit(draggedCard.value, 'main') || !isCardWithinLimit(draggedCard.value, 'extra') || !isCardWithinLimit(draggedCard.value, 'side'))
+        ) ||
+        (
+          // card dragged from the paginated results to the already full deck dropzones
+          source.value === undefined && 
+          (
+            mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT ||
+            extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT ||
+            sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT
+          )
+        ) ||
+        // card dragged from the main deck to the already full side deck
+        (source.value === 'main' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
+        // card dragged from the extra deck to the already full side deck
+        (source.value === 'extra' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
+        (
+          // card dragged from the side deck to the already full main or extra deck
+          source.value === 'side' &&
+          ((mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT))
+        )
+      ) {
         ghostElement.value.style.cursor = 'not-allowed'
       } else {
         ghostElement.value.style.cursor = 'grabbing'
@@ -154,13 +184,13 @@ export function useDragAndDrop() {
     // add card to new deck dropzone
     switch (currentDropTarget.value) {
       case 'main':
-        addToMainDeck(draggedCard.value, toIndex.value)
+        addCardToDeck(draggedCard.value, toIndex.value, 'main')
         break
       case 'extra':
-        addToExtraDeck(draggedCard.value, toIndex.value)
+        addCardToDeck(draggedCard.value, toIndex.value, 'extra')
         break
       case 'side':
-        addToSideDeck(draggedCard.value, toIndex.value)
+        addCardToDeck(draggedCard.value, toIndex.value, 'side')
         break
       default:
         break
