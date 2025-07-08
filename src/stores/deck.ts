@@ -139,29 +139,15 @@ export const useDeckStore = defineStore('deck', () => {
   }
 
   /**
-   * Remove a card from the main deck
+   * Remove a card from a deck
    * @param index Index to remove the card from
+   * @param deckType Deck of either `main`, `extra`, or `side`
    */
-  function removeFromMainDeck(index: number) {
-    if (mainDeck.value.length > 0) mainDeck.value.splice(index, 1)
-  }
-
-  /**
-   * Remove a card from the extra deck
-   * @param index Index to remove the card from
-   */
-  function removeFromExtraDeck(index: number) {
-    if (extraDeck.value.length > 0) extraDeck.value.splice(index, 1)
-  }
-
-  /**
-   * Remove a card from the side deck
-   * @param index Index to remove the card from
-   */
-  function removeFromSideDeck(index: number) {
-    if (sideDeck.value.length > 0) sideDeck.value.splice(index, 1)
+  function removeCardFromDeck(index: number, deckType: Dropzone) {
+    const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
+    if (array.value.length > 0) array.value.splice(index, 1)
   }
 
   return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
-    sideDeckMonsters, sideDeckSpells, sideDeckTraps, addCardToDeck, isCardWithinLimit, removeFromMainDeck, removeFromExtraDeck, removeFromSideDeck }
+    sideDeckMonsters, sideDeckSpells, sideDeckTraps, addCardToDeck, isCardWithinLimit, removeCardFromDeck }
 })

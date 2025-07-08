@@ -5,7 +5,7 @@ import type { YGOCardData, Dropzone } from '@/utils/interfaces'
 
 export function useDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
-  const { addCardToDeck, isCardWithinLimit, removeFromMainDeck, removeFromExtraDeck, removeFromSideDeck } = useDeckStore()
+  const { addCardToDeck, isCardWithinLimit, removeCardFromDeck } = useDeckStore()
 
   const offset = reactive({x: 0, y: 0})
   const isDragging = ref(false)
@@ -168,13 +168,13 @@ export function useDragAndDrop() {
     if (toIndex.value !== -1) {
       switch (source.value) {
         case 'main':
-          removeFromMainDeck(cardIndex.value)
+          removeCardFromDeck(cardIndex.value, 'main')
           break
         case 'extra':
-          removeFromExtraDeck(cardIndex.value)
+          removeCardFromDeck(cardIndex.value, 'extra')
           break
         case 'side':
-          removeFromSideDeck(cardIndex.value)
+          removeCardFromDeck(cardIndex.value, 'side')
           break
         default:
           break
