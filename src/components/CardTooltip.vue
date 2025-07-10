@@ -58,15 +58,13 @@ onMounted(() => {
   <TooltipProvider :delay-duration="100" :disable-hoverable-content="true">
     <TooltipRoot>
       <TooltipTrigger as-child ref="trigger-ref">
-        <div class="hidden lg:block cursor-grab draggable" @mousedown.left="handleMouseDown($event, card, from, index)">
-          <div
-            class="relative rounded-sm active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
-            <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
-              class="rounded-sm aspect-[268/391] text-xs">
-            <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
-            <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
-          </div>
-        </div>
+        <button type="button" @mousedown.left="handleMouseDown($event, card, from, index)"
+          class="draggable hidden lg:block cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+          <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
+            class="rounded-sm aspect-[268/391] text-xs">
+          <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
+          <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
+        </button>
       </TooltipTrigger>
       <TooltipPortal disabled>
         <TooltipContent :side-offset="5" :side="dynamicSide" :avoid-collisions="true"

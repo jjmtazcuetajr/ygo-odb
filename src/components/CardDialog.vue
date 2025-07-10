@@ -23,13 +23,13 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
 <template>
   <DialogRoot v-model:open="isDialogOpen">
     <DialogTrigger as-child>
-      <div
-        class="relative rounded-sm lg:hidden active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+      <button type="button"
+        class="relative rounded-sm block lg:hidden active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
         <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
           class="rounded-sm aspect-[268/391] text-xs">
         <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
         <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
-      </div>
+      </button>
     </DialogTrigger>
     <DialogPortal disabled>
       <DialogOverlay
