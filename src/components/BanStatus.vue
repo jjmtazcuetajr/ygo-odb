@@ -6,7 +6,7 @@ defineProps<{ status: BanStatus | undefined }>()
 </script>
 <template>
   <span v-if="status === 'Forbidden'"
-    class="absolute top-0 rounded-full shadow-md shadow-neutral-900 text-red-500 bg-black">
+    class="absolute top-0 left-0 rounded-full shadow-md shadow-neutral-900 text-red-500 bg-black">
     <Ban :size="20" />
   </span>
   <span v-else-if="status === 'Limited' || status === 'Semi-Limited'"
