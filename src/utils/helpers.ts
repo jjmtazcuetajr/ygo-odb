@@ -133,8 +133,8 @@ export function matchPendulumType(card: YGOCardData, pendulum: string): boolean 
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
  * @param rank Rank of an Xyz Monster from 0 - 13
  */
-export function matchRank(card: YGOCardData, rank: number): boolean {
-  if (!Number.isNaN(rank)) {
+export function matchRank(card: YGOCardData, rank: number | undefined): boolean {
+  if (rank !== undefined) {
     // this is needed because Materiactor Exagard has level=null instead of 3 in the YGOPRODeck API
     const specialXyzMonsters: Record<number, number[]> = { 3: [72409226] }
     const isSpecialXyzMonster = specialXyzMonsters[rank]?.includes(card.id)
@@ -149,8 +149,8 @@ export function matchRank(card: YGOCardData, rank: number): boolean {
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
  * @param scale Pendulum Scale of a Pendulum Monster from 0 - 13
  */
-export function matchPendulumScale(card: YGOCardData, scale: number): boolean {
-  if (!Number.isNaN(scale)) {
+export function matchPendulumScale(card: YGOCardData, scale: number | undefined): boolean {
+  if (scale !== undefined) {
     // this is needed because the scale of D/D/D Vice King Requiem should be 4, not 8
     const specialPendulumScales: Record<number, number[]> = { 4: [25857977] }
     const isSpecialPendulumScale = specialPendulumScales[scale]?.includes(card.id)
@@ -166,8 +166,8 @@ export function matchPendulumScale(card: YGOCardData, scale: number): boolean {
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
  * @param atk Attack value of a Monster card
  */
-export function matchAtk(card: YGOCardData, atk: number): boolean {
-  if (Number.isNaN(atk)) return true
+export function matchAtk(card: YGOCardData, atk: number | undefined): boolean {
+  if (atk === undefined) return true
 
   // this is needed because the ATK of Goblin Biker Mean Merciless should be 1400, not 1300
   const exclusions = [{ atk: 1300, id: 64257161 }]
@@ -185,8 +185,8 @@ export function matchAtk(card: YGOCardData, atk: number): boolean {
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
  * @param def Defense value of a Monster card
  */
-export function matchDef(card: YGOCardData, def: number): boolean {
-  if (Number.isNaN(def)) return true
+export function matchDef(card: YGOCardData, def: number | undefined): boolean {
+  if (def === undefined) return true
 
   // this is needed because some monsters have wrong defense values from the API
   const exclusions: Record<number, number[]> = {

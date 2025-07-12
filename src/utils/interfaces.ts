@@ -82,13 +82,13 @@ export interface FilterOptions {
   pendulumType: string
   monsterType: string
   attribute: string
-  level: number
-  rank: number
-  scale: number
-  linkRating: number
+  level: number | undefined
+  rank: number | undefined
+  scale: number | undefined
+  linkRating: number | undefined
   linkArrows: string[]
-  atk: number
-  def: number
+  atk: number | undefined
+  def: number | undefined
   spellType: string
   trapType: string
   banStatus: BanStatus | 'Unrestricted' | ''
