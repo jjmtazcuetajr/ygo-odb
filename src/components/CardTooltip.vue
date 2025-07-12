@@ -5,6 +5,7 @@ import BanStatus from './BanStatus.vue'
 import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
 import { ref, computed, onMounted, useTemplateRef } from 'vue'
+import { Info } from 'lucide-vue-next'
 
 defineProps<{
   card: YGOCardData
@@ -17,6 +18,7 @@ const { handleMouseDown } = useDragAndDrop()
 
 const tooltipTrigger = useTemplateRef('trigger-ref')
 const triggerPosition = ref({ top: 0, left: 0 })
+const isHovered = ref(false)
 
 const dynamicSide = computed(() => {
   const viewportHeight = window.innerHeight
@@ -55,26 +57,44 @@ onMounted(() => {
 })
 </script>
 <template>
-  <TooltipProvider :delay-duration="100" :disable-hoverable-content="true">
-    <TooltipRoot>
-      <TooltipTrigger as-child ref="trigger-ref">
-        <button type="button" @mousedown.left="handleMouseDown($event, card, from, index)"
-          class="draggable hidden lg:block cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
-          <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
-            class="rounded-sm aspect-[268/391] text-xs">
-          <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
-          <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
-        </button>
-      </TooltipTrigger>
-      <TooltipPortal disabled>
-        <TooltipContent :side-offset="5" :side="dynamicSide" :avoid-collisions="true"
-          class="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade flex gap-2 w-xl select-none rounded-md p-2 z-1 text-sm shadow-sm bg-neutral-200 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
-          <img :src="card.card_images[0].image_url_small" :alt="card.name" width="150" loading="lazy"
-            class="rounded-sm aspect-[268/391] text-xs self-start">
-          <CardInfo :card="card" />
-          <TooltipArrow class="fill-neutral-200 dark:fill-neutral-800 stroke-emerald-600" :height="10" :width="20" />
-        </TooltipContent>
-      </TooltipPortal>
-    </TooltipRoot>
-  </TooltipProvider>
+  <div @mousedown.left="handleMouseDown($event, card, from, index)" @mouseenter="isHovered = true"
+    @mouseleave="isHovered = false"
+    class="draggable hidden lg:block cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+    <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
+      class="rounded-sm aspect-[268/391] text-xs">
+    <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
+    <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
+    <TooltipProvider :delay-duration="100" :disable-hoverable-content="true">
+      <TooltipRoot>
+        <transition>
+          <TooltipTrigger v-if="isHovered" as-child ref="trigger-ref">
+            <button type="button" aria-label="More Info"
+              class="absolute top-0 right-0 rounded-full size-[20px] flex items-center justify-center cursor-pointer text-neutral-300 bg-neutral-500">
+              <Info :size="20" />
+            </button>
+          </TooltipTrigger>
+        </transition>
+        <TooltipPortal disabled>
+          <TooltipContent :side-offset="5" :side="dynamicSide" :avoid-collisions="true"
+            class="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade flex gap-2 w-xl select-none rounded-md p-2 z-35 text-sm shadow-sm bg-neutral-200 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
+            <img :src="card.card_images[0].image_url_small" :alt="card.name" width="150" loading="lazy"
+              class="rounded-sm aspect-[268/391] text-xs self-start">
+            <CardInfo :card="card" />
+            <TooltipArrow class="fill-neutral-200 dark:fill-neutral-800 stroke-emerald-600" :height="10" :width="20" />
+          </TooltipContent>
+        </TooltipPortal>
+      </TooltipRoot>
+    </TooltipProvider>
+  </div>
 </template>
+<style>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>
