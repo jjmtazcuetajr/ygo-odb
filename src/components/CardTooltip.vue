@@ -13,7 +13,7 @@ import { Info } from 'lucide-vue-next'
 defineProps<{
   card: YGOCardData
   banList: BanList
-  from?: Dropzone
+  from: Dropzone | 'grid'
   index: number
 }>()
 

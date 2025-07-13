@@ -13,7 +13,7 @@ export function useDragAndDrop() {
   const draggedCard = ref<YGOCardData | null>(null)
   const currentDropTarget = ref<Dropzone | null>(null)
   const cardIndex = ref(-1)
-  const source = ref<Dropzone | undefined>(undefined)
+  const source = ref<Dropzone | 'grid'>('grid')
   const toIndex = ref(-1)
 
   /**
@@ -23,7 +23,7 @@ export function useDragAndDrop() {
    * @param from Source of draggable card
    * @param fromIndex Index of draggable card from source
    */
-  function handleMouseDown(e: MouseEvent, card: YGOCardData, from: Dropzone | undefined, fromIndex: number) {
+  function handleMouseDown(e: MouseEvent, card: YGOCardData, from: Dropzone | 'grid', fromIndex: number) {
     e.preventDefault()
     isDragging.value = true
     draggedCard.value = card
@@ -106,12 +106,12 @@ export function useDragAndDrop() {
         (mainDeckDropzone && extraDeckCards.includes(cardFrame)) || // extra deck card dragged into the main deck
         (
           // card dragged from the paginated results to the deck dropzones has reached its limit
-          source.value === undefined &&
+          source.value === 'grid' &&
           (!isCardWithinLimit(draggedCard.value, 'main') || !isCardWithinLimit(draggedCard.value, 'extra') || !isCardWithinLimit(draggedCard.value, 'side'))
         ) ||
         (
           // card dragged from the paginated results to the already full deck dropzones
-          source.value === undefined && 
+          source.value === 'grid' && 
           (
             mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT ||
             extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT ||
@@ -208,7 +208,7 @@ export function useDragAndDrop() {
     draggedCard.value = null
     currentDropTarget.value = null
     cardIndex.value = -1
-    source.value = undefined
+    source.value = 'grid'
     toIndex.value = -1
     isDragging.value = false
   }
