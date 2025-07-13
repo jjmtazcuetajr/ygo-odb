@@ -55,7 +55,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
 
       <DropdownMenuPortal>
         <DropdownMenuContent
-          class="rounded-md p-1 border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 shadow-xl shadow-neutral-400 dark:shadow-neutral-800 will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+          class="rounded-md p-1 border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 shadow-xl shadow-neutral-400 dark:shadow-neutral-950 will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
           :side-offset="5">
           <template v-if="type === 'Import' || type === 'Export'">
             <DropdownMenuItem v-on="type === 'Import' ? { click: openYdkFileDialog } : { click: exportToYdkFile }"
