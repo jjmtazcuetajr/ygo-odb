@@ -69,30 +69,35 @@ export const useDeckStore = defineStore('deck', () => {
    * @param card Object containing card info
    * @param index Index to insert the card into
    * @param deckType Deck of either `main`, `extra`, or `side`
+   * @param num Number of cards about to add
    */
-  function addCardToDeck(card: YGOCardData, index: number, deckType: Dropzone) {
+  function addCardToDeck(card: YGOCardData, index: number, deckType: Dropzone, num: number | undefined = undefined) {
     const MAIN_DECK_LIMIT = 60
     const EXTRA_AND_SIDE_DECK_LIMIT = 15
 
-    const cardLimit = isCardWithinLimit(card, deckType)
-    if (cardLimit) {
-      const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
-      const deckLimit = deckType === 'main' ? MAIN_DECK_LIMIT : EXTRA_AND_SIDE_DECK_LIMIT
-      
-      if (array.value.length < deckLimit) {
-        if (index >= array.value.length || index === -1) array.value.push(card)
-        else array.value.splice(index, 0, card)
+    const loopLimit = num !== undefined ? num : 1
+    for (let x = 0; x < loopLimit; x++) {
+      const cardLimit = isCardWithinLimit(card, deckType)
+      if (cardLimit) {
+        const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
+        const deckLimit = deckType === 'main' ? MAIN_DECK_LIMIT : EXTRA_AND_SIDE_DECK_LIMIT
+        
+        if (array.value.length < deckLimit) {
+          if (index >= array.value.length || index === -1) array.value.push(card)
+          else array.value.splice(index, 0, card)
+        }
       }
     }
   }
 
   /**
-   * Determine if a card dragged into a deck dropzone is within the limit allowed
+   * Determine if a card added into a deck dropzone is within the limit allowed
    * @param card Object containing card info
    * @param deckType Deck of either `main`, `extra`, or `side`
+   * @param num Number of cards about to add
    * @returns Boolean value
    */
-  function isCardWithinLimit(card: YGOCardData, deckType: Dropzone): boolean {
+  function isCardWithinLimit(card: YGOCardData, deckType: Dropzone, num: number | undefined = undefined): boolean {
     const FORBIDDEN_CARD_LIMIT = 0
     const LIMITED_CARD_LIMIT = 1
     const SEMI_LIMITED_CARD_LIMIT = 2
@@ -132,9 +137,11 @@ export const useDeckStore = defineStore('deck', () => {
     const limitOCG = cardLimitMap[card.banlist_info?.ban_ocg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
     const limitTCG = cardLimitMap[card.banlist_info?.ban_tcg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
 
-    if (banList.value === 'ocg' && totalCount < limitOCG) return true
-    else if (banList.value === 'tcg' && totalCount < limitTCG) return true
-    else if (banList.value === 'none' && totalCount < UNRESTRICTED_CARD_LIMIT) return true
+    const numberToAdd = num !== undefined ? totalCount + (num - 1) : totalCount
+
+    if (banList.value === 'ocg' && numberToAdd < limitOCG) return true
+    else if (banList.value === 'tcg' && numberToAdd < limitTCG) return true
+    else if (banList.value === 'none' && numberToAdd < UNRESTRICTED_CARD_LIMIT) return true
     return false
   }
 

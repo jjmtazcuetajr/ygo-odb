@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import {
   TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRoot, TooltipTrigger,
+  PopoverArrow, PopoverClose, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger
 } from 'reka-ui'
 import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
+import GridToDeck from './card-popover/GridToDeck.vue'
 import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
 import { ref } from 'vue'
-import { Info } from 'lucide-vue-next'
+import { Info, Settings2, X } from 'lucide-vue-next'
 
 defineProps<{
   card: YGOCardData
@@ -35,7 +37,7 @@ const isHovered = ref(false)
         </TooltipTrigger>
         <TooltipPortal>
           <TooltipContent :side-offset="5"
-            class="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade flex gap-2 w-xl select-none rounded-md p-2 z-35 text-sm shadow-sm bg-neutral-200 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
+            class="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade flex gap-2 w-xl select-none rounded-md p-2 z-35 text-sm shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-200 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
             <img :src="card.card_images[0].image_url_small" :alt="card.name" width="150" loading="lazy"
               class="rounded-sm aspect-[268/391] text-xs self-start">
             <CardInfo :card="card" />
@@ -44,5 +46,24 @@ const isHovered = ref(false)
         </TooltipPortal>
       </TooltipRoot>
     </TooltipProvider>
+    <PopoverRoot>
+      <PopoverTrigger aria-label="Options" :class="{ 'opacity-100': isHovered }"
+        class="absolute top-[50%] left-[50%] transform-[translate(-50%,-50%)] rounded-full size-6 flex items-center justify-center cursor-pointer opacity-0 focus-visible:opacity-100 text-neutral-300 bg-neutral-500 hover:bg-neutral-600 shadow-md shadow-neutral-900 transition-[background-color,opacity] duration-200">
+        <Settings2 :size="20" />
+      </PopoverTrigger>
+      <PopoverPortal>
+        <PopoverContent side="bottom" :side-offset="5"
+          class="data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade min-w- rounded-md p-5 z-30 text-sm shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-100 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
+          <template v-if="from === 'grid'">
+            <GridToDeck :card="card" />
+          </template>
+          <PopoverClose aria-label="Close"
+            class="absolute top-1.5 right-1.5 flex justify-center items-center size-[24px] rounded-full cursor-pointer dark:text-white hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
+            <X :size="16" />
+          </PopoverClose>
+          <PopoverArrow class="fill-neutral-200 dark:fill-neutral-800 stroke-emerald-600" />
+        </PopoverContent>
+      </PopoverPortal>
+    </PopoverRoot>
   </div>
 </template>
