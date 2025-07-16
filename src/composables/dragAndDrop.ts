@@ -29,8 +29,7 @@ export function useDragAndDrop() {
     draggedCard.value = card
     cardIndex.value = fromIndex
     source.value = from
-    const target = e.currentTarget as HTMLElement
-    const imgElement = target.querySelector('img') as HTMLImageElement
+    const imgElement = e.currentTarget as HTMLElement
 
     // create a ghost element that's always smaller than the original and the cursor always at its center
     const rect = imgElement.getBoundingClientRect()
@@ -42,8 +41,9 @@ export function useDragAndDrop() {
     createGhostElement(imgElement, rect.width, startX, startY)
 
     // add visual feedback to original
-    target.style.opacity = '0.5'
-    target.style.transform = 'scale(0.95)'
+    const cardDraggable = imgElement.closest('.draggable') as HTMLElement
+    cardDraggable.style.opacity = '0.5'
+    cardDraggable.style.transform = 'scale(0.95)'
 
     /**
      * Process the dragging logic while on `mousemove`

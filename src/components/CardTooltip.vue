@@ -21,11 +21,10 @@ const { handleMouseDown } = useDragAndDrop()
 const isHovered = ref(false)
 </script>
 <template>
-  <div @mousedown.left="handleMouseDown($event, card, from, index)" @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
+  <div @mouseenter="isHovered = true" @mouseleave="isHovered = false"
     class="draggable hidden lg:block cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
     <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
-      class="rounded-sm aspect-[268/391] text-xs">
+      class="rounded-sm aspect-[268/391] text-xs" @mousedown.left="handleMouseDown($event, card, from, index)">
     <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
     <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
     <TooltipProvider :delay-duration="100" :disable-hoverable-content="true">
