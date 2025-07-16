@@ -6,7 +6,7 @@ import type { YGOCardData } from '@/utils/interfaces'
 defineProps<{ card: YGOCardData }>()
 </script>
 <template>
-  <div class="flex flex-col gap-1 w-full">
+  <div class="flex flex-col gap-1 w-full dark:text-neutral-300">
     <div class="flex justify-between items-center flex-wrap gap-1">
       <span class="text-base font-bold leading-tight">{{ card.name }}</span>
       <span v-if="card.frameType === 'spell' || card.frameType === 'trap'">{{ card.humanReadableCardType }}</span>
