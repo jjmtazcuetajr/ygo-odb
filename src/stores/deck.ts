@@ -63,6 +63,13 @@ export const useDeckStore = defineStore('deck', () => {
     })
   })
 
+  const getCardFrequency = computed(() => {
+    return (cardId: number, deckType: Dropzone) => {
+      const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
+      return array.value.filter(card => card.id === cardId).length
+    }
+  })
+
   // actions
   /**
    * Add a card to a deck
@@ -149,12 +156,25 @@ export const useDeckStore = defineStore('deck', () => {
    * Remove a card from a deck
    * @param index Index to remove the card from
    * @param deckType Deck of either `main`, `extra`, or `side`
+   * @param [num=1] Number of cards to remove. Defaults to `1` copy
    */
-  function removeCardFromDeck(index: number, deckType: Dropzone) {
+  function removeCardFromDeck(index: number, deckType: Dropzone, num: number = 1) {
     const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
-    if (array.value.length > 0) array.value.splice(index, 1)
+    let removedCards: YGOCardData[] = []
+    if (array.value.length > 0) {
+      for (let i = 0; i < num; i++) {
+        if (i === 0) {
+          // remove selected card
+          removedCards.push(...array.value.splice(index, 1))
+        } else {
+          // remove copies starting from first instance found
+          const idx = array.value.findIndex(card => card.id === removedCards[0].id)
+          removedCards.push(...array.value.splice(idx, 1))
+        }
+      }
+    }
   }
 
   return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
-    sideDeckMonsters, sideDeckSpells, sideDeckTraps, addCardToDeck, isCardWithinLimit, removeCardFromDeck }
+    sideDeckMonsters, sideDeckSpells, sideDeckTraps, getCardFrequency, addCardToDeck, isCardWithinLimit, removeCardFromDeck }
 })

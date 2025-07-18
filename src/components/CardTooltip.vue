@@ -6,6 +6,7 @@ import {
 import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
 import GridToDeck from './card-popover/GridToDeck.vue'
+import MainToSide from './card-popover/MainToSide.vue'
 import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
 import { ref } from 'vue'
@@ -21,6 +22,7 @@ defineProps<{
 const { handleMouseDown } = useDragAndDrop()
 
 const isHovered = ref(false)
+const isPopoverOpen = ref(false)
 </script>
 <template>
   <div @mouseenter="isHovered = true" @mouseleave="isHovered = false"
@@ -46,16 +48,19 @@ const isHovered = ref(false)
         </TooltipPortal>
       </TooltipRoot>
     </TooltipProvider>
-    <PopoverRoot>
+    <PopoverRoot v-model:open="isPopoverOpen">
       <PopoverTrigger aria-label="Options" :class="{ 'opacity-100': isHovered }"
         class="absolute top-[50%] left-[50%] transform-[translate(-50%,-50%)] rounded-full size-6 flex items-center justify-center cursor-pointer opacity-0 focus-visible:opacity-100 text-neutral-300 bg-neutral-500 hover:bg-neutral-600 shadow-md shadow-neutral-900 transition-[background-color,opacity] duration-200">
         <Settings2 :size="20" />
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverContent side="bottom" :side-offset="5"
-          class="data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade min-w- rounded-md p-5 z-30 text-sm shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-100 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
+          class="data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade min-w- rounded-md p-3 z-30 text-sm shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-100 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
           <template v-if="from === 'grid'">
             <GridToDeck :card="card" />
+          </template>
+          <template v-else-if="from === 'main'">
+            <MainToSide :card="card" :from-index="index" @handle-popover-close="isPopoverOpen = false" />
           </template>
           <PopoverClose aria-label="Close"
             class="absolute top-1.5 right-1.5 flex justify-center items-center size-[24px] rounded-full cursor-pointer dark:text-white hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
