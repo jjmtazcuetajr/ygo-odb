@@ -34,9 +34,11 @@ function isExtraDeckCard(cardFrame: string): boolean {
       <ButtonCTA variant="emerald" text-content="+ 1" aria-label="Add 1 copy"
         :disabled="!isCardWithinLimit(card, 'main')" @click="addCardToDeck(card, mainDeck.length, 'main')" />
       <ButtonCTA variant="emerald" text-content="+ 2" aria-label="Add 2 copies"
-        :disabled="!isCardWithinLimit(card, 'main', 2)" @click="addCardToDeck(card, mainDeck.length, 'main', 2)" />
+        :disabled="!isCardWithinLimit(card, 'main', 2)"
+        @click="isCardWithinLimit(card, 'main', 2) && addCardToDeck(card, mainDeck.length, 'main', 2)" />
       <ButtonCTA variant="emerald" text-content="+ 3" aria-label="Add 3 copies"
-        :disabled="!isCardWithinLimit(card, 'main', 3)" @click="addCardToDeck(card, mainDeck.length, 'main', 3)" />
+        :disabled="!isCardWithinLimit(card, 'main', 3)"
+        @click="isCardWithinLimit(card, 'main', 3) && addCardToDeck(card, mainDeck.length, 'main', 3)" />
     </div>
   </div>
   <div v-else-if="isExtraDeckCard(card.frameType)" class="dark:text-neutral-300">
@@ -45,9 +47,11 @@ function isExtraDeckCard(cardFrame: string): boolean {
       <ButtonCTA variant="emerald" text-content="+ 1" aria-label="Add 1 copy"
         :disabled="!isCardWithinLimit(card, 'extra')" @click="addCardToDeck(card, extraDeck.length, 'extra')" />
       <ButtonCTA variant="emerald" text-content="+ 2" aria-label="Add 2 copies"
-        :disabled="!isCardWithinLimit(card, 'extra', 2)" @click="addCardToDeck(card, extraDeck.length, 'extra', 2)" />
+        :disabled="!isCardWithinLimit(card, 'extra', 2)"
+        @click="isCardWithinLimit(card, 'extra', 2) && addCardToDeck(card, extraDeck.length, 'extra', 2)" />
       <ButtonCTA variant="emerald" text-content="+ 3" aria-label="Add 3 copies"
-        :disabled="!isCardWithinLimit(card, 'extra', 3)" @click="addCardToDeck(card, extraDeck.length, 'extra', 3)" />
+        :disabled="!isCardWithinLimit(card, 'extra', 3)"
+        @click="isCardWithinLimit(card, 'extra', 3) && addCardToDeck(card, extraDeck.length, 'extra', 3)" />
     </div>
   </div>
   <div class="mt-3 dark:text-neutral-300">
@@ -56,9 +60,11 @@ function isExtraDeckCard(cardFrame: string): boolean {
       <ButtonCTA variant="emerald" text-content="+ 1" aria-label="Add 1 copy"
         :disabled="!isCardWithinLimit(card, 'side')" @click="addCardToDeck(card, sideDeck.length, 'side')" />
       <ButtonCTA variant="emerald" text-content="+ 2" aria-label="Add 2 copies"
-        :disabled="!isCardWithinLimit(card, 'side', 2)" @click="addCardToDeck(card, sideDeck.length, 'side', 2)" />
+        :disabled="!isCardWithinLimit(card, 'side', 2)"
+        @click="isCardWithinLimit(card, 'side', 2) && addCardToDeck(card, sideDeck.length, 'side', 2)" />
       <ButtonCTA variant="emerald" text-content="+ 3" aria-label="Add 3 copies"
-        :disabled="!isCardWithinLimit(card, 'side', 3)" @click="addCardToDeck(card, sideDeck.length, 'side', 3)" />
+        :disabled="!isCardWithinLimit(card, 'side', 3)"
+        @click="isCardWithinLimit(card, 'side', 3) && addCardToDeck(card, sideDeck.length, 'side', 3)" />
     </div>
   </div>
 </template>
