@@ -4,6 +4,7 @@ import type { YGOCardData } from '@/utils/interfaces'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 import { ArrowLeftRight } from 'lucide-vue-next'
+import { EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
 
 const props = defineProps<{
   card: YGOCardData
@@ -13,8 +14,6 @@ const props = defineProps<{
 const deckStore = useDeckStore()
 const { mainDeck, sideDeck, getCardFrequency } = storeToRefs(deckStore)
 const { isCardWithinLimit, addCardToDeck, removeCardFromDeck } = useDeckStore()
-
-const EXTRA_AND_SIDE_DECK_LIMIT = 15
 
 /**
  * Transfer card copies from main deck to side deck

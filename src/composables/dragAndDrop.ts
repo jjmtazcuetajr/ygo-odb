@@ -2,6 +2,7 @@ import { reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import type { YGOCardData, Dropzone } from '@/utils/interfaces'
+import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
 
 export function useDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
@@ -98,8 +99,6 @@ export function useDragAndDrop() {
       const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
       const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
       const cardFrame = draggedCard.value.frameType
-      const MAIN_DECK_LIMIT = 60
-      const EXTRA_AND_SIDE_DECK_LIMIT = 15
 
       if (
         (extraDeckDropzone && mainDeckCards.includes(cardFrame)) || // main deck card dragged into the extra deck

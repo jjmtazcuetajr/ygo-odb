@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useYgoCardsStore } from './ygo-cards'
 import type { YGOCardData, BanStatus, Dropzone } from '@/utils/interfaces'
+import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, FORBIDDEN_CARD_LIMIT, LIMITED_CARD_LIMIT, SEMI_LIMITED_CARD_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
 
 export const useDeckStore = defineStore('deck', () => {
   // states
@@ -79,9 +80,6 @@ export const useDeckStore = defineStore('deck', () => {
    * @param num Number of cards about to add
    */
   function addCardToDeck(card: YGOCardData, index: number, deckType: Dropzone, num: number | undefined = undefined) {
-    const MAIN_DECK_LIMIT = 60
-    const EXTRA_AND_SIDE_DECK_LIMIT = 15
-
     const loopLimit = num !== undefined ? num : 1
     for (let x = 0; x < loopLimit; x++) {
       const cardLimit = isCardWithinLimit(card, deckType)
@@ -105,10 +103,6 @@ export const useDeckStore = defineStore('deck', () => {
    * @returns Boolean value
    */
   function isCardWithinLimit(card: YGOCardData, deckType: Dropzone, num: number | undefined = undefined): boolean {
-    const FORBIDDEN_CARD_LIMIT = 0
-    const LIMITED_CARD_LIMIT = 1
-    const SEMI_LIMITED_CARD_LIMIT = 2
-    const UNRESTRICTED_CARD_LIMIT = 3
     const { banList } = storeToRefs(useYgoCardsStore())
 
     // check the number of instances a card is within each of the deck types
