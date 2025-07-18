@@ -40,7 +40,7 @@ function moveFromMainToSideDeck(num: number = 1) {
     <span>Add more:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="emerald" text-content="+ 1" aria-label="Add 1 Copy"
-        :disabled="!isCardWithinLimit(card, 'main', 1)" @click="addCardToDeck(card, mainDeck.length, 'main', 1)" />
+        :disabled="!isCardWithinLimit(card, 'main')" @click="addCardToDeck(card, mainDeck.length, 'main')" />
       <ButtonCTA variant="emerald" text-content="+ 2" aria-label="Add 2 Copies"
         :disabled="!isCardWithinLimit(card, 'main', 2)"
         @click="isCardWithinLimit(card, 'main', 2) && addCardToDeck(card, mainDeck.length, 'main', 2)" />

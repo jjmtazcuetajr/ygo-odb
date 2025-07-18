@@ -77,11 +77,10 @@ export const useDeckStore = defineStore('deck', () => {
    * @param card Object containing card info
    * @param index Index to insert the card into
    * @param deckType Deck of either `main`, `extra`, or `side`
-   * @param num Number of cards about to add
+   * @param num Number of cards about to add. Defaults to `1` copy
    */
-  function addCardToDeck(card: YGOCardData, index: number, deckType: Dropzone, num: number | undefined = undefined) {
-    const loopLimit = num !== undefined ? num : 1
-    for (let x = 0; x < loopLimit; x++) {
+  function addCardToDeck(card: YGOCardData, index: number, deckType: Dropzone, num: number = 1) {
+    for (let x = 0; x < num; x++) {
       const cardLimit = isCardWithinLimit(card, deckType)
       if (cardLimit) {
         const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
@@ -99,10 +98,10 @@ export const useDeckStore = defineStore('deck', () => {
    * Determine if a card added into a deck dropzone is within the limit allowed
    * @param card Object containing card info
    * @param deckType Deck of either `main`, `extra`, or `side`
-   * @param num Number of cards about to add
+   * @param num Number of cards about to add. Defaults to `1` copy
    * @returns Boolean value
    */
-  function isCardWithinLimit(card: YGOCardData, deckType: Dropzone, num: number | undefined = undefined): boolean {
+  function isCardWithinLimit(card: YGOCardData, deckType: Dropzone, num: number = 1): boolean {
     const { banList } = storeToRefs(useYgoCardsStore())
 
     // check the number of instances a card is within each of the deck types
@@ -138,7 +137,7 @@ export const useDeckStore = defineStore('deck', () => {
     const limitOCG = cardLimitMap[card.banlist_info?.ban_ocg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
     const limitTCG = cardLimitMap[card.banlist_info?.ban_tcg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
 
-    const numberToAdd = num !== undefined ? totalCount + (num - 1) : totalCount
+    const numberToAdd = totalCount + (num - 1)
 
     if (banList.value === 'ocg' && numberToAdd < limitOCG) return true
     else if (banList.value === 'tcg' && numberToAdd < limitTCG) return true
