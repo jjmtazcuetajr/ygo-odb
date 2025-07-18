@@ -34,6 +34,15 @@ function moveFromMainToSideDeck(num: number = 1) {
     addCardToDeck(props.card, sideDeck.value.length, 'side', 3)
   }
 }
+
+const emit = defineEmits<{ 'handle-popover-close': [] }>()
+
+/**
+ * Emit the `handle-popover-close` event
+ */
+function popoverClose() {
+  emit('handle-popover-close')
+}
 </script>
 <template>
   <div class="dark:text-neutral-300">
@@ -50,21 +59,21 @@ function moveFromMainToSideDeck(num: number = 1) {
     <span>Move to Side Deck:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA has-icon variant="neutral-2" aria-label="Move 1 Copy" :disabled="sideDeck.length === 15"
-        @click="[moveFromMainToSideDeck(), $emit('handlePopoverClose')]">
+        @click="[moveFromMainToSideDeck(), popoverClose()]">
         <template #textWithIcon>
           <ArrowLeftRight :size="16" /> 1
         </template>
       </ButtonCTA>
       <ButtonCTA has-icon variant="neutral-2" aria-label="Move 2 Copies"
         :disabled="getCardFrequency(card.id, 'main') < 2 || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.length < 2"
-        @click="[moveFromMainToSideDeck(2), $emit('handlePopoverClose')]">
+        @click="[moveFromMainToSideDeck(2), popoverClose()]">
         <template #textWithIcon>
           <ArrowLeftRight :size="16" /> 2
         </template>
       </ButtonCTA>
       <ButtonCTA has-icon variant="neutral-2" aria-label="Move 3 Copies"
         :disabled="getCardFrequency(card.id, 'main') < 3 || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.length < 3"
-        @click="[moveFromMainToSideDeck(3), $emit('handlePopoverClose')]">
+        @click="[moveFromMainToSideDeck(3), popoverClose()]">
         <template #textWithIcon>
           <ArrowLeftRight :size="16" /> 3
         </template>
@@ -75,13 +84,13 @@ function moveFromMainToSideDeck(num: number = 1) {
     <span>Remove:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="red" text-content="- 1" aria-label="Remove 1 Copy"
-        @click="[removeCardFromDeck(fromIndex, 'main'), $emit('handlePopoverClose')]" />
+        @click="[removeCardFromDeck(fromIndex, 'main'), popoverClose()]" />
       <ButtonCTA variant="red" text-content="- 2" aria-label="Remove 2 Copies"
         :disabled="getCardFrequency(card.id, 'main') < 2"
-        @click="[getCardFrequency(card.id, 'main') >= 2 && removeCardFromDeck(fromIndex, 'main', 2), $emit('handlePopoverClose')]" />
+        @click="[getCardFrequency(card.id, 'main') >= 2 && removeCardFromDeck(fromIndex, 'main', 2), popoverClose()]" />
       <ButtonCTA variant="red" text-content="- 3" aria-label="Remove 3 Copies"
         :disabled="getCardFrequency(card.id, 'main') < 3"
-        @click="[getCardFrequency(card.id, 'main') === 3 && removeCardFromDeck(fromIndex, 'main', 3), $emit('handlePopoverClose')]" />
+        @click="[getCardFrequency(card.id, 'main') === 3 && removeCardFromDeck(fromIndex, 'main', 3), popoverClose()]" />
     </div>
   </div>
 </template>
