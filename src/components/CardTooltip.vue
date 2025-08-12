@@ -6,7 +6,7 @@ import {
 import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
 import GridToDeck from './card-popover/GridToDeck.vue'
-import MainToSide from './card-popover/MainToSide.vue'
+import DropzoneOps from './card-popover/DropzoneOps.vue'
 import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
 import { ref } from 'vue'
@@ -60,7 +60,7 @@ const isPopoverOpen = ref(false)
             <GridToDeck :card="card" />
           </template>
           <template v-else-if="from === 'main'">
-            <MainToSide :card="card" :from-index="index" @handle-popover-close="isPopoverOpen = false" />
+            <DropzoneOps :card="card" :from-index="index" @handle-popover-close="isPopoverOpen = false" />
           </template>
           <PopoverClose aria-label="Close"
             class="absolute top-1.5 right-1.5 flex justify-center items-center size-[24px] rounded-full cursor-pointer dark:text-white hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
