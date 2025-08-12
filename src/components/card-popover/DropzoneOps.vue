@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ButtonCTA from '../ButtonCTA.vue'
-import type { YGOCardData } from '@/utils/interfaces'
+import type { YGOCardData, Dropzone } from '@/utils/interfaces'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 import { ArrowLeftRight } from 'lucide-vue-next'
@@ -9,10 +9,11 @@ import { EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
 const props = defineProps<{
   card: YGOCardData
   fromIndex: number
+  source: Dropzone
 }>()
 
 const deckStore = useDeckStore()
-const { mainDeck, sideDeck, getCardFrequency } = storeToRefs(deckStore)
+const { mainDeck, extraDeck, sideDeck, getCardFrequency } = storeToRefs(deckStore)
 const { isCardWithinLimit, addCardToDeck, removeCardFromDeck } = useDeckStore()
 
 /**
@@ -48,49 +49,69 @@ function popoverClose() {
   <div class="dark:text-neutral-300">
     <span>Add more:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="emerald" text-content="+ 1" aria-label="Add 1 Copy"
-        :disabled="!isCardWithinLimit(card, 'main')" @click="addCardToDeck(card, mainDeck.length, 'main')" />
-      <ButtonCTA variant="emerald" text-content="+ 2" aria-label="Add 2 Copies"
-        :disabled="!isCardWithinLimit(card, 'main', 2)"
-        @click="isCardWithinLimit(card, 'main', 2) && addCardToDeck(card, mainDeck.length, 'main', 2)" />
+      <template v-if="source === 'main'">
+        <ButtonCTA variant="emerald" text-content="+ 1" aria-label="Add 1 Copy"
+          :disabled="!isCardWithinLimit(card, 'main')" @click="addCardToDeck(card, mainDeck.length, 'main')" />
+        <ButtonCTA variant="emerald" text-content="+ 2" aria-label="Add 2 Copies"
+          :disabled="!isCardWithinLimit(card, 'main', 2)"
+          @click="isCardWithinLimit(card, 'main', 2) && addCardToDeck(card, mainDeck.length, 'main', 2)" />
+      </template>
+      <template v-else-if="source === 'extra'">
+        <ButtonCTA variant="emerald" text-content="+ 1" aria-label="Add 1 Copy"
+          :disabled="!isCardWithinLimit(card, 'extra')" @click="addCardToDeck(card, extraDeck.length, 'extra')" />
+        <ButtonCTA variant="emerald" text-content="+ 2" aria-label="Add 2 Copies"
+          :disabled="!isCardWithinLimit(card, 'extra', 2)"
+          @click="isCardWithinLimit(card, 'extra', 2) && addCardToDeck(card, extraDeck.length, 'extra', 2)" />
+      </template>
+      <template v-else-if="source === 'side'">
+        <ButtonCTA variant="emerald" text-content="+ 1" aria-label="Add 1 Copy"
+          :disabled="!isCardWithinLimit(card, 'side')" @click="addCardToDeck(card, sideDeck.length, 'side')" />
+        <ButtonCTA variant="emerald" text-content="+ 2" aria-label="Add 2 Copies"
+          :disabled="!isCardWithinLimit(card, 'side', 2)"
+          @click="isCardWithinLimit(card, 'side', 2) && addCardToDeck(card, sideDeck.length, 'side', 2)" />
+      </template>
     </div>
   </div>
   <div class="mt-3 dark:text-neutral-300">
     <span>Move to Side Deck:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA has-icon variant="neutral-2" aria-label="Move 1 Copy" :disabled="sideDeck.length === 15"
-        @click="[moveFromMainToSideDeck(), popoverClose()]">
-        <template #textWithIcon>
-          <ArrowLeftRight :size="16" /> 1
-        </template>
-      </ButtonCTA>
-      <ButtonCTA has-icon variant="neutral-2" aria-label="Move 2 Copies"
-        :disabled="getCardFrequency(card.id, 'main') < 2 || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.length < 2"
-        @click="[moveFromMainToSideDeck(2), popoverClose()]">
-        <template #textWithIcon>
-          <ArrowLeftRight :size="16" /> 2
-        </template>
-      </ButtonCTA>
-      <ButtonCTA has-icon variant="neutral-2" aria-label="Move 3 Copies"
-        :disabled="getCardFrequency(card.id, 'main') < 3 || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.length < 3"
-        @click="[moveFromMainToSideDeck(3), popoverClose()]">
-        <template #textWithIcon>
-          <ArrowLeftRight :size="16" /> 3
-        </template>
-      </ButtonCTA>
+      <template v-if="source === 'main'">
+        <ButtonCTA has-icon variant="neutral-2" aria-label="Move 1 Copy" :disabled="sideDeck.length === 15"
+          @click="[moveFromMainToSideDeck(), popoverClose()]">
+          <template #textWithIcon>
+            <ArrowLeftRight :size="16" /> 1
+          </template>
+        </ButtonCTA>
+        <ButtonCTA has-icon variant="neutral-2" aria-label="Move 2 Copies"
+          :disabled="getCardFrequency(card.id, 'main') < 2 || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.length < 2"
+          @click="[moveFromMainToSideDeck(2), popoverClose()]">
+          <template #textWithIcon>
+            <ArrowLeftRight :size="16" /> 2
+          </template>
+        </ButtonCTA>
+        <ButtonCTA has-icon variant="neutral-2" aria-label="Move 3 Copies"
+          :disabled="getCardFrequency(card.id, 'main') < 3 || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.length < 3"
+          @click="[moveFromMainToSideDeck(3), popoverClose()]">
+          <template #textWithIcon>
+            <ArrowLeftRight :size="16" /> 3
+          </template>
+        </ButtonCTA>
+      </template>
     </div>
   </div>
   <div class="mt-3 dark:text-neutral-300">
     <span>Remove:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="red" text-content="- 1" aria-label="Remove 1 Copy"
-        @click="[removeCardFromDeck(fromIndex, 'main'), popoverClose()]" />
-      <ButtonCTA variant="red" text-content="- 2" aria-label="Remove 2 Copies"
-        :disabled="getCardFrequency(card.id, 'main') < 2"
-        @click="[getCardFrequency(card.id, 'main') >= 2 && removeCardFromDeck(fromIndex, 'main', 2), popoverClose()]" />
-      <ButtonCTA variant="red" text-content="- 3" aria-label="Remove 3 Copies"
-        :disabled="getCardFrequency(card.id, 'main') < 3"
-        @click="[getCardFrequency(card.id, 'main') === 3 && removeCardFromDeck(fromIndex, 'main', 3), popoverClose()]" />
+      <template v-if="source === 'main'">
+        <ButtonCTA variant="red" text-content="- 1" aria-label="Remove 1 Copy"
+          @click="[removeCardFromDeck(fromIndex, 'main'), popoverClose()]" />
+        <ButtonCTA variant="red" text-content="- 2" aria-label="Remove 2 Copies"
+          :disabled="getCardFrequency(card.id, 'main') < 2"
+          @click="[getCardFrequency(card.id, 'main') >= 2 && removeCardFromDeck(fromIndex, 'main', 2), popoverClose()]" />
+        <ButtonCTA variant="red" text-content="- 3" aria-label="Remove 3 Copies"
+          :disabled="getCardFrequency(card.id, 'main') < 3"
+          @click="[getCardFrequency(card.id, 'main') === 3 && removeCardFromDeck(fromIndex, 'main', 3), popoverClose()]" />
+      </template>
     </div>
   </div>
 </template>

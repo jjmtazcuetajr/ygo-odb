@@ -60,7 +60,16 @@ const isPopoverOpen = ref(false)
             <GridToDeck :card="card" />
           </template>
           <template v-else-if="from === 'main'">
-            <DropzoneOps :card="card" :from-index="index" @handle-popover-close="isPopoverOpen = false" />
+            <DropzoneOps :card="card" :from-index="index" :source="'main'"
+              @handle-popover-close="isPopoverOpen = false" />
+          </template>
+          <template v-else-if="from === 'extra'">
+            <DropzoneOps :card="card" :from-index="index" :source="'extra'"
+              @handle-popover-close="isPopoverOpen = false" />
+          </template>
+          <template v-else-if="from === 'side'">
+            <DropzoneOps :card="card" :from-index="index" :source="'side'"
+              @handle-popover-close="isPopoverOpen = false" />
           </template>
           <PopoverClose aria-label="Close"
             class="absolute top-1.5 right-1.5 flex justify-center items-center size-[24px] rounded-full cursor-pointer dark:text-white hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
