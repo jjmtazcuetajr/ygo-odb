@@ -112,6 +112,26 @@ function popoverClose() {
           :disabled="getCardFrequency(card.id, 'main') < 3"
           @click="[getCardFrequency(card.id, 'main') === 3 && removeCardFromDeck(fromIndex, 'main', 3), popoverClose()]" />
       </template>
+      <template v-else-if="source === 'extra'">
+        <ButtonCTA variant="red" text-content="- 1" aria-label="Remove 1 Copy"
+          @click="[removeCardFromDeck(fromIndex, 'extra'), popoverClose()]" />
+        <ButtonCTA variant="red" text-content="- 2" aria-label="Remove 2 Copies"
+          :disabled="getCardFrequency(card.id, 'extra') < 2"
+          @click="[getCardFrequency(card.id, 'extra') >= 2 && removeCardFromDeck(fromIndex, 'extra', 2), popoverClose()]" />
+        <ButtonCTA variant="red" text-content="- 3" aria-label="Remove 3 Copies"
+          :disabled="getCardFrequency(card.id, 'extra') < 3"
+          @click="[getCardFrequency(card.id, 'extra') === 3 && removeCardFromDeck(fromIndex, 'extra', 3), popoverClose()]" />
+      </template>
+      <template v-else-if="source === 'side'">
+        <ButtonCTA variant="red" text-content="- 1" aria-label="Remove 1 Copy"
+          @click="[removeCardFromDeck(fromIndex, 'side'), popoverClose()]" />
+        <ButtonCTA variant="red" text-content="- 2" aria-label="Remove 2 Copies"
+          :disabled="getCardFrequency(card.id, 'side') < 2"
+          @click="[getCardFrequency(card.id, 'side') >= 2 && removeCardFromDeck(fromIndex, 'side', 2), popoverClose()]" />
+        <ButtonCTA variant="red" text-content="- 3" aria-label="Remove 3 Copies"
+          :disabled="getCardFrequency(card.id, 'side') < 3"
+          @click="[getCardFrequency(card.id, 'side') === 3 && removeCardFromDeck(fromIndex, 'side', 3), popoverClose()]" />
+      </template>
     </div>
   </div>
 </template>
