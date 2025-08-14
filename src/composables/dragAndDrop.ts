@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import type { YGOCardData, Dropzone } from '@/utils/interfaces'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
+import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
 
 export function useDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
@@ -96,13 +97,11 @@ export function useDragAndDrop() {
       const mainDeckDropzone = elementBelow.closest('#main-deck')
       const extraDeckDropzone = elementBelow.closest('#extra-deck')
       const sideDeckDropzone = elementBelow.closest('#side-deck')
-      const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
-      const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
       const cardFrame = draggedCard.value.frameType
 
       if (
-        (extraDeckDropzone && mainDeckCards.includes(cardFrame)) || // main deck card dragged into the extra deck
-        (mainDeckDropzone && extraDeckCards.includes(cardFrame)) || // extra deck card dragged into the main deck
+        (extraDeckDropzone && isMainDeckCard(cardFrame)) || // main deck card dragged into the extra deck
+        (mainDeckDropzone && isExtraDeckCard(cardFrame)) || // extra deck card dragged into the main deck
         (
           // card dragged from the paginated results to the deck dropzones has reached its limit
           source.value === 'grid' &&

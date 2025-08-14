@@ -3,29 +3,12 @@ import ButtonCTA from '../ButtonCTA.vue'
 import type { YGOCardData } from '@/utils/interfaces'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
+import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
 
 defineProps<{ card: YGOCardData }>()
 
 const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
 const { isCardWithinLimit, addCardToDeck } = useDeckStore()
-
-/**
- * Determine if card is a main deck card
- * @param cardFrame Type of card based on frame color
- */
-function isMainDeckCard(cardFrame: string): boolean {
-  const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
-  return mainDeckCards.includes(cardFrame)
-}
-
-/**
- * Determine if card is an extra deck card
- * @param cardFrame Type of card based on frame color
- */
-function isExtraDeckCard(cardFrame: string): boolean {
-  const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
-  return extraDeckCards.includes(cardFrame)
-}
 </script>
 <template>
   <div v-if="isMainDeckCard(card.frameType)" class="dark:text-neutral-300">

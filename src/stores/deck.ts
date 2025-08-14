@@ -3,6 +3,7 @@ import { defineStore, storeToRefs } from 'pinia'
 import { useYgoCardsStore } from './ygo-cards'
 import type { YGOCardData, BanStatus, Dropzone } from '@/utils/interfaces'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, FORBIDDEN_CARD_LIMIT, LIMITED_CARD_LIMIT, SEMI_LIMITED_CARD_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
+import { isMainDeckCard } from '@/utils/components'
 
 export const useDeckStore = defineStore('deck', () => {
   // states
@@ -112,17 +113,16 @@ export const useDeckStore = defineStore('deck', () => {
     let totalCount = 0
     switch (deckType) {
       case 'main':
-        // check the main and side deck if its a main deck card
+        // check the main and side deck if it's a main deck card
         totalCount = countInMainDeck + countInSideDeck
         break
       case 'extra':
-        // check the extra and side deck if its an extra deck card
+        // check the extra and side deck if it's an extra deck card
         totalCount = countInExtraDeck + countInSideDeck
         break
       case 'side':
-        // since the side deck can contain both main & extra deck cards, check the frame type of the card
-        const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
-        totalCount = (mainDeckCards.includes(card.frameType) ? countInMainDeck : countInExtraDeck) + countInSideDeck
+        // since the side deck can contain both main & extra deck cards, check the frame type of the card first
+        totalCount = (isMainDeckCard(card.frameType) ? countInMainDeck : countInExtraDeck) + countInSideDeck
         break
       default:
         break

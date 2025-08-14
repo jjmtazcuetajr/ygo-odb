@@ -5,6 +5,7 @@ import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 import { ArrowLeftRight } from 'lucide-vue-next'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
+import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
 
 const props = defineProps<{
   card: YGOCardData
@@ -86,24 +87,6 @@ function handleLastIndex(to: Dropzone): number {
  */
 function popoverClose() {
   emit('handle-popover-close')
-}
-
-/**
- * Determine if card is a main deck card
- * @param cardFrame Type of card based on frame color
- */
-function isMainDeckCard(cardFrame: string): boolean {
-  const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
-  return mainDeckCards.includes(cardFrame)
-}
-
-/**
- * Determine if card is an extra deck card
- * @param cardFrame Type of card based on frame color
- */
-function isExtraDeckCard(cardFrame: string): boolean {
-  const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
-  return extraDeckCards.includes(cardFrame)
 }
 
 /**
