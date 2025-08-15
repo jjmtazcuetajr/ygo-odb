@@ -21,7 +21,7 @@ const { isCardWithinLimit, addCardToDeck, removeCardFromDeck } = useDeckStore()
 /**
  * Transfer card copies between deck types
  * @param from Deck type the card came from
- * @param num Number of card copies to transfer. Defaults to `1` copy
+ * @param num Number of card copies to transfer
  */
 function crossdeckCardTransfer(from: Dropzone, num: 1 | 2 | 3) {
   const sameCardCount = deckStore.getCardFrequency(props.card.id, from)
