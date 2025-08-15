@@ -20,53 +20,33 @@ const { isCardWithinLimit, addCardToDeck, removeCardFromDeck } = useDeckStore()
 
 /**
  * Transfer card copies between deck types
+ * @param from Deck type the card came from
  * @param num Number of card copies to transfer. Defaults to `1` copy
  */
-function crossdeckCardTransfer(from: Dropzone, num: number = 1) {
+function crossdeckCardTransfer(from: Dropzone, num: 1 | 2 | 3) {
   const sameCardCount = deckStore.getCardFrequency(props.card.id, from)
-  const difference = from === 'main' || from === 'extra' ? EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length : 0
 
   switch (from) {
     case 'main':
     case 'extra':
-      if (num === 1 && sideDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT) {
-        removeCardFromDeck(props.fromIndex, from)
-        addCardToDeck(props.card, sideDeck.value.length, 'side')
-      } else if (num === 2 && (sameCardCount >= 2 && difference >= 2)) {
-        removeCardFromDeck(props.fromIndex, from, 2)
-        addCardToDeck(props.card, sideDeck.value.length, 'side', 2)
-      } else if (num === 3 && (sameCardCount === 3 && difference >= 3)) {
-        removeCardFromDeck(props.fromIndex, from, 3)
-        addCardToDeck(props.card, sideDeck.value.length, 'side', 3)
+      if (sameCardCount >= num && EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length >= num) {
+        removeCardFromDeck(props.fromIndex, from, num)
+        addCardToDeck(props.card, sideDeck.value.length, 'side', num)
       }
       break
-
     case 'side':
       if (isMainDeckCard(props.card.frameType)) {
-        if (num === 1 && mainDeck.value.length < MAIN_DECK_LIMIT) {
-          removeCardFromDeck(props.fromIndex, from)
-          addCardToDeck(props.card, mainDeck.value.length, 'main')
-        } else if (num === 2 && (sameCardCount >= 2 && (MAIN_DECK_LIMIT - mainDeck.value.length) >= 2)) {
-          removeCardFromDeck(props.fromIndex, from, 2)
-          addCardToDeck(props.card, mainDeck.value.length, 'main', 2)
-        } else if (num === 3 && (sameCardCount === 3 && (MAIN_DECK_LIMIT - mainDeck.value.length) >= 3)) {
-          removeCardFromDeck(props.fromIndex, from, 3)
-          addCardToDeck(props.card, mainDeck.value.length, 'main', 3)
+        if (sameCardCount >= num && MAIN_DECK_LIMIT - mainDeck.value.length >= num) {
+          removeCardFromDeck(props.fromIndex, from, num)
+          addCardToDeck(props.card, mainDeck.value.length, 'main', num)
         }
       } else if (isExtraDeckCard(props.card.frameType)) {
-        if (num === 1 && extraDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT) {
-          removeCardFromDeck(props.fromIndex, from)
-          addCardToDeck(props.card, extraDeck.value.length, 'extra')
-        } else if (num === 2 && (sameCardCount >= 2 && (EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length) >= 2)) {
-          removeCardFromDeck(props.fromIndex, from, 2)
-          addCardToDeck(props.card, extraDeck.value.length, 'extra', 2)
-        } else if (num === 3 && (sameCardCount === 3 && (EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length) >= 3)) {
-          removeCardFromDeck(props.fromIndex, from, 3)
-          addCardToDeck(props.card, extraDeck.value.length, 'extra', 3)
+        if (sameCardCount >= num && EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length >= num) {
+          removeCardFromDeck(props.fromIndex, from, num)
+          addCardToDeck(props.card, extraDeck.value.length, 'extra', num)
         }
       }
       break
-
     default:
       break
   }
@@ -94,27 +74,17 @@ function popoverClose() {
  * @param from Deck type the card came from
  * @param num Number of card copies
  */
-function handleDisabledState(from: Dropzone, num: number): boolean {
+function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
   switch (from) {
     case 'main':
     case 'extra':
-      if (num === 1) return sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT
-      else if (num === 2) return getCardFrequency.value(props.card.id, props.source) < 2 || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < 2
-      else if (num === 3) return getCardFrequency.value(props.card.id, props.source) < 3 || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < 3
-      break
-
+      return getCardFrequency.value(props.card.id, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < num
     case 'side':
-      if (isMainDeckCard(props.card.frameType)) {
-        if (num === 1) return mainDeck.value.length === MAIN_DECK_LIMIT
-        else if (num === 2) return getCardFrequency.value(props.card.id, props.source) < 2 || MAIN_DECK_LIMIT - mainDeck.value.length < 2
-        else if (num === 3) return getCardFrequency.value(props.card.id, props.source) < 3 || MAIN_DECK_LIMIT - mainDeck.value.length < 3
-      } else if (isExtraDeckCard(props.card.frameType)) {
-        if (num === 1) return extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT
-        else if (num === 2) return getCardFrequency.value(props.card.id, props.source) < 2 || EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < 2
-        else if (num === 3) return getCardFrequency.value(props.card.id, props.source) < 3 || EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < 3
-      }
+      if (isMainDeckCard(props.card.frameType))
+        return getCardFrequency.value(props.card.id, props.source) < num || MAIN_DECK_LIMIT - mainDeck.value.length < num
+      else if (isExtraDeckCard(props.card.frameType))
+        return getCardFrequency.value(props.card.id, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < num
       break
-
     default:
       break
   }
@@ -140,7 +110,7 @@ function handleDisabledState(from: Dropzone, num: number): boolean {
     </template>
     <div class="flex gap-2 mt-1">
       <ButtonCTA has-icon variant="neutral-2" aria-label="Move 1 Copy" :disabled="handleDisabledState(source, 1)"
-        @click="crossdeckCardTransfer(source)">
+        @click="crossdeckCardTransfer(source, 1)">
         <template #textWithIcon>
           <ArrowLeftRight :size="16" /> 1
         </template>

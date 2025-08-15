@@ -16,7 +16,7 @@ const { isCardWithinLimit, addCardToDeck } = useDeckStore()
  * @param from Deck type to add the card to
  * @param num Number of card copies
  */
-function handleDisabledState(to: Dropzone, num: number): boolean {
+function handleDisabledState(to: Dropzone, num: 1 | 2 | 3): boolean {
   switch (to) {
     case 'main':
       return !isCardWithinLimit(props.card, to, num) || MAIN_DECK_LIMIT - mainDeck.value.length < num
@@ -35,7 +35,7 @@ function handleDisabledState(to: Dropzone, num: number): boolean {
  * @param to Deck type to add the card to
  * @param num Number of card copies to add
  */
-function handleAdd(to: Dropzone, num: number) {
+function handleAdd(to: Dropzone, num: 1 | 2 | 3) {
   switch (to) {
     case 'main':
       if (isCardWithinLimit(props.card, to, num) && MAIN_DECK_LIMIT - mainDeck.value.length >= num)
