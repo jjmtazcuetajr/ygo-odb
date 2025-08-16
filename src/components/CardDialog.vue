@@ -4,12 +4,17 @@ import { X } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
 import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
-import type { YGOCardData, BanList } from '@/utils/interfaces'
+import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
+import { useMobileDragAndDrop } from '@/composables/mobileDragAndDrop'
 
 defineProps<{
-  card: YGOCardData,
+  card: YGOCardData
   banList: BanList
+  from: Dropzone | 'grid'
+  index: number
 }>()
+
+const { handleTouchStart } = useMobileDragAndDrop()
 
 const isDialogOpen = ref(false)
 
@@ -26,7 +31,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
       <button type="button"
         class="relative rounded-sm block lg:hidden active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
         <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
-          class="rounded-sm aspect-[268/391] text-xs">
+          class="rounded-sm aspect-[268/391] text-xs" @touchstart="handleTouchStart($event, card, from, index)">
         <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
         <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
       </button>
