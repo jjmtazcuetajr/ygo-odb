@@ -6,6 +6,7 @@ import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
 import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
 import { useMobileDragAndDrop } from '@/composables/mobileDragAndDrop'
+import doubleTapDirective from '@/custom-directives/doubleTap'
 
 defineProps<{
   card: YGOCardData
@@ -16,10 +17,17 @@ defineProps<{
 
 const { handleTouchStart } = useMobileDragAndDrop()
 
+const vDoubleTap = doubleTapDirective
+
 const isDialogOpen = ref(false)
 
+function showDialog() { isDialogOpen.value = true }
 function hideDialog() {
   if (window.innerWidth >= 1024 && isDialogOpen.value) isDialogOpen.value = false
+}
+function handleClick() {
+  // prevent the dialog on showing when doing a single tap
+  isDialogOpen.value = false
 }
 
 onMounted(() => { window.addEventListener('resize', hideDialog) })
@@ -28,7 +36,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
 <template>
   <DialogRoot v-model:open="isDialogOpen">
     <DialogTrigger as-child>
-      <button type="button"
+      <button type="button" v-double-tap="showDialog" @click="handleClick"
         class="relative rounded-sm block lg:hidden active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
         <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
           class="rounded-sm aspect-[268/391] text-xs" @touchstart="handleTouchStart($event, card, from, index)">
