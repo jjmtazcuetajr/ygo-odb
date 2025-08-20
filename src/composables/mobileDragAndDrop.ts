@@ -7,7 +7,7 @@ import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
 
 export function useMobileDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
-  const { addCardToDeck, isCardWithinLimit, removeCardFromDeck } = useDeckStore()
+  const { addCardToDeck, removeCardFromDeck } = useDeckStore()
 
   const offset = reactive({x: 0, y: 0})
   const isDragging = ref(false)
@@ -28,19 +28,23 @@ export function useMobileDragAndDrop() {
   function handleTouchStart(e: TouchEvent, card: YGOCardData, from: Dropzone | 'grid', fromIndex: number) {
     if (from === 'grid') return
 
-    e.preventDefault()
+    if (e.cancelable) e.preventDefault()
     isDragging.value = true
     draggedCard.value = card
     cardIndex.value = fromIndex
     source.value = from
     const imgElement = e.currentTarget as HTMLElement
 
-    // create a ghost element that's always smaller than the original and the cursor always at its center
     const rect = imgElement.getBoundingClientRect()
+    const touch = e.touches[0]
+
+    // check if cursor is within the bounds of the tapped element
+    const isWithinBounds = (touch.clientX >= rect.left && touch.clientX <= rect.right && touch.clientY >= rect.top && touch.clientY <= rect.bottom)
+    if (!isWithinBounds) return
+
+    // create a ghost element that's always smaller than the original and the cursor always at its center
     offset.x = (rect.width - 20) / 2
     offset.y = (rect.height - 20) / 2
-
-    const touch = e.changedTouches[0]
     const startX = touch.clientX - offset.x
     const startY = touch.clientY - offset.y
     createGhostElement(imgElement, rect.width, startX, startY)
@@ -58,12 +62,12 @@ export function useMobileDragAndDrop() {
       if (!isDragging.value || !ghostElement.value) return
       e.preventDefault()
 
-      const touch = e.changedTouches[0]
+      const touch = e.touches[0]
       const positionX = touch.clientX - offset.x
       const positionY = touch.clientY - offset.y
       updateGhostPosition(positionX, positionY)
 
-      handleDragMove(e)
+      handleDragMove(touch.clientX, touch.clientY)
     }
 
     /**
@@ -84,20 +88,14 @@ export function useMobileDragAndDrop() {
 
   /**
    * Handle operations while dragging is ongoing
-   * @param e Event object
+   * @param x x-coordinate of touch input
+   * @param y y-coordinate of touch input
    */
-  function handleDragMove(e: TouchEvent) {
+  function handleDragMove(x: number, y: number) {
     if (!ghostElement.value) return
 
-    // temporarily disable pointer events
-    ghostElement.value.style.pointerEvents = 'none'
-
     // get element under cursor
-    const touch = e.changedTouches[0]
-    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY)
-
-    // re-enable pointer events
-    ghostElement.value.style.pointerEvents = 'auto'
+    const elementBelow = document.elementFromPoint(x, y)
 
     if (elementBelow && draggedCard.value) {
       const mainDeckDropzone = elementBelow.closest('#main-deck')
@@ -108,20 +106,6 @@ export function useMobileDragAndDrop() {
       if (
         (extraDeckDropzone && isMainDeckCard(cardFrame)) || // main deck card dragged into the extra deck
         (mainDeckDropzone && isExtraDeckCard(cardFrame)) || // extra deck card dragged into the main deck
-        (
-          // card dragged from the paginated results to the deck dropzones has reached its limit
-          source.value === 'grid' &&
-          (!isCardWithinLimit(draggedCard.value, 'main') || !isCardWithinLimit(draggedCard.value, 'extra') || !isCardWithinLimit(draggedCard.value, 'side'))
-        ) ||
-        (
-          // card dragged from the paginated results to the already full deck dropzones
-          source.value === 'grid' && 
-          (
-            mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT ||
-            extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT ||
-            sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT
-          )
-        ) ||
         // card dragged from the main deck to the already full side deck
         (source.value === 'main' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
         // card dragged from the extra deck to the already full side deck
@@ -132,22 +116,17 @@ export function useMobileDragAndDrop() {
           ((mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT))
         )
       ) {
-        ghostElement.value.style.cursor = 'not-allowed'
+        // nothing happens for now. might add some logic later
       } else {
-        ghostElement.value.style.cursor = 'grabbing'
-
-        // change cursor to 'copy' when dragging a card to a valid dropzone
-        if (mainDeckDropzone || extraDeckDropzone || sideDeckDropzone) ghostElement.value.style.cursor = 'copy'
-
         if (mainDeckDropzone) {
           setDropTarget('main')
-          setIndexInsertion(mainDeckDropzone, touch.clientX, touch.clientY)
+          setIndexInsertion(mainDeckDropzone, x, y)
         } else if (extraDeckDropzone) {
           setDropTarget('extra')
-          setIndexInsertion(extraDeckDropzone, touch.clientX, touch.clientY)
+          setIndexInsertion(extraDeckDropzone, x, y)
         } else if (sideDeckDropzone) {
           setDropTarget('side')
-          setIndexInsertion(sideDeckDropzone, touch.clientX, touch.clientY)
+          setIndexInsertion(sideDeckDropzone, x, y)
         } else {
           setDropTarget()
 
@@ -226,9 +205,8 @@ export function useMobileDragAndDrop() {
    */
   function createGhostElement(originalElement: HTMLElement, width: number, x: number, y: number) {
     const ghost = originalElement.cloneNode(true) as HTMLImageElement
-    ghost.className = 'fixed z-[9999] opacity-80 rounded-sm aspect-[268/391] text-xs shadow-md shadow-neutral-400 dark:shadow-neutral-950'
+    ghost.className = 'fixed z-[9999] opacity-80 rounded-sm aspect-[268/391] text-xs pointer-events-none touch-none shadow-md shadow-neutral-400 dark:shadow-neutral-950'
     ghost.width = width - 20
-    ghost.style.cursor = 'grabbing'
     ghost.style.left = `${x}px`
     ghost.style.top = `${y}px`
     document.body.appendChild(ghost)
