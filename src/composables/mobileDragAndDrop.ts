@@ -149,35 +149,11 @@ export function useMobileDragAndDrop() {
 
     // remove card from deck dropzone source
     if (toIndex !== -1) {
-      switch (source) {
-        case 'main':
-          removeCardFromDeck(cardIndex, 'main')
-          break
-        case 'extra':
-          removeCardFromDeck(cardIndex, 'extra')
-          break
-        case 'side':
-          removeCardFromDeck(cardIndex, 'side')
-          break
-        default:
-          break
-      }
+      if (source !== 'grid') removeCardFromDeck(cardIndex, source)
     }
 
     // add card to new deck dropzone
-    switch (currentDropTarget) {
-      case 'main':
-        addCardToDeck(draggedCard, toIndex, 'main')
-        break
-      case 'extra':
-        addCardToDeck(draggedCard, toIndex, 'extra')
-        break
-      case 'side':
-        addCardToDeck(draggedCard, toIndex, 'side')
-        break
-      default:
-        break
-    }
+    if (currentDropTarget) addCardToDeck(draggedCard, toIndex, currentDropTarget)
 
     // reset original image appearances
     const imageItems = document.querySelectorAll('.draggable')
