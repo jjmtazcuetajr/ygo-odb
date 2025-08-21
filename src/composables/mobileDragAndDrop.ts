@@ -1,4 +1,3 @@
-import { reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import type { YGOCardData, Dropzone } from '@/utils/interfaces'
@@ -9,14 +8,14 @@ export function useMobileDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
   const { addCardToDeck, removeCardFromDeck } = useDeckStore()
 
-  const offset = reactive({x: 0, y: 0})
-  const isDragging = ref(false)
-  const ghostElement = ref<HTMLImageElement | null>(null)
-  const draggedCard = ref<YGOCardData | null>(null)
-  const currentDropTarget = ref<Dropzone | null>(null)
-  const cardIndex = ref(-1)
-  const source = ref<Dropzone | 'grid'>('grid')
-  const toIndex = ref(-1)
+  const offset = {x: 0, y: 0}
+  let isDragging = false
+  let ghostElement: HTMLImageElement | null = null
+  let draggedCard: YGOCardData | null = null
+  let currentDropTarget: Dropzone | null = null
+  let cardIndex = -1
+  let source: Dropzone | 'grid' = 'grid'
+  let toIndex = -1
 
   /**
    * Start the dragging logic
@@ -29,10 +28,10 @@ export function useMobileDragAndDrop() {
     if (from === 'grid') return
 
     if (e.cancelable) e.preventDefault()
-    isDragging.value = true
-    draggedCard.value = card
-    cardIndex.value = fromIndex
-    source.value = from
+    isDragging = true
+    draggedCard = card
+    cardIndex = fromIndex
+    source = from
     const imgElement = e.currentTarget as HTMLElement
 
     const rect = imgElement.getBoundingClientRect()
@@ -52,10 +51,10 @@ export function useMobileDragAndDrop() {
      * @param e Event object
      */
     function handleTouchMove(e: TouchEvent) {
-      if (!isDragging.value) return
+      if (!isDragging) return
 
       const touch = e.touches[0]
-      if (!ghostElement.value) {
+      if (!ghostElement) {
         // create a ghost element that's always smaller than the original and the cursor always at its center
         offset.x = (rect.width - 20) / 2
         offset.y = (rect.height - 20) / 2
@@ -75,7 +74,7 @@ export function useMobileDragAndDrop() {
      * End the dragging logic
      */
     function handleTouchEnd() {
-      if (!isDragging.value) return
+      if (!isDragging) return
 
       handleDragEnd()
 
@@ -93,27 +92,27 @@ export function useMobileDragAndDrop() {
    * @param y y-coordinate of touch input
    */
   function handleDragMove(x: number, y: number) {
-    if (!ghostElement.value) return
+    if (!ghostElement) return
 
     // get element under cursor
     const elementBelow = document.elementFromPoint(x, y)
 
-    if (elementBelow && draggedCard.value) {
+    if (elementBelow && draggedCard) {
       const mainDeckDropzone = elementBelow.closest('#main-deck')
       const extraDeckDropzone = elementBelow.closest('#extra-deck')
       const sideDeckDropzone = elementBelow.closest('#side-deck')
-      const cardFrame = draggedCard.value.frameType
+      const cardFrame = draggedCard.frameType
 
       if (
         (extraDeckDropzone && isMainDeckCard(cardFrame)) || // main deck card dragged into the extra deck
         (mainDeckDropzone && isExtraDeckCard(cardFrame)) || // extra deck card dragged into the main deck
         // card dragged from the main deck to the already full side deck
-        (source.value === 'main' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
+        (source === 'main' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
         // card dragged from the extra deck to the already full side deck
-        (source.value === 'extra' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
+        (source === 'extra' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
         (
           // card dragged from the side deck to the already full main or extra deck
-          source.value === 'side' &&
+          source === 'side' &&
           ((mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT))
         )
       ) {
@@ -146,19 +145,19 @@ export function useMobileDragAndDrop() {
    * Handle operations when dragging ends
    */
   function handleDragEnd() {
-    if (!draggedCard.value) return
+    if (!draggedCard) return
 
     // remove card from deck dropzone source
-    if (toIndex.value !== -1) {
-      switch (source.value) {
+    if (toIndex !== -1) {
+      switch (source) {
         case 'main':
-          removeCardFromDeck(cardIndex.value, 'main')
+          removeCardFromDeck(cardIndex, 'main')
           break
         case 'extra':
-          removeCardFromDeck(cardIndex.value, 'extra')
+          removeCardFromDeck(cardIndex, 'extra')
           break
         case 'side':
-          removeCardFromDeck(cardIndex.value, 'side')
+          removeCardFromDeck(cardIndex, 'side')
           break
         default:
           break
@@ -166,15 +165,15 @@ export function useMobileDragAndDrop() {
     }
 
     // add card to new deck dropzone
-    switch (currentDropTarget.value) {
+    switch (currentDropTarget) {
       case 'main':
-        addCardToDeck(draggedCard.value, toIndex.value, 'main')
+        addCardToDeck(draggedCard, toIndex, 'main')
         break
       case 'extra':
-        addCardToDeck(draggedCard.value, toIndex.value, 'extra')
+        addCardToDeck(draggedCard, toIndex, 'extra')
         break
       case 'side':
-        addCardToDeck(draggedCard.value, toIndex.value, 'side')
+        addCardToDeck(draggedCard, toIndex, 'side')
         break
       default:
         break
@@ -189,12 +188,12 @@ export function useMobileDragAndDrop() {
     })
     
     removeGhostElement()
-    draggedCard.value = null
-    currentDropTarget.value = null
-    cardIndex.value = -1
-    source.value = 'grid'
-    toIndex.value = -1
-    isDragging.value = false
+    draggedCard = null
+    currentDropTarget = null
+    cardIndex = -1
+    source = 'grid'
+    toIndex = -1
+    isDragging = false
   }
 
   /**
@@ -211,7 +210,7 @@ export function useMobileDragAndDrop() {
     ghost.style.left = `${x}px`
     ghost.style.top = `${y}px`
     document.body.appendChild(ghost)
-    ghostElement.value = ghost
+    ghostElement = ghost
   }
 
   /**
@@ -220,9 +219,9 @@ export function useMobileDragAndDrop() {
    * @param y y-coordinate position
    */
   function updateGhostPosition(x: number, y: number) {
-    if (ghostElement.value) {
-      ghostElement.value.style.left = `${x}px`
-      ghostElement.value.style.top = `${y}px`
+    if (ghostElement) {
+      ghostElement.style.left = `${x}px`
+      ghostElement.style.top = `${y}px`
     }
   }
 
@@ -230,9 +229,9 @@ export function useMobileDragAndDrop() {
    * Remove the ghost element
    */
   function removeGhostElement() {
-    if (ghostElement.value) {
-      document.body.removeChild(ghostElement.value)
-      ghostElement.value = null
+    if (ghostElement) {
+      document.body.removeChild(ghostElement)
+      ghostElement = null
     }
   }
 
@@ -241,7 +240,7 @@ export function useMobileDragAndDrop() {
    * @param dropTarget Drop target of either the `main`, `extra`, `side` deck drop zone or outside them
    */
   function setDropTarget(dropTarget: Dropzone | null = null) {
-    currentDropTarget.value = dropTarget
+    currentDropTarget = dropTarget
   }
 
   /**
@@ -262,15 +261,15 @@ export function useMobileDragAndDrop() {
 
       // if not hovering a card within deck dropzones, set the index equal to the card total
       if (!card) {
-        toIndex.value = cards.length
+        toIndex = cards.length
         return
       }
 
       const idx = cards.indexOf(card)
       if (idx !== -1) {
         // add a highlight to the hovered card within deck dropzones when performing dragging
-        if (cardIndex.value !== idx || source.value !== currentDropTarget.value) card.classList.add('outline-4', 'outline-amber-500')
-        toIndex.value = idx
+        if (cardIndex !== idx || source !== currentDropTarget) card.classList.add('outline-4', 'outline-amber-500')
+        toIndex = idx
       }
     }
   }
