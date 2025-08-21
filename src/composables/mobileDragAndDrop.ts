@@ -42,13 +42,6 @@ export function useMobileDragAndDrop() {
     const isWithinBounds = (touch.clientX >= rect.left && touch.clientX <= rect.right && touch.clientY >= rect.top && touch.clientY <= rect.bottom)
     if (!isWithinBounds) return
 
-    // create a ghost element that's always smaller than the original and the cursor always at its center
-    offset.x = (rect.width - 20) / 2
-    offset.y = (rect.height - 20) / 2
-    const startX = touch.clientX - offset.x
-    const startY = touch.clientY - offset.y
-    createGhostElement(imgElement, rect.width, startX, startY)
-
     // add visual feedback to original
     const cardDraggable = imgElement.closest('.draggable') as HTMLElement
     cardDraggable.style.opacity = '0.5'
@@ -59,10 +52,18 @@ export function useMobileDragAndDrop() {
      * @param e Event object
      */
     function handleTouchMove(e: TouchEvent) {
-      if (!isDragging.value || !ghostElement.value) return
-      e.preventDefault()
+      if (!isDragging.value) return
 
       const touch = e.touches[0]
+      if (!ghostElement.value) {
+        // create a ghost element that's always smaller than the original and the cursor always at its center
+        offset.x = (rect.width - 20) / 2
+        offset.y = (rect.height - 20) / 2
+        const startX = touch.clientX - offset.x
+        const startY = touch.clientY - offset.y
+        createGhostElement(imgElement, rect.width, startX, startY)
+      }
+      
       const positionX = touch.clientX - offset.x
       const positionY = touch.clientY - offset.y
       updateGhostPosition(positionX, positionY)
