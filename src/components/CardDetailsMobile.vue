@@ -61,7 +61,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
               </VisuallyHidden>
               <div class="flex justify-center px-14 mb-2">
                 <img :src="card.card_images[0].image_url_small" :alt="card.name" width="170" loading="lazy"
-                  class="rounded-sm aspect-[268/391] text-xs">
+                  draggable="false" class="rounded-sm aspect-[268/391] text-xs">
               </div>
               <CardInfo :card="card" />
               <DialogClose aria-label="Close"

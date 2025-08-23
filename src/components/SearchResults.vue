@@ -126,7 +126,7 @@ onMounted(() => { searchValue.value = filters.value.search })
           <div v-for="card in paginatedResults" :key="card.id" class="flex gap-2">
             <CardPlaceholder v-if="!allCurrentPageImagesLoaded" />
             <div v-else class="relative w-[70px] sm:w-[80px] flex-none">
-              <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
+              <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy" draggable="false"
                 class="rounded-sm aspect-[268/391] text-xs">
               <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
               <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
