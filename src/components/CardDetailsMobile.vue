@@ -5,11 +5,36 @@ import { X } from 'lucide-vue-next'
 import ButtonCTA from './ButtonCTA.vue'
 import CardInfo from './tooltip-content/CardInfo.vue'
 import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
-import type { YGOCardData } from '@/utils/interfaces'
+import { useDeckStore } from '@/stores/deck'
+import { storeToRefs } from 'pinia'
+import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
+import type { YGOCardData, Dropzone } from '@/utils/interfaces'
 
-defineProps<{ card: YGOCardData }>()
+const props = defineProps<{ card: YGOCardData }>()
 
 const isDialogOpen = ref(false)
+
+const deckStore = useDeckStore()
+const { mainDeck, extraDeck, sideDeck } = storeToRefs(deckStore)
+const { isCardWithinLimit, addCardToDeck } = useDeckStore()
+
+/**
+ * Determine the disabled state of buttons
+ * @param from Deck type to add the card to
+ */
+function handleDisabledState(to: Dropzone): boolean {
+  switch (to) {
+    case 'main':
+      return !isCardWithinLimit(props.card, to) || MAIN_DECK_LIMIT === mainDeck.value.length
+    case 'extra':
+      return !isCardWithinLimit(props.card, to) || EXTRA_AND_SIDE_DECK_LIMIT === extraDeck.value.length
+    case 'side':
+      return !isCardWithinLimit(props.card, to) || EXTRA_AND_SIDE_DECK_LIMIT === sideDeck.value.length
+    default:
+      break
+  }
+  return false
+}
 
 function hideDialog() {
   if (window.innerWidth >= 1024 && isDialogOpen.value) isDialogOpen.value = false
@@ -26,7 +51,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
         <DialogTrigger as-child>
           <ButtonCTA variant="neutral-2" text-content="More Info" class="self-start" />
         </DialogTrigger>
-        <DialogPortal disabled>
+        <DialogPortal>
           <DialogOverlay
             class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto dark:[color-scheme:dark]">
             <DialogContent :aria-describedby="undefined"
@@ -48,9 +73,12 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
         </DialogPortal>
       </DialogRoot>
       <div class="flex gap-4">
-        <ButtonCTA v-if="isMainDeckCard(card.frameType)" variant="emerald" text-content="Add to Main" />
-        <ButtonCTA v-else-if="isExtraDeckCard(card.frameType)" variant="emerald" text-content="Add to Extra" />
-        <ButtonCTA variant="emerald" text-content="Add to Side" />
+        <ButtonCTA v-if="isMainDeckCard(card.frameType)" variant="emerald" text-content="Add to Main"
+          :disabled="handleDisabledState('main')" @click="addCardToDeck(card, mainDeck.length, 'main')" />
+        <ButtonCTA v-else-if="isExtraDeckCard(card.frameType)" variant="emerald" text-content="Add to Extra"
+          :disabled="handleDisabledState('extra')" @click="addCardToDeck(card, extraDeck.length, 'extra')" />
+        <ButtonCTA variant="emerald" text-content="Add to Side" :disabled="handleDisabledState('side')"
+          @click="addCardToDeck(card, sideDeck.length, 'side')" />
       </div>
     </div>
   </div>
