@@ -7,8 +7,8 @@ import CardInfo from './tooltip-content/CardInfo.vue'
 import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
-import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, FORBIDDEN_CARD_LIMIT, LIMITED_CARD_LIMIT, SEMI_LIMITED_CARD_LIMIT } from '@/utils/constants'
-import type { YGOCardData, Dropzone, BanList, BanStatus } from '@/utils/interfaces'
+import { useToast } from '@/composables/toast'
+import type { YGOCardData, Dropzone, BanList } from '@/utils/interfaces'
 
 const props = defineProps<{
   card: YGOCardData
@@ -17,53 +17,11 @@ const props = defineProps<{
 const emit = defineEmits<{ 'show-toast': [toastMsg: string, isSuccess: boolean] }>()
 
 const isDialogOpen = ref(false)
-const toastMessage = ref('')
-const isSuccessToast = ref(false)
 
-const deckStore = useDeckStore()
-const { mainDeck, extraDeck, sideDeck } = storeToRefs(deckStore)
-const { isCardWithinLimit, addCardToDeck } = useDeckStore()
+const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
+const { addCardToDeck } = useDeckStore()
 
-/**
- * Construct a toast message
- * @param to Destination of the card to be added
- */
-function handleToastMessage(to: Dropzone) {
-  if (isCardWithinLimit(props.card, to)) {
-    if (to === 'main' && MAIN_DECK_LIMIT === mainDeck.value.length) {
-      toastMessage.value = `${MAIN_DECK_LIMIT} card limit for the ${to} deck reached!`
-      isSuccessToast.value = false
-    } else if (
-      (to === 'extra' && EXTRA_AND_SIDE_DECK_LIMIT === extraDeck.value.length) ||
-      (to === 'side' && EXTRA_AND_SIDE_DECK_LIMIT === sideDeck.value.length)
-    ) {
-      toastMessage.value = `${EXTRA_AND_SIDE_DECK_LIMIT} card limit for the ${to} deck reached!`
-      isSuccessToast.value = false
-    } else {
-      toastMessage.value = `${props.card.name} added to the ${to} deck!`
-      isSuccessToast.value = true
-    }
-  } else {
-    const banList = props.banList === 'ocg' ? 'OCG' : props.banList === 'tcg' ? 'TCG' : 'none'
-    const banStatus = props.banList === 'ocg' ? props.card.banlist_info?.ban_ocg
-      : props.banList === 'tcg' ? props.card.banlist_info?.ban_tcg
-        : undefined
-
-    if (banStatus && banList !== 'none') {
-      const cardLimitMap: Record<BanStatus, number> = {
-        'Forbidden': FORBIDDEN_CARD_LIMIT,
-        'Limited': LIMITED_CARD_LIMIT,
-        'Semi-Limited': SEMI_LIMITED_CARD_LIMIT
-      }
-      const isSingular = cardLimitMap[banStatus] === 1 ? 'card' : 'cards'
-      const limitText = cardLimitMap[banStatus] === 0 ? 'You cannot add it' : `Limit is ${cardLimitMap[banStatus]} ${isSingular}`
-      toastMessage.value = `${props.card.name} is ${banStatus} in ${banList} format. ${limitText}!`
-    } else {
-      toastMessage.value = `3 card limit for ${props.card.name} reached!`
-    }
-    isSuccessToast.value = false
-  }
-}
+const { toastMessage, isSuccessToast, createToastMessage } = useToast()
 
 /**
  * Add a card to a type of deck and show a toast
@@ -71,7 +29,7 @@ function handleToastMessage(to: Dropzone) {
  * @param index Card count of the deck destination it currently has
  */
 function handleClick(to: Dropzone, index: number) {
-  handleToastMessage(to)
+  createToastMessage(to, props.card, props.banList)
   addCardToDeck(props.card, index, to)
   emitToast()
 }
