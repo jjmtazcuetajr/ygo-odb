@@ -8,6 +8,7 @@ import CardTooltip from './CardTooltip.vue'
 import BanStatus from './BanStatus.vue'
 import CardDetailsMobile from './CardDetailsMobile.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
+import ToastComponent from '@/components/ToastComponent.vue'
 import { sortTypes, sortDirections } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
@@ -26,6 +27,10 @@ const imagesStore = useImagesStore()
 const { allCurrentPageImagesLoaded } = storeToRefs(imagesStore)
 const { queueImagesForCurrentPage, processImageQueue, reset } = useImagesStore()
 
+const toastRef = ref<InstanceType<typeof ToastComponent>>()
+const toastMessage = ref('')
+const isSuccessToast = ref(false)
+const timer = ref(0)
 const searchValue = ref('')
 const displayValue = computed(() => searchValue.value)
 
@@ -53,6 +58,22 @@ function handleSearch(ev: Event) {
 
   // update the input value if it's different from the current value that went through the white space rules
   if (target.value !== value) target.value = value
+}
+
+/**
+ * Show a toast with an appropriate message when adding cards
+ * @param msg Toast message
+ * @param feedback Toast success/error feedback
+ */
+function handleToast(msg: string, feedback: boolean) {
+  // delay the toast message change due to toast animations
+  clearTimeout(timer.value)
+  timer.value = setTimeout(() => {
+    toastMessage.value = msg
+    isSuccessToast.value = feedback
+  }, 100)
+
+  toastRef.value?.handleShow()
 }
 
 // reset image loading state when changing page or when filtered results change, then queue and process the images for the current page
@@ -131,9 +152,11 @@ onMounted(() => { searchValue.value = filters.value.search })
               <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
               <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
             </div>
-            <CardDetailsMobile :card="card" />
+            <CardDetailsMobile :card="card" :ban-list="banList"
+              @show-toast="(msg, feedback) => handleToast(msg, feedback)" />
           </div>
         </div>
+        <ToastComponent ref="toastRef" :is-success="isSuccessToast" :description="toastMessage" />
         <Pagination v-model="currentPage" />
       </div>
     </div>
