@@ -76,7 +76,7 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
     </div>
     <div class="flex gap-4 mt-3 h-full">
       <div class="flex flex-col gap-3 grow shrink basis-0">
-        <SelectOption id="ban-list" label-text="Ban List" parent-class="flex items-center gap-1" :options="banRegion"
+        <SelectOption id="ban-list" label-text="Format" parent-class="flex items-center gap-1" :options="banRegion"
           v-model="banList" />
         <DeckType type="main" :deck="mainDeck" :monster-count="mainDeckMonsters.length"
           :spell-count="mainDeckSpells.length" :trap-count="mainDeckTraps.length" />
