@@ -55,21 +55,28 @@ const isPopoverOpen = ref(false)
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverContent side="bottom" :side-offset="5"
-          class="data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade min-w- rounded-md p-3 z-30 text-sm shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-100 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
-          <template v-if="from === 'grid'">
-            <GridToDeck :card="card" />
+          class="data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade max-w-50 rounded-md p-3 z-30 text-sm dark:text-neutral-300 shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-100 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
+          <template
+            v-if="(banList === 'ocg' && card.banlist_info?.ban_ocg === 'Forbidden') || (banList === 'tcg' && card.banlist_info?.ban_tcg === 'Forbidden')">
+            This card is <strong>Forbidden</strong> in <strong>{{ banList.toUpperCase() }}</strong> format. You cannot
+            add it!
           </template>
-          <template v-else-if="from === 'main'">
-            <DropzoneOps :card="card" :from-index="index" :source="'main'"
-              @handle-popover-close="isPopoverOpen = false" />
-          </template>
-          <template v-else-if="from === 'extra'">
-            <DropzoneOps :card="card" :from-index="index" :source="'extra'"
-              @handle-popover-close="isPopoverOpen = false" />
-          </template>
-          <template v-else-if="from === 'side'">
-            <DropzoneOps :card="card" :from-index="index" :source="'side'"
-              @handle-popover-close="isPopoverOpen = false" />
+          <template v-else>
+            <template v-if="from === 'grid'">
+              <GridToDeck :card="card" />
+            </template>
+            <template v-else-if="from === 'main'">
+              <DropzoneOps :card="card" :from-index="index" :source="'main'"
+                @handle-popover-close="isPopoverOpen = false" />
+            </template>
+            <template v-else-if="from === 'extra'">
+              <DropzoneOps :card="card" :from-index="index" :source="'extra'"
+                @handle-popover-close="isPopoverOpen = false" />
+            </template>
+            <template v-else-if="from === 'side'">
+              <DropzoneOps :card="card" :from-index="index" :source="'side'"
+                @handle-popover-close="isPopoverOpen = false" />
+            </template>
           </template>
           <PopoverClose aria-label="Close"
             class="absolute top-1.5 right-1.5 flex justify-center items-center size-[24px] rounded-full cursor-pointer dark:text-white hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
