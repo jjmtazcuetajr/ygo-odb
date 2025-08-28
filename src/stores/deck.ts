@@ -81,13 +81,13 @@ export const useDeckStore = defineStore('deck', () => {
    * @param num Number of cards about to add. Defaults to `1` copy
    */
   function addCardToDeck(card: YGOCardData, index: number, deckType: Dropzone, num: number = 1) {
-    for (let x = 0; x < num; x++) {
-      const cardLimit = isCardWithinLimit(card, deckType)
-      if (cardLimit) {
-        const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
-        const deckLimit = deckType === 'main' ? MAIN_DECK_LIMIT : EXTRA_AND_SIDE_DECK_LIMIT
-        
-        if (array.value.length < deckLimit) {
+    const cardLimit = isCardWithinLimit(card, deckType, num)
+    if (cardLimit) {
+      const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
+      const deckLimit = deckType === 'main' ? MAIN_DECK_LIMIT : EXTRA_AND_SIDE_DECK_LIMIT
+
+      if (array.value.length < deckLimit && num <= deckLimit - array.value.length) {
+        for (let x = 0; x < num; x++) {
           if (index >= array.value.length || index === -1) array.value.push(card)
           else array.value.splice(index, 0, card)
         }
