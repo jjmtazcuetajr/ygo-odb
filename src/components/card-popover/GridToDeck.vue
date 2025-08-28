@@ -97,7 +97,7 @@ function isButtonVisible(card: YGOCardData, format: BanList, num: 2 | 3): boolea
         aria-label="Add 3 copies" :disabled="handleDisabledState('extra', 3)" @click="handleAdd('extra', 3)" />
     </div>
   </div>
-  <div class="mt-3 dark:text-neutral-300">
+  <div class="dark:text-neutral-300">
     <span>To Side Deck:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="emerald" class="w-full" text-content="+ 1" aria-label="Add 1 copy"

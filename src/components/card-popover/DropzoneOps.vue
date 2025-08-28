@@ -102,7 +102,7 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
         @click="isCardWithinLimit(card, source, 2) && addCardToDeck(card, handleLastIndex(source), source, 2)" />
     </div>
   </div>
-  <div class="mt-3 dark:text-neutral-300">
+  <div class="dark:text-neutral-300">
     <span v-if="source === 'main' || source === 'extra'">Move to Side Deck:</span>
     <template v-else>
       <span v-if="isMainDeckCard(card.frameType)">Move to Main Deck:</span>
@@ -129,7 +129,7 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
       </ButtonCTA>
     </div>
   </div>
-  <div class="mt-3 dark:text-neutral-300">
+  <div class="dark:text-neutral-300">
     <span>Remove:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="red" text-content="- 1" aria-label="Remove 1 Copy"
