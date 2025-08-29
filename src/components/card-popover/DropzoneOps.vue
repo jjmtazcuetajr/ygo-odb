@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ButtonCTA from '../ButtonCTA.vue'
-import type { YGOCardData, Dropzone } from '@/utils/interfaces'
+import type { YGOCardData, Dropzone, BanList } from '@/utils/interfaces'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 import { ArrowLeftRight } from 'lucide-vue-next'
@@ -11,6 +11,7 @@ const props = defineProps<{
   card: YGOCardData
   fromIndex: number
   source: Dropzone
+  banList: BanList
 }>()
 const emit = defineEmits<{ 'handle-popover-close': [] }>()
 
@@ -68,38 +69,20 @@ function handleLastIndex(to: Dropzone): number {
 function popoverClose() {
   emit('handle-popover-close')
 }
-
-/**
- * Determine the disabled state of buttons for cross-deck card transfer operations
- * @param from Deck type the card came from
- * @param num Number of card copies
- */
-function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
-  switch (from) {
-    case 'main':
-    case 'extra':
-      return getCardFrequency.value(props.card.id, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < num
-    case 'side':
-      if (isMainDeckCard(props.card.frameType))
-        return getCardFrequency.value(props.card.id, props.source) < num || MAIN_DECK_LIMIT - mainDeck.value.length < num
-      else if (isExtraDeckCard(props.card.frameType))
-        return getCardFrequency.value(props.card.id, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < num
-      break
-    default:
-      break
-  }
-  return false
-}
 </script>
 <template>
-  <div class="dark:text-neutral-300">
+  <div
+    v-if="!((banList === 'ocg' && card.banlist_info?.ban_ocg === 'Limited') || (banList === 'tcg' && card.banlist_info?.ban_tcg === 'Limited'))"
+    class="dark:text-neutral-300">
     <span>Add more:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="emerald" text-content="+ 1" aria-label="Add 1 Copy"
+      <ButtonCTA variant="emerald" text-content="+ 1" class="w-full" aria-label="Add 1 Copy"
         :disabled="!isCardWithinLimit(card, source)" @click="addCardToDeck(card, handleLastIndex(source), source)" />
-      <ButtonCTA variant="emerald" text-content="+ 2" aria-label="Add 2 Copies"
+      <ButtonCTA
+        v-if="(banList === 'ocg' && !card.banlist_info?.ban_ocg) || (banList === 'tcg' && !card.banlist_info?.ban_tcg) || banList === 'none'"
+        variant="emerald" text-content="+ 2" class="w-full" aria-label="Add 2 Copies"
         :disabled="!isCardWithinLimit(card, source, 2)"
-        @click="isCardWithinLimit(card, source, 2) && addCardToDeck(card, handleLastIndex(source), source, 2)" />
+        @click="addCardToDeck(card, handleLastIndex(source), source, 2)" />
     </div>
   </div>
   <div class="dark:text-neutral-300">
@@ -109,20 +92,20 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
       <span v-else-if="isExtraDeckCard(card.frameType)">Move to Extra Deck:</span>
     </template>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA has-icon variant="neutral-2" aria-label="Move 1 Copy" :disabled="handleDisabledState(source, 1)"
+      <ButtonCTA has-icon variant="neutral-2" class="w-full" aria-label="Move 1 Copy"
         @click="crossdeckCardTransfer(source, 1)">
         <template #textWithIcon>
           <ArrowLeftRight :size="16" /> 1
         </template>
       </ButtonCTA>
-      <ButtonCTA has-icon variant="neutral-2" aria-label="Move 2 Copies" :disabled="handleDisabledState(source, 2)"
-        @click="crossdeckCardTransfer(source, 2)">
+      <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" has-icon variant="neutral-2" class="w-full"
+        aria-label="Move 2 Copies" @click="crossdeckCardTransfer(source, 2)">
         <template #textWithIcon>
           <ArrowLeftRight :size="16" /> 2
         </template>
       </ButtonCTA>
-      <ButtonCTA has-icon variant="neutral-2" aria-label="Move 3 Copies" :disabled="handleDisabledState(source, 3)"
-        @click="crossdeckCardTransfer(source, 3)">
+      <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" has-icon variant="neutral-2" class="w-full"
+        aria-label="Move 3 Copies" @click="crossdeckCardTransfer(source, 3)">
         <template #textWithIcon>
           <ArrowLeftRight :size="16" /> 3
         </template>
@@ -132,14 +115,12 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
   <div class="dark:text-neutral-300">
     <span>Remove:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="red" text-content="- 1" aria-label="Remove 1 Copy"
+      <ButtonCTA variant="red" text-content="- 1" class="w-full" aria-label="Remove 1 Copy"
         @click="[removeCardFromDeck(fromIndex, source), popoverClose()]" />
-      <ButtonCTA variant="red" text-content="- 2" aria-label="Remove 2 Copies"
-        :disabled="getCardFrequency(card.id, source) < 2"
-        @click="[getCardFrequency(card.id, source) >= 2 && removeCardFromDeck(fromIndex, source, 2), popoverClose()]" />
-      <ButtonCTA variant="red" text-content="- 3" aria-label="Remove 3 Copies"
-        :disabled="getCardFrequency(card.id, source) < 3"
-        @click="[getCardFrequency(card.id, source) === 3 && removeCardFromDeck(fromIndex, source, 3), popoverClose()]" />
+      <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" variant="red" text-content="- 2" class="w-full"
+        aria-label="Remove 2 Copies" @click="[removeCardFromDeck(fromIndex, source, 2), popoverClose()]" />
+      <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" variant="red" text-content="- 3" class="w-full"
+        aria-label="Remove 3 Copies" @click="[removeCardFromDeck(fromIndex, source, 3), popoverClose()]" />
     </div>
   </div>
 </template>

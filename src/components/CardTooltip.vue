@@ -83,15 +83,15 @@ const isPopoverOpen = ref(false)
               <GridToDeck :card="card" :ban-list="banList" />
             </template>
             <template v-else-if="from === 'main'">
-              <DropzoneOps :card="card" :from-index="index" :source="'main'"
+              <DropzoneOps :card="card" :from-index="index" :source="'main'" :ban-list="banList"
                 @handle-popover-close="isPopoverOpen = false" />
             </template>
             <template v-else-if="from === 'extra'">
-              <DropzoneOps :card="card" :from-index="index" :source="'extra'"
+              <DropzoneOps :card="card" :from-index="index" :source="'extra'" :ban-list="banList"
                 @handle-popover-close="isPopoverOpen = false" />
             </template>
             <template v-else-if="from === 'side'">
-              <DropzoneOps :card="card" :from-index="index" :source="'side'"
+              <DropzoneOps :card="card" :from-index="index" :source="'side'" :ban-list="banList"
                 @handle-popover-close="isPopoverOpen = false" />
             </template>
           </template>
