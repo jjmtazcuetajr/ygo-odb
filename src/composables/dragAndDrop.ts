@@ -290,5 +290,18 @@ export function useDragAndDrop() {
     }
   }
 
-  return { handleMouseDown }
+  /**
+   * Remove a card from a deck type through right-click
+   * @param e Event object
+   * @param idx Index of draggable card from source
+   * @param from Source of draggable card
+   */
+  function rightClickDeleteCard(e: MouseEvent, idx: number, from: Dropzone | 'grid') {
+    if (from === 'grid') return
+
+    e.preventDefault()
+    removeCardFromDeck(idx, from)
+  }
+
+  return { handleMouseDown, rightClickDeleteCard }
 }

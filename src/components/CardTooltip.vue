@@ -22,7 +22,7 @@ defineProps<{
   index: number
 }>()
 
-const { handleMouseDown } = useDragAndDrop()
+const { handleMouseDown, rightClickDeleteCard } = useDragAndDrop()
 
 const { getCardFrequency } = storeToRefs(useDeckStore())
 
@@ -33,7 +33,8 @@ const isPopoverOpen = ref(false)
   <div @mouseenter="isHovered = true" @mouseleave="isHovered = false"
     class="draggable hidden lg:block cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
     <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
-      class="rounded-sm aspect-[268/391] text-xs" @mousedown.left="handleMouseDown($event, card, from, index)">
+      class="rounded-sm aspect-[268/391] text-xs" @mousedown.left="handleMouseDown($event, card, from, index)"
+      @contextmenu="rightClickDeleteCard($event, index, from)">
     <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
     <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
     <TooltipProvider :delay-duration="100" :disable-hoverable-content="true" :ignore-non-keyboard-focus="true">
