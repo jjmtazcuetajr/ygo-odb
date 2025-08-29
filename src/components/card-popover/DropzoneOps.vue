@@ -3,7 +3,6 @@ import ButtonCTA from '../ButtonCTA.vue'
 import type { YGOCardData, Dropzone, BanList } from '@/utils/interfaces'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
-import { ArrowLeftRight } from 'lucide-vue-next'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
 import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
 
@@ -76,11 +75,11 @@ function popoverClose() {
     class="dark:text-neutral-300">
     <span>Add more:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="emerald" text-content="+ 1" class="w-full" aria-label="Add 1 Copy"
+      <ButtonCTA variant="emerald" text-content="&#xd7; 1" class="w-full" aria-label="Add 1 Copy"
         :disabled="!isCardWithinLimit(card, source)" @click="addCardToDeck(card, handleLastIndex(source), source)" />
       <ButtonCTA
         v-if="(banList === 'ocg' && !card.banlist_info?.ban_ocg) || (banList === 'tcg' && !card.banlist_info?.ban_tcg) || banList === 'none'"
-        variant="emerald" text-content="+ 2" class="w-full" aria-label="Add 2 Copies"
+        variant="emerald" text-content="&#xd7; 2" class="w-full" aria-label="Add 2 Copies"
         :disabled="!isCardWithinLimit(card, source, 2)"
         @click="addCardToDeck(card, handleLastIndex(source), source, 2)" />
     </div>
@@ -92,34 +91,23 @@ function popoverClose() {
       <span v-else-if="isExtraDeckCard(card.frameType)">Move to Extra Deck:</span>
     </template>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA has-icon variant="neutral-2" class="w-full" aria-label="Move 1 Copy"
-        @click="crossdeckCardTransfer(source, 1)">
-        <template #textWithIcon>
-          <ArrowLeftRight :size="16" /> 1
-        </template>
-      </ButtonCTA>
-      <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" has-icon variant="neutral-2" class="w-full"
-        aria-label="Move 2 Copies" @click="crossdeckCardTransfer(source, 2)">
-        <template #textWithIcon>
-          <ArrowLeftRight :size="16" /> 2
-        </template>
-      </ButtonCTA>
-      <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" has-icon variant="neutral-2" class="w-full"
-        aria-label="Move 3 Copies" @click="crossdeckCardTransfer(source, 3)">
-        <template #textWithIcon>
-          <ArrowLeftRight :size="16" /> 3
-        </template>
-      </ButtonCTA>
+      <ButtonCTA variant="neutral-2" text-content="&#xd7; 1" class="w-full" aria-label="Move 1 Copy"
+        @click="crossdeckCardTransfer(source, 1)" />
+      <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" variant="neutral-2" text-content="&#xd7; 2"
+        class="w-full" aria-label="Move 2 Copies" @click="crossdeckCardTransfer(source, 2)" />
+      <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" variant="neutral-2" text-content="&#xd7; 3"
+        class="w-full" aria-label="Move 3 Copies" @click="crossdeckCardTransfer(source, 3)" />
+
     </div>
   </div>
   <div class="dark:text-neutral-300">
     <span>Remove:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="red" text-content="- 1" class="w-full" aria-label="Remove 1 Copy"
+      <ButtonCTA variant="red" text-content="&#xd7; 1" class="w-full" aria-label="Remove 1 Copy"
         @click="[removeCardFromDeck(fromIndex, source), popoverClose()]" />
-      <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" variant="red" text-content="- 2" class="w-full"
+      <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" variant="red" text-content="&#xd7; 2" class="w-full"
         aria-label="Remove 2 Copies" @click="[removeCardFromDeck(fromIndex, source, 2), popoverClose()]" />
-      <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" variant="red" text-content="- 3" class="w-full"
+      <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" variant="red" text-content="&#xd7; 3" class="w-full"
         aria-label="Remove 3 Copies" @click="[removeCardFromDeck(fromIndex, source, 3), popoverClose()]" />
     </div>
   </div>
