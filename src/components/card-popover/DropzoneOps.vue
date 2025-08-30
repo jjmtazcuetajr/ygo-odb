@@ -68,6 +68,28 @@ function handleLastIndex(to: Dropzone): number {
 function popoverClose() {
   emit('handle-popover-close')
 }
+
+/**
+ * Determine the disabled state of buttons for cross-deck card transfer operations
+ * @param from Deck type the card came from
+ * @param num Number of card copies
+ */
+function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
+  switch (from) {
+    case 'main':
+    case 'extra':
+      return getCardFrequency.value(props.card.id, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < num
+    case 'side':
+      if (isMainDeckCard(props.card.frameType))
+        return getCardFrequency.value(props.card.id, props.source) < num || MAIN_DECK_LIMIT - mainDeck.value.length < num
+      else if (isExtraDeckCard(props.card.frameType))
+        return getCardFrequency.value(props.card.id, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < num
+      break
+    default:
+      break
+  }
+  return false
+}
 </script>
 <template>
   <div
@@ -92,12 +114,13 @@ function popoverClose() {
     </template>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="neutral-2" text-content="&#xd7; 1" class="w-full" aria-label="Move 1 Copy"
-        @click="crossdeckCardTransfer(source, 1)" />
+        :disabled="handleDisabledState(source, 1)" @click="crossdeckCardTransfer(source, 1)" />
       <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" variant="neutral-2" text-content="&#xd7; 2"
-        class="w-full" aria-label="Move 2 Copies" @click="crossdeckCardTransfer(source, 2)" />
+        class="w-full" aria-label="Move 2 Copies" :disabled="handleDisabledState(source, 2)"
+        @click="crossdeckCardTransfer(source, 2)" />
       <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" variant="neutral-2" text-content="&#xd7; 3"
-        class="w-full" aria-label="Move 3 Copies" @click="crossdeckCardTransfer(source, 3)" />
-
+        class="w-full" aria-label="Move 3 Copies" :disabled="handleDisabledState(source, 3)"
+        @click="crossdeckCardTransfer(source, 3)" />
     </div>
   </div>
   <div class="dark:text-neutral-300">
