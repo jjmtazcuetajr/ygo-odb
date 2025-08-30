@@ -4,6 +4,7 @@ import CardDialog from './CardDialog.vue'
 import type { YGOCardData } from '@/utils/interfaces'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { storeToRefs } from 'pinia'
+import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
 
 defineProps<{
   type: 'main' | 'extra' | 'side'
@@ -44,7 +45,9 @@ const deckTypeMap: Record<string, DeckProps> = {
     <div class="flex flex-wrap items-center gap-x-4">
       <span class="text-lg sm:text-xl font-bold">{{ deckTypeMap[type].name }} Deck</span>
       <span class="text-xs sm:text-base">
-        <span>Cards: <strong>{{ deck.length }}</strong></span>
+        <span>
+          Cards: <strong>{{ deck.length }}/{{ type === 'main' ? MAIN_DECK_LIMIT : EXTRA_AND_SIDE_DECK_LIMIT }}</strong>
+        </span>
         (<template v-if="type === 'main' || type === 'side'">
           <span>Monsters: <strong>{{ monsterCount }}</strong></span> |
           <span>Spells: <strong>{{ spellCount }}</strong></span> |
