@@ -31,7 +31,7 @@ const isPopoverOpen = ref(false)
 </script>
 <template>
   <div @mouseenter="isHovered = true" @mouseleave="isHovered = false"
-    class="draggable hidden lg:block cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-400 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+    class="draggable hidden lg:block cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
     <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy"
       class="rounded-sm aspect-[268/391] text-xs" @mousedown.left="handleMouseDown($event, card, from, index)"
       @contextmenu="rightClickDeleteCard($event, index, from)">
