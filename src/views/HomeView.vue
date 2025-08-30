@@ -50,7 +50,7 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
         <div class="flex gap-2">
           <DialogModal usage="clear-all">
             <template #trigger>
-              <ButtonCTA variant="neutral-1" has-icon>
+              <ButtonCTA variant="neutral" has-icon>
                 <template #textWithIcon>
                   <Trash2 :size="16" /> Clear
                 </template>
@@ -59,14 +59,14 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
           </DialogModal>
           <DialogModal usage="help">
             <template #trigger>
-              <ButtonCTA variant="neutral-1" has-icon>
+              <ButtonCTA variant="neutral" has-icon>
                 <template #textWithIcon>
                   <CircleHelp :size="16" /> Help
                 </template>
               </ButtonCTA>
             </template>
           </DialogModal>
-          <ButtonCTA variant="neutral-1" has-icon only-in-mobile @click="isSideDrawerShown = true">
+          <ButtonCTA variant="neutral" has-icon only-in-mobile @click="isSideDrawerShown = true">
             <template #textWithIcon>
               <Search :size="16" /> Search
             </template>

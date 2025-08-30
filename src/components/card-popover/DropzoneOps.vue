@@ -113,13 +113,13 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
       <span v-else-if="isExtraDeckCard(card.frameType)">Move to Extra Deck:</span>
     </template>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="neutral-2" text-content="&#xd7; 1" class="w-full" aria-label="Move 1 Copy"
+      <ButtonCTA variant="neutral" text-content="&#xd7; 1" class="w-full" aria-label="Move 1 Copy"
         :disabled="handleDisabledState(source, 1)" @click="crossdeckCardTransfer(source, 1)" />
-      <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" variant="neutral-2" text-content="&#xd7; 2"
-        class="w-full" aria-label="Move 2 Copies" :disabled="handleDisabledState(source, 2)"
+      <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" variant="neutral" text-content="&#xd7; 2" class="w-full"
+        aria-label="Move 2 Copies" :disabled="handleDisabledState(source, 2)"
         @click="crossdeckCardTransfer(source, 2)" />
-      <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" variant="neutral-2" text-content="&#xd7; 3"
-        class="w-full" aria-label="Move 3 Copies" :disabled="handleDisabledState(source, 3)"
+      <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" variant="neutral" text-content="&#xd7; 3" class="w-full"
+        aria-label="Move 3 Copies" :disabled="handleDisabledState(source, 3)"
         @click="crossdeckCardTransfer(source, 3)" />
     </div>
   </div>

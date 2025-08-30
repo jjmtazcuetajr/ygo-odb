@@ -108,7 +108,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
           <div class="mt-5 mr-1 flex justify-end gap-2">
             <ButtonCTA variant="emerald" text-content="Import" />
             <DialogClose as-child>
-              <ButtonCTA variant="neutral-1" text-content="Cancel" />
+              <ButtonCTA variant="neutral" text-content="Cancel" />
             </DialogClose>
           </div>
           <DialogClose aria-label="Close"

@@ -113,7 +113,7 @@ onMounted(() => { searchValue.value = filters.value.search })
           v-model="sortDir" />
         <DialogModal usage="filters">
           <template #trigger>
-            <ButtonCTA variant="neutral-2" has-icon>
+            <ButtonCTA variant="neutral" has-icon>
               <template #textWithIcon>
                 <Filter :size="16" /> Filters
               </template>

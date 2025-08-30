@@ -54,7 +54,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
     <div class="flex flex-col grow justify-around">
       <DialogRoot v-model:open="isDialogOpen">
         <DialogTrigger as-child>
-          <ButtonCTA variant="neutral-2" text-content="More Info" class="self-start" />
+          <ButtonCTA variant="neutral" text-content="More Info" class="self-start" />
         </DialogTrigger>
         <DialogPortal>
           <DialogOverlay

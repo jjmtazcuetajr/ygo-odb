@@ -79,12 +79,12 @@ function handleKeyDown() {
               @keydown.enter="handleKeyDown" />
           </div>
           <div class="mt-5 mr-1 flex justify-end gap-2">
-            <ButtonCTA variant="neutral-1" text-content="Reset filters" v-if="usage === 'filters'"
+            <ButtonCTA variant="neutral" text-content="Reset filters" v-if="usage === 'filters'"
               @click="resetFilters" />
             <template v-else-if="usage === 'clear-all'">
               <ButtonCTA variant="red" text-content="Clear" />
               <DialogClose as-child>
-                <ButtonCTA variant="neutral-1" text-content="Cancel" />
+                <ButtonCTA variant="neutral" text-content="Cancel" />
               </DialogClose>
             </template>
             <template v-else-if="usage === 'pagination'">
@@ -92,11 +92,11 @@ function handleKeyDown() {
                 <ButtonCTA variant="emerald" text-content="Jump" @click="toPage(pageInputValue)" />
               </DialogClose>
               <DialogClose as-child>
-                <ButtonCTA variant="neutral-1" text-content="Cancel" />
+                <ButtonCTA variant="neutral" text-content="Cancel" />
               </DialogClose>
             </template>
             <DialogClose as-child v-else>
-              <ButtonCTA variant="neutral-1" text-content="Close" />
+              <ButtonCTA variant="neutral" text-content="Close" />
             </DialogClose>
           </div>
           <DialogClose aria-label="Close"
