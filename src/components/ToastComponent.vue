@@ -33,16 +33,15 @@ function handleShow() {
 <template>
   <ToastProvider>
     <ToastRoot v-model:open="open" :class="feedback"
-      class="toast-root flex justify-between items-center gap-4 p-4 w-full max-w-75 self-end rounded-md border">
+      class="toast-root flex justify-between items-center gap-4 p-4 rounded-md border">
       <ToastDescription class="text-sm">
         {{ description }}
       </ToastDescription>
-      <ToastClose aria-label="Close" class="p-1 size-[24px] cursor-pointer">
+      <ToastClose aria-label="Close" class="p-1 size-[24px]">
         <X :size="16" />
       </ToastClose>
     </ToastRoot>
-    <ToastViewport
-      class="fixed inset-x-0 bottom-0 flex flex-col p-6 gap-2 w-full m-0 list-none z-[99999] outline-none" />
+    <ToastViewport class="fixed right-0 bottom-0 flex flex-col p-4 w-80 z-[99999]" />
   </ToastProvider>
 </template>
 
