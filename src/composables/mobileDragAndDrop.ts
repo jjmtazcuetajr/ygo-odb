@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import type { YGOCardData, Dropzone } from '@/utils/interfaces'
@@ -8,32 +9,47 @@ export function useMobileDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
   const { addCardToDeck, removeCardFromDeck } = useDeckStore()
 
+  // variables related to dragging
   const offset = {x: 0, y: 0}
   let isDragging = false
   let ghostElement: HTMLImageElement | null = null
   let draggedCard: YGOCardData | null = null
   let currentDropTarget: Dropzone | null = null
   let cardIndex = -1
-  let source: Dropzone | 'grid' = 'grid'
+  let source: Dropzone | null = null
   let toIndex = -1
 
+  interface TouchPosition {
+    x: number;
+    y: number;
+  }
+
+  // variables related to touch gesture
+  let longPressTimeStart = 0
+  let lastTapTime = 0
+  let tapCount = 0
+  let startPosition: TouchPosition | null = null
+  const config = {
+    longPressDelay: 500,
+    doubleTapDelay: 300,
+    dragThreshold: 10
+  }
+
+  const isDialogOpen = ref(false)
+
   /**
-   * Start the dragging logic
+   * Process the touchstart event
    * @param e Event object
    * @param card Object containing card info
    * @param from Source of draggable card
    * @param fromIndex Index of draggable card from source
    */
-  function handleTouchStart(e: TouchEvent, card: YGOCardData, from: Dropzone | 'grid', fromIndex: number) {
-    if (from === 'grid') return
+  function handleTouchStart(e: TouchEvent, card: YGOCardData, from: Dropzone, fromIndex: number) {
+    if (e.touches.length !== 1) return
 
     if (e.cancelable) e.preventDefault()
-    isDragging = true
-    draggedCard = card
-    cardIndex = fromIndex
-    source = from
+    
     const imgElement = e.currentTarget as HTMLElement
-
     const rect = imgElement.getBoundingClientRect()
     const touch = e.touches[0]
 
@@ -41,49 +57,103 @@ export function useMobileDragAndDrop() {
     const isWithinBounds = (touch.clientX >= rect.left && touch.clientX <= rect.right && touch.clientY >= rect.top && touch.clientY <= rect.bottom)
     if (!isWithinBounds) return
 
+    draggedCard = card
+    cardIndex = fromIndex
+    source = from
+    startPosition = getTouchPosition(touch)
+    longPressTimeStart = Date.now()
+
     // add visual feedback to original
     const cardDraggable = imgElement.closest('.draggable') as HTMLElement
     cardDraggable.style.opacity = '0.5'
     cardDraggable.style.transform = 'scale(0.95)'
 
     /**
-     * Process the dragging logic while dragging the draggable
+     * Process the touchmove event
      * @param e Event object
      */
     function handleTouchMove(e: TouchEvent) {
-      if (!isDragging) return
+      if (e.touches.length !== 1 || !startPosition) return
 
       const touch = e.touches[0]
-      if (!ghostElement) {
-        // create a ghost element that's always smaller than the original and the cursor always at its center
+      const currentPosition = getTouchPosition(touch)
+      const distance = getDistance(startPosition, currentPosition)
+
+      if (!isDragging && distance > config.dragThreshold) {
+        // start dragging
+        isDragging = true
+        longPressTimeStart = 0
+      }
+
+      if (isDragging) {
         offset.x = (rect.width - 20) / 2
         offset.y = (rect.height - 20) / 2
-        const startX = touch.clientX - offset.x
-        const startY = touch.clientY - offset.y
-        createGhostElement(imgElement, rect.width, startX, startY)
-      }
-      
-      const positionX = touch.clientX - offset.x
-      const positionY = touch.clientY - offset.y
-      updateGhostPosition(positionX, positionY)
+        const positionX = touch.clientX - offset.x
+        const positionY = touch.clientY - offset.y
 
-      handleDragMove(touch.clientX, touch.clientY)
+        if (!ghostElement) {
+          // create a ghost element that's always smaller than the original and the touch point always at its center
+          createGhostElement(imgElement, rect.width, positionX, positionY)
+        }
+
+        if (ghostElement) {
+          // if ghost element exists, it can be dragged around and perform operations depending on what's underneath it
+          updateGhostPosition(positionX, positionY)
+          handleDragMove(touch.clientX, touch.clientY)
+        }
+      }
     }
 
     /**
-     * End the dragging logic
+     * Process the touchend event
      */
     function handleTouchEnd() {
-      if (!isDragging) return
+      if (!startPosition) return
+      
+      const longPressTimeEnd = Date.now()
+      const longPressDuration = longPressTimeEnd - longPressTimeStart
 
-      handleDragEnd()
+      if (isDragging) {
+        handleDragEnd()
+      } else if (longPressDuration >= config.longPressDelay) {
+        // remove card after long press
+        if (source) removeCardFromDeck(cardIndex, source)
+      } else if (longPressDuration < config.longPressDelay) {
+        // handle tap events
+        const currentTime = Date.now()
+        if (currentTime - lastTapTime < config.doubleTapDelay && tapCount === 1) {
+          // double tap detected
+          tapCount = 0
+          isDialogOpen.value = true
+        } else {
+          // potential single tap - wait to see if there's a second tap
+          tapCount = 1
+          lastTapTime = currentTime
+
+          setTimeout(() => {
+            if (tapCount === 1) tapCount = 0
+          }, config.doubleTapDelay)
+        }
+      }
+
+      resetTouch()
 
       document.removeEventListener('touchmove', handleTouchMove)
       document.removeEventListener('touchend', handleTouchEnd)
+      document.removeEventListener('touchcancel', handleTouchCancel)
     }
 
-    document.addEventListener('touchmove', handleTouchMove, { passive: false })
+    /**
+     * Process the touchcancel event
+     */
+    function handleTouchCancel(e: TouchEvent) {
+      e.preventDefault()
+      resetTouch()
+    }
+
+    document.addEventListener('touchmove', handleTouchMove)
     document.addEventListener('touchend', handleTouchEnd)
+    document.addEventListener('touchcancel', handleTouchCancel)
   }
 
   /**
@@ -149,25 +219,17 @@ export function useMobileDragAndDrop() {
 
     // remove card from deck dropzone source
     if (toIndex !== -1) {
-      if (source !== 'grid') removeCardFromDeck(cardIndex, source)
+      if (source) removeCardFromDeck(cardIndex, source)
     }
 
     // add card to new deck dropzone
     if (currentDropTarget) addCardToDeck(draggedCard, toIndex, currentDropTarget)
-
-    // reset original image appearances
-    const imageItems = document.querySelectorAll('.draggable')
-    imageItems.forEach(item => {
-      const element = item as HTMLElement
-      element.removeAttribute('style')
-      element.classList.remove('outline-4', 'outline-amber-500')
-    })
     
     removeGhostElement()
     draggedCard = null
     currentDropTarget = null
     cardIndex = -1
-    source = 'grid'
+    source = null
     toIndex = -1
     isDragging = false
   }
@@ -250,5 +312,41 @@ export function useMobileDragAndDrop() {
     }
   }
 
-  return { handleTouchStart }
+  /**
+   * Get the position of the touch point
+   * @param touch The touch interface
+   * @returns X & Y coordinate of the touch point relative to browser viewport
+   */
+  function getTouchPosition(touch: Touch): TouchPosition {
+    return { x: touch.clientX, y: touch.clientY }
+  }
+
+  /**
+   * Get the distance between the starting and current touch points
+   * @param startPos Starting touch point
+   * @param currentPos Current touch point
+   * @returns Distance in pixels
+   */
+  function getDistance(startPos: TouchPosition, currentPos: TouchPosition): number {
+    const deltaX = currentPos.x - startPos.x
+    const deltaY = currentPos.y - startPos.y
+    return Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+  }
+
+  /**
+   * Reset touch gesture and card appearance changes
+   */
+  function resetTouch() {
+    startPosition = null
+    longPressTimeStart = 0
+
+    const imageItems = document.querySelectorAll('.draggable')
+    imageItems.forEach(item => {
+      const element = item as HTMLElement
+      element.removeAttribute('style')
+      element.classList.remove('outline-4', 'outline-amber-500')
+    })
+  }
+
+  return { handleTouchStart, isDialogOpen }
 }
