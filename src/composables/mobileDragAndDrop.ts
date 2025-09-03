@@ -37,6 +37,12 @@ export function useMobileDragAndDrop() {
 
   const isDialogOpen = ref(false)
 
+  const SCROLL_ZONE_SIZE = 60 // pixels from top/bottom
+  const SCROLL_SPEED = 10 // pixels per frame
+  const SCROLL_INTERVAL_MS = 16 // ~60fps
+  let scrollInterval: number | null = null
+  let currentTouchY = 0
+
   /**
    * Process the touchstart event
    * @param e Event object
@@ -62,6 +68,7 @@ export function useMobileDragAndDrop() {
     source = from
     startPosition = getTouchPosition(touch)
     longPressTimeStart = Date.now()
+    currentTouchY = touch.clientY
 
     // add visual feedback to original
     const cardDraggable = imgElement.closest('.draggable') as HTMLElement
@@ -74,6 +81,8 @@ export function useMobileDragAndDrop() {
      */
     function handleTouchMove(e: TouchEvent) {
       if (e.touches.length !== 1 || !startPosition) return
+
+      e.preventDefault()
 
       const touch = e.touches[0]
       const currentPosition = getTouchPosition(touch)
@@ -100,6 +109,8 @@ export function useMobileDragAndDrop() {
           // if ghost element exists, it can be dragged around and perform operations depending on what's underneath it
           updateGhostPosition(positionX, positionY)
           handleDragMove(touch.clientX, touch.clientY)
+          currentTouchY = touch.clientY
+          updateAutoScroll()
         }
       }
     }
@@ -115,6 +126,7 @@ export function useMobileDragAndDrop() {
 
       if (isDragging) {
         handleDragEnd()
+        stopAutoScroll()
       } else if (longPressDuration >= config.longPressDelay) {
         // remove card after long press
         if (source) removeCardFromDeck(cardIndex, source)
@@ -151,7 +163,7 @@ export function useMobileDragAndDrop() {
       resetTouch()
     }
 
-    document.addEventListener('touchmove', handleTouchMove)
+    document.addEventListener('touchmove', handleTouchMove, { passive: false })
     document.addEventListener('touchend', handleTouchEnd)
     document.addEventListener('touchcancel', handleTouchCancel)
   }
@@ -346,6 +358,73 @@ export function useMobileDragAndDrop() {
       element.removeAttribute('style')
       element.classList.remove('outline-4', 'outline-amber-500')
     })
+  }
+
+  /**
+   * Update auto scroll direction
+   */
+  function updateAutoScroll() {
+    const scrollDirection = getScrollDirection(currentTouchY, window.innerHeight)
+
+    if (scrollDirection !== 0) startAutoScroll(scrollDirection)
+    else stopAutoScroll()
+  }
+
+  /**
+   * Get the scroll direction based on the position of the touch point in the viewport
+   * @param touchY Y coordinate of touch point
+   * @param viewportHeight Height of the device viewport
+   * @returns Either `-1`, `0`, or `1`
+   */
+  function getScrollDirection(touchY: number, viewportHeight: number): number {
+    // check if touch is in top scroll zone
+    if (touchY <= SCROLL_ZONE_SIZE) return -1; // scroll up
+    
+    // check if touch is in bottom scroll zone
+    if (touchY >= viewportHeight - SCROLL_ZONE_SIZE) return 1; // scroll down
+    
+    return 0; // no scroll
+  }
+
+  /**
+   * Start auto scrolling logic
+   * @param direction Either `-1` (scroll up), `0` (no scroll), or `1` (scroll down)
+   */
+  function startAutoScroll(direction: number) {
+    // don't start a new interval if one is already running in the same direction
+    if (scrollInterval !== null) return
+
+    scrollInterval = setInterval(() => {
+      if (!isDragging) {
+        stopAutoScroll()
+        return
+      }
+
+      const scrollAmount = direction * SCROLL_SPEED
+      const currentScrollY = window.pageYOffset || document.documentElement.scrollTop
+      const maxScrollY = document.documentElement.scrollHeight - window.innerHeight
+
+      // calculate new scroll position
+      const newScrollY = Math.max(0, Math.min(maxScrollY, currentScrollY + scrollAmount))
+
+      // only scroll if we haven't reached the boundary
+      if (newScrollY !== currentScrollY) {
+        scrollTo(0, newScrollY)
+      } else {
+        // stop auto-scroll if we've reached the boundary
+        stopAutoScroll()
+      }
+    }, SCROLL_INTERVAL_MS)
+  }
+
+  /**
+   * Stop auto scrolling
+   */
+  function stopAutoScroll() {
+    if (scrollInterval !== null) {
+      clearInterval(scrollInterval)
+      scrollInterval = null
+    }
   }
 
   return { handleTouchStart, isDialogOpen }
