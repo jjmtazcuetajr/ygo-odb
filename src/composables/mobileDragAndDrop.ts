@@ -159,7 +159,7 @@ export function useMobileDragAndDrop() {
      * Process the touchcancel event
      */
     function handleTouchCancel(e: TouchEvent) {
-      e.preventDefault()
+      if (e.cancelable) e.preventDefault()
       resetTouch()
     }
 
@@ -198,8 +198,27 @@ export function useMobileDragAndDrop() {
           ((mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT))
         )
       ) {
-        // nothing happens for now. might add some logic later
+        // add a red outline to the ghost element when hovering an invalid drop zone
+        if (ghostElement.classList.contains('outline-transparent')) {
+          ghostElement.classList.remove('outline-transparent')
+          ghostElement.classList.add('outline-red-500')
+        }
       } else {
+        // remove the ghost element's outline
+        if (ghostElement.classList.contains('outline-red-500')) {
+          ghostElement.classList.remove('outline-red-500')
+          ghostElement.classList.add('outline-transparent')
+        } else if (ghostElement.classList.contains('outline-emerald-500')) {
+          ghostElement.classList.remove('outline-emerald-500')
+          ghostElement.classList.add('outline-transparent')
+        }
+
+        // add a green outline to the ghost element when hovering a valid drop zone
+        if ((mainDeckDropzone || extraDeckDropzone || sideDeckDropzone) && ghostElement.classList.contains('outline-transparent')) {
+          ghostElement.classList.remove('outline-transparent')
+          ghostElement.classList.add('outline-emerald-500')
+        }
+        
         if (mainDeckDropzone) {
           setDropTarget('main')
           setIndexInsertion(mainDeckDropzone, x, y)
@@ -255,7 +274,7 @@ export function useMobileDragAndDrop() {
    */
   function createGhostElement(originalElement: HTMLElement, width: number, x: number, y: number) {
     const ghost = originalElement.cloneNode(true) as HTMLImageElement
-    ghost.className = 'fixed z-[9999] opacity-80 rounded-sm aspect-[268/391] text-xs pointer-events-none touch-none shadow-md shadow-neutral-400 dark:shadow-neutral-950'
+    ghost.className = 'fixed z-[9999] opacity-80 rounded-sm aspect-[268/391] text-xs pointer-events-none touch-none outline-4 outline-transparent shadow-md shadow-neutral-400 dark:shadow-neutral-950'
     ghost.width = width - 20
     ghost.style.left = `${x}px`
     ghost.style.top = `${y}px`
