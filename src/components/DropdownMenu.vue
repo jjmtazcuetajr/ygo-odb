@@ -8,17 +8,15 @@ defineProps<{
   type: 'Import' | 'Export' | 'Sort'
 }>()
 
-const toggleState = ref(false)
-const usage = ref('')
+type DropdownMenuUsage = 'ydk-file-import' | 'ydke-url-import' | 'ydk-file-export' | 'ydke-url-export'
 
-const openYdkFileDialog = () => { usage.value = 'ydk-file' }
-const openYdkeUrlDialog = () => { usage.value = 'ydke-url' }
-function exportToYdkFile() {
-  console.log('export to ydk file');
-}
-function exportToYdkeUrl() {
-  console.log('export to ydke url');
-}
+const toggleState = ref(false)
+const usage = ref<DropdownMenuUsage | null>(null)
+
+const handleYdkFileImport = () => { usage.value = 'ydk-file-import' }
+const handleYdkeUrlImport = () => { usage.value = 'ydke-url-import' }
+const handleYdkFileExport = () => { usage.value = 'ydk-file-export' }
+const handleYdkeUrlExport = () => { usage.value = 'ydke-url-export' }
 function sortByName() {
   console.log('sort by name');
 }
@@ -58,15 +56,15 @@ function persistDialog(event: PointerDownOutsideEvent) {
           class="rounded-md p-1 border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 shadow-xl shadow-neutral-400 dark:shadow-neutral-950 will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
           :side-offset="5">
           <template v-if="type === 'Import' || type === 'Export'">
-            <DropdownMenuItem v-on="type === 'Import' ? { click: openYdkFileDialog } : { click: exportToYdkFile }"
+            <DropdownMenuItem v-on="type === 'Import' ? { click: handleYdkFileImport } : { click: handleYdkFileExport }"
               class="text-sm rounded flex items-center h-6 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
               <DialogTrigger class="w-full text-start px-3" v-if="type === 'Import'">From .ydk file</DialogTrigger>
-              <span class="w-full text-start px-3" v-else>To .ydk file</span>
+              <DialogTrigger class="w-full text-start px-3" v-else>To .ydk file</DialogTrigger>
             </DropdownMenuItem>
-            <DropdownMenuItem v-on="type === 'Import' ? { click: openYdkeUrlDialog } : { click: exportToYdkeUrl }"
+            <DropdownMenuItem v-on="type === 'Import' ? { click: handleYdkeUrlImport } : { click: handleYdkeUrlExport }"
               class="text-sm rounded flex items-center h-6 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
               <DialogTrigger class="w-full text-start px-3" v-if="type === 'Import'">From YDKe URL</DialogTrigger>
-              <span class="w-full text-start px-3" v-else>To YDKe URL</span>
+              <DialogTrigger class="w-full text-start px-3" v-else>To YDKe URL</DialogTrigger>
             </DropdownMenuItem>
           </template>
           <template v-else>
@@ -90,23 +88,33 @@ function persistDialog(event: PointerDownOutsideEvent) {
         <DialogContent :aria-describedby="undefined" @pointer-down-outside="persistDialog"
           class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto mt-[50%] sm:mt-[10%] mb-[10%] w-[90vw] max-w-[450px] p-6 z-100 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
           <DialogTitle class="text-lg font-semibold dark:text-neutral-300">
-            Import {{ usage === 'ydk-file' ? '.ydk file' : 'YDKe URL' }}
+            {{ type }} {{ usage && usage.includes('ydk-file') ? '.ydk file' : 'YDKe URL' }}
           </DialogTitle>
           <div class="mt-3 dark:text-neutral-300">
-            <template v-if="usage === 'ydk-file'">
+            <template v-if="usage === 'ydk-file-import'">
               <div class="mb-2 text-sm sm:text-base">You may drag a .ydk file here</div>
               <span class="sr-only">Please upload a .ydk file</span>
               <input type="file"
                 class="w-full py-10 px-2 text-xs sm:text-base rounded-lg border-[2px] border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
             </template>
-            <div v-else-if="usage === 'ydke-url'"
+            <div v-else-if="usage === 'ydke-url-import'"
               class="flex overflow-hidden rounded-md border border-neutral-500 focus-within:outline-2 focus-within:-outline-offset-1 focus-within:outline-sky-500">
               <textarea id="ydke" placeholder="Please enter a YDKe URL" rows="7"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] focus:outline-none"></textarea>
             </div>
+            <template v-else-if="usage === 'ydk-file-export'">
+              <label for="deck-name">(Optional) You may enter your preferred deck name:</label>
+              <input id="deck-name" type="text"
+                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 mt-2 border border-neutral-500 bg-neutral-50 dark:bg-neutral-950 dark:focus-within:outline dark:focus-within:outline-neutral-300">
+            </template>
+            <template v-else-if="usage === 'ydke-url-export'">
+              <textarea id="ydke-export" rows="7"
+                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
+            </template>
           </div>
           <div class="mt-5 mr-1 flex justify-end gap-2">
-            <ButtonCTA variant="emerald" text-content="Import" />
+            <ButtonCTA variant="emerald"
+              :text-content="usage === 'ydk-file-export' ? 'Download .ydk file' : usage === 'ydke-url-export' ? 'Copy to clipboard' : 'Import'" />
             <DialogClose as-child>
               <ButtonCTA variant="neutral" text-content="Cancel" />
             </DialogClose>
