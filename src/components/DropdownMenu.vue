@@ -97,11 +97,11 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <input type="file"
                 class="w-full py-10 px-2 text-xs sm:text-base rounded-lg border-[2px] border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
             </template>
-            <div v-else-if="usage === 'ydke-url-import'"
-              class="flex overflow-hidden rounded-md border border-neutral-500 focus-within:outline-2 focus-within:-outline-offset-1 focus-within:outline-sky-500">
-              <textarea id="ydke" placeholder="Please enter a YDKe URL" rows="7"
-                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] focus:outline-none"></textarea>
-            </div>
+            <template v-else-if="usage === 'ydke-url-import'">
+              <label for="ydke-import">Please enter a YDKe URL:</label>
+              <textarea id="ydke-import" placeholder="ydke://..." rows="7"
+                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 mt-2 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
+            </template>
             <template v-else-if="usage === 'ydk-file-export'">
               <label for="deck-name">(Optional) You may enter your preferred deck name:</label>
               <input id="deck-name" type="text"
