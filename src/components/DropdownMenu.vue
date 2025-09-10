@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { FileInput, FileOutput, ChevronDown, ArrowDownUp, X } from 'lucide-vue-next'
-import { DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger, DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger } from 'reka-ui'
+import {
+  DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger,
+  DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger
+} from 'reka-ui'
 import ButtonCTA from './ButtonCTA.vue'
+import { useYdkFile } from '@/composables/ydkFile'
 
 defineProps<{
   type: 'Import' | 'Export' | 'Sort'
@@ -10,13 +14,41 @@ defineProps<{
 
 type DropdownMenuUsage = 'ydk-file-import' | 'ydke-url-import' | 'ydk-file-export' | 'ydke-url-export'
 
+const { downloadYDKFile } = useYdkFile()
+
 const toggleState = ref(false)
 const usage = ref<DropdownMenuUsage | null>(null)
+const deckName = ref('')
 
 const handleYdkFileImport = () => { usage.value = 'ydk-file-import' }
 const handleYdkeUrlImport = () => { usage.value = 'ydke-url-import' }
 const handleYdkFileExport = () => { usage.value = 'ydk-file-export' }
 const handleYdkeUrlExport = () => { usage.value = 'ydke-url-export' }
+
+/**
+ * Produce a compliant deck name for YDK file download
+ * @param e The event object
+ */
+function handleInput(e: Event) {
+  const target = e.target as HTMLInputElement
+  let value = target.value
+
+  // if starting with a space, return as empty string
+  if (value.trim() === '') value = ''
+
+  // remove all other characters that aren't letters, numbers, spaces, hyphens, and underscores
+  // then remove all extra whitespaces
+  value = value.replace(/[^a-zA-Z0-9 \-_]/g, '').replace(/\s+/g, ' ')
+
+  deckName.value = value
+}
+
+/**
+ * Click function encompassing ydk file/ydke url import/export functionalities
+ */
+function clickHandler() {
+  if (usage.value === 'ydk-file-export') downloadYDKFile(deckName.value)
+}
 function sortByName() {
   console.log('sort by name');
 }
@@ -103,9 +135,14 @@ function persistDialog(event: PointerDownOutsideEvent) {
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 mt-2 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
             </template>
             <template v-else-if="usage === 'ydk-file-export'">
-              <label for="deck-name">(Optional) You may enter your preferred deck name:</label>
-              <input id="deck-name" type="text"
-                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 mt-2 border border-neutral-500 bg-neutral-50 dark:bg-neutral-950 dark:focus-within:outline dark:focus-within:outline-neutral-300">
+              <label for="deck-name" class="text-sm sm:text-base">
+                (Optional) You may enter your preferred deck name:
+              </label>
+              <input v-model="deckName" @input="handleInput" id="deck-name" type="text"
+                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 my-2 border border-neutral-500 bg-neutral-50 dark:bg-neutral-950 dark:focus-within:outline dark:focus-within:outline-neutral-300">
+              <span class="text-xs text-neutral-500 dark:text-neutral-400">
+                You may only type letters, numbers, spaces, hyphens, and underscores.
+              </span>
             </template>
             <template v-else-if="usage === 'ydke-url-export'">
               <textarea id="ydke-export" rows="7"
@@ -113,7 +150,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
             </template>
           </div>
           <div class="mt-5 mr-1 flex justify-end gap-2">
-            <ButtonCTA variant="emerald"
+            <ButtonCTA variant="emerald" @click="clickHandler"
               :text-content="usage === 'ydk-file-export' ? 'Download .ydk file' : usage === 'ydke-url-export' ? 'Copy to clipboard' : 'Import'" />
             <DialogClose as-child>
               <ButtonCTA variant="neutral" text-content="Cancel" />
