@@ -90,8 +90,8 @@ function persistDialog(event: PointerDownOutsideEvent) {
           <template v-if="type === 'Import' || type === 'Export'">
             <DropdownMenuItem v-on="type === 'Import' ? { click: handleYdkFileImport } : { click: handleYdkFileExport }"
               class="text-sm rounded flex items-center h-6 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
-              <DialogTrigger class="w-full text-start px-3" v-if="type === 'Import'">From .ydk file</DialogTrigger>
-              <DialogTrigger class="w-full text-start px-3" v-else>To .ydk file</DialogTrigger>
+              <DialogTrigger class="w-full text-start px-3" v-if="type === 'Import'">From YDK file</DialogTrigger>
+              <DialogTrigger class="w-full text-start px-3" v-else>To YDK file</DialogTrigger>
             </DropdownMenuItem>
             <DropdownMenuItem v-on="type === 'Import' ? { click: handleYdkeUrlImport } : { click: handleYdkeUrlExport }"
               class="text-sm rounded flex items-center h-6 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
@@ -120,12 +120,12 @@ function persistDialog(event: PointerDownOutsideEvent) {
         <DialogContent :aria-describedby="undefined" @pointer-down-outside="persistDialog"
           class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto mt-[50%] sm:mt-[10%] mb-[10%] w-[90vw] max-w-[450px] p-6 z-100 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
           <DialogTitle class="text-lg font-semibold dark:text-neutral-300">
-            {{ type }} {{ usage && usage.includes('ydk-file') ? '.ydk file' : 'YDKe URL' }}
+            {{ type }} {{ usage && usage.includes('ydk-file') ? 'YDK file' : 'YDKe URL' }}
           </DialogTitle>
           <div class="mt-3 dark:text-neutral-300">
             <template v-if="usage === 'ydk-file-import'">
-              <div class="mb-2 text-sm sm:text-base">You may drag a .ydk file here</div>
-              <span class="sr-only">Please upload a .ydk file</span>
+              <div class="mb-2 text-sm sm:text-base">You may drag a YDK file here</div>
+              <span class="sr-only">Please upload a YDK file</span>
               <input type="file"
                 class="w-full py-10 px-2 text-xs sm:text-base rounded-lg border-[2px] border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
             </template>
@@ -151,7 +151,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
           </div>
           <div class="mt-5 mr-1 flex justify-end gap-2">
             <ButtonCTA variant="emerald" @click="clickHandler"
-              :text-content="usage === 'ydk-file-export' ? 'Download .ydk file' : usage === 'ydke-url-export' ? 'Copy to clipboard' : 'Import'" />
+              :text-content="usage === 'ydk-file-export' ? 'Download YDK file' : usage === 'ydke-url-export' ? 'Copy to clipboard' : 'Import'" />
             <DialogClose as-child>
               <ButtonCTA variant="neutral" text-content="Cancel" />
             </DialogClose>
