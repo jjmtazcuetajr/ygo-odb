@@ -16,7 +16,7 @@ defineProps<{
 
 type DropdownMenuUsage = 'ydk-file-import' | 'ydke-url-import' | 'ydk-file-export' | 'ydke-url-export'
 
-const { downloadYDKFile } = useYdkFile()
+const { downloadYDKFile, parseYDK } = useYdkFile()
 
 const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
 
@@ -24,6 +24,8 @@ const toggleState = ref(false)
 const usage = ref<DropdownMenuUsage | null>(null)
 const fileName = ref('')
 const isErrorYDKExport = ref(false)
+const isErrorYDKImport = ref(false)
+const ydkFile = ref<File | null>(null)
 
 const handleYdkFileImport = () => { usage.value = 'ydk-file-import' }
 const handleYdkeUrlImport = () => { usage.value = 'ydke-url-import' }
@@ -55,6 +57,13 @@ function clickHandler() {
   if (usage.value === 'ydk-file-export') {
     if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length) isErrorYDKExport.value = true
     else downloadYDKFile(fileName.value)
+  } else if (usage.value === 'ydk-file-import') {
+    if (ydkFile.value && ydkFile.value.name.endsWith('.ydk')) {
+      isErrorYDKImport.value = false
+      readYDKFile(ydkFile.value)
+    } else {
+      isErrorYDKImport.value = true
+    }
   }
 }
 
@@ -65,6 +74,43 @@ function clickHandler() {
 function handleDialogOpen(isOpen: boolean) {
   if (!isOpen) isErrorYDKExport.value = false
 }
+
+/**
+ * Handle file upload of the input of type file via onchange event
+ * @param e The event object
+ */
+function handleFileUpload(e: Event) {
+  const target = e.target
+  const selectedFile = target instanceof HTMLInputElement ? target.files && target.files[0] : null
+
+  if (!selectedFile) return
+
+  ydkFile.value = selectedFile
+  isErrorYDKImport.value = false // hide error message
+}
+
+/**
+ * Read the imported YDK file and attempt to parse it
+ * @param file file of type `File`
+ */
+function readYDKFile(file: File) {
+  const reader = new FileReader()
+
+  reader.onload = (ev) => {
+    if (ev.target && ev.target.result) {
+      const fileContent = ev.target.result
+      if (typeof fileContent === 'string') parseYDK(fileContent)
+      else console.error('YDK file is not valid.')
+    }
+  }
+
+  reader.onerror = (ev) => {
+    console.error("Error reading file:", ev.target?.error)
+  }
+
+  reader.readAsText(file)
+}
+
 function sortByName() {
   console.log('sort by name');
 }
@@ -141,8 +187,12 @@ function persistDialog(event: PointerDownOutsideEvent) {
           <div class="flex flex-col gap-2 mt-3 dark:text-neutral-300">
             <template v-if="usage === 'ydk-file-import'">
               <label for="file-import" class="text-sm sm:text-base">Please upload a YDK file:</label>
-              <input id="file-import" type="file" accept=".ydk"
+              <input id="file-import" type="file" accept=".ydk" @change="handleFileUpload"
                 class="w-full py-10 px-2 text-xs sm:text-base rounded-lg border-[2px] border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
+              <span class="opacity-0 text-xs sm:text-sm text-red-600 dark:text-red-400"
+                :class="{ 'opacity-100': isErrorYDKImport }">
+                You did not upload a YDK file!
+              </span>
             </template>
             <template v-else-if="usage === 'ydke-url-import'">
               <label for="ydke-import">Please enter a YDKe URL:</label>
