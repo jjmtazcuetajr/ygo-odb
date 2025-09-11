@@ -124,10 +124,9 @@ function persistDialog(event: PointerDownOutsideEvent) {
           </DialogTitle>
           <div class="mt-3 dark:text-neutral-300">
             <template v-if="usage === 'ydk-file-import'">
-              <div class="mb-2 text-sm sm:text-base">You may drag a YDK file here</div>
-              <span class="sr-only">Please upload a YDK file</span>
-              <input type="file"
-                class="w-full py-10 px-2 text-xs sm:text-base rounded-lg border-[2px] border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
+              <label for="file-import" class="text-sm sm:text-base">Please upload a YDK file:</label>
+              <input id="file-import" type="file" accept=".ydk"
+                class="w-full py-10 px-2 my-2 text-xs sm:text-base rounded-lg border-[2px] border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
             </template>
             <template v-else-if="usage === 'ydke-url-import'">
               <label for="ydke-import">Please enter a YDKe URL:</label>
