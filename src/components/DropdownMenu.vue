@@ -136,7 +136,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
             </template>
             <template v-else-if="usage === 'ydk-file-export'">
               <label for="deck-name" class="text-sm sm:text-base">
-                (Optional) You may enter your preferred deck name:
+                (Optional) You may enter your preferred file name:
               </label>
               <input v-model="deckName" @input="handleInput" id="deck-name" type="text"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 my-2 border border-neutral-500 bg-neutral-50 dark:bg-neutral-950 dark:focus-within:outline dark:focus-within:outline-neutral-300">

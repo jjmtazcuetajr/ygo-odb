@@ -9,18 +9,9 @@ export function useYdkFile() {
 
   /**
    * Generates a YDK file's contents
-   * @param deckName Optional deck name. Defaults to empty string
    */
-  function generateYDK(deckName: string) {
+  function generateYDK() {
     const lines: string[] = []
-
-    // add deck name as comment if provided
-    if (deckName !== '') {
-      // trim first then replace spaces with underscores
-      const finalDeckName = deckName.trim().replace(/\s+/g, '_')
-      lines.push(`#deck name: ${finalDeckName}`)
-      lines.push('')
-    }
 
     // main deck section
     lines.push('#main')
@@ -49,7 +40,7 @@ export function useYdkFile() {
    */
   function downloadYDKFile(filename: string) {
     // create object url
-    const content = generateYDK(filename)
+    const content = generateYDK()
     const blob = new Blob([content], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
 
@@ -76,8 +67,6 @@ export function useYdkFile() {
     let currentSection: 'main' | 'extra' | 'side' = 'main'
 
     for (const line of lines) {
-      if (!line || line.startsWith('#')) continue
-
       // determine current deck section
       if (line === '#main') {
         currentSection = 'main'
