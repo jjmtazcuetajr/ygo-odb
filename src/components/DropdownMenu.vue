@@ -18,7 +18,7 @@ const { downloadYDKFile } = useYdkFile()
 
 const toggleState = ref(false)
 const usage = ref<DropdownMenuUsage | null>(null)
-const deckName = ref('')
+const fileName = ref('')
 
 const handleYdkFileImport = () => { usage.value = 'ydk-file-import' }
 const handleYdkeUrlImport = () => { usage.value = 'ydke-url-import' }
@@ -40,14 +40,14 @@ function handleInput(e: Event) {
   // then remove all extra whitespaces
   value = value.replace(/[^a-zA-Z0-9 \-_]/g, '').replace(/\s+/g, ' ')
 
-  deckName.value = value
+  fileName.value = value
 }
 
 /**
  * Click function encompassing ydk file/ydke url import/export functionalities
  */
 function clickHandler() {
-  if (usage.value === 'ydk-file-export') downloadYDKFile(deckName.value)
+  if (usage.value === 'ydk-file-export') downloadYDKFile(fileName.value)
 }
 function sortByName() {
   console.log('sort by name');
@@ -137,7 +137,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <label for="deck-name" class="text-sm sm:text-base">
                 (Optional) You may enter your preferred file name:
               </label>
-              <input v-model="deckName" @input="handleInput" id="deck-name" type="text"
+              <input v-model="fileName" @input="handleInput" id="deck-name" type="text"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 my-2 border border-neutral-500 bg-neutral-50 dark:bg-neutral-950 dark:focus-within:outline dark:focus-within:outline-neutral-300">
               <span class="text-xs text-neutral-500 dark:text-neutral-400">
                 You may only type letters, numbers, spaces, hyphens, and underscores.
