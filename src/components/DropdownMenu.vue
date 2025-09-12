@@ -16,7 +16,7 @@ defineProps<{
 
 type DropdownMenuUsage = 'ydk-file-import' | 'ydke-url-import' | 'ydk-file-export' | 'ydke-url-export'
 
-const { downloadYDKFile, parseYDK } = useYdkFile()
+const { ydkFile, downloadYDKFile, readYDKFile } = useYdkFile()
 
 const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
 
@@ -26,7 +26,6 @@ const usage = ref<DropdownMenuUsage | null>(null)
 const fileName = ref('')
 const isErrorYDKExport = ref(false)
 const isErrorYDKImport = ref(false)
-const ydkFile = ref<File | null>(null)
 
 const handleYdkFileImport = () => { usage.value = 'ydk-file-import' }
 const handleYdkeUrlImport = () => { usage.value = 'ydke-url-import' }
@@ -57,12 +56,15 @@ function handleInput(e: Event) {
 function clickHandler() {
   switch (usage.value) {
     case 'ydk-file-export':
-      if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length) isErrorYDKExport.value = true
+      if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length) isErrorYDKExport.value = true // show ydk export error message
       else downloadYDKFile(fileName.value)
       break
     case 'ydk-file-import':
-      if (ydkFile.value && ydkFile.value.name.endsWith('.ydk')) readYDKFile(ydkFile.value)
-      else isErrorYDKImport.value = true
+      if (ydkFile.value && ydkFile.value.name.endsWith('.ydk')) {
+        readYDKFile(ydkFile.value)
+        isDialogOpen.value = false // close the dialog
+      } else
+        isErrorYDKImport.value = true // show ydk import error message
       break
     default:
       break
@@ -74,7 +76,11 @@ function clickHandler() {
  * @param isOpen Open state of dialog
  */
 function handleDialogOpen(isOpen: boolean) {
-  if (!isOpen) isErrorYDKExport.value = false
+  if (!isOpen) {
+    // hide error messages
+    isErrorYDKExport.value = false
+    isErrorYDKImport.value = false
+  }
 }
 
 /**
@@ -88,32 +94,7 @@ function handleFileUpload(e: Event) {
   if (!selectedFile) return
 
   ydkFile.value = selectedFile
-  isErrorYDKImport.value = false // hide error message
-}
-
-/**
- * Read the imported YDK file and attempt to parse it
- * @param file file of type `File`
- */
-function readYDKFile(file: File) {
-  const reader = new FileReader()
-
-  reader.onload = (ev) => {
-    if (ev.target && ev.target.result) {
-      const fileContent = ev.target.result
-      if (typeof fileContent === 'string') {
-        parseYDK(fileContent)
-        isDialogOpen.value = false
-      } else
-        console.error('YDK file is not valid.')
-    }
-  }
-
-  reader.onerror = (ev) => {
-    console.error("Error reading file:", ev.target?.error)
-  }
-
-  reader.readAsText(file)
+  isErrorYDKImport.value = false // hide ydk import error message
 }
 
 function sortByName() {

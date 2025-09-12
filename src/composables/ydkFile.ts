@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
@@ -7,10 +8,12 @@ export function useYdkFile() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
   const { cards } = storeToRefs(useYgoCardsStore())
 
+  const ydkFile = ref<File | null>(null)
+
   /**
    * Generates a YDK file's contents
    */
-  function generateYDK() {
+  function generateYDKContent() {
     const lines: string[] = []
 
     // main deck section
@@ -40,7 +43,7 @@ export function useYdkFile() {
    */
   function downloadYDKFile(filename: string) {
     // create object url
-    const content = generateYDK()
+    const content = generateYDKContent()
     const blob = new Blob([content], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
 
@@ -113,5 +116,30 @@ export function useYdkFile() {
     referenceCardArray.length = 0
   }
 
-  return { downloadYDKFile, parseYDK }
+  /**
+ * Read the imported YDK file and attempt to parse it
+ * @param file file of type `File`
+ */
+function readYDKFile(file: File) {
+  const reader = new FileReader()
+
+  reader.onload = (ev) => {
+    if (ev.target && ev.target.result) {
+      const fileContent = ev.target.result
+      if (typeof fileContent === 'string') {
+        parseYDK(fileContent)
+        ydkFile.value = null // empty the variable holding the ydk file
+      } else
+        console.error('YDK file is not valid.')
+    }
+  }
+
+  reader.onerror = (ev) => {
+    console.error("Error reading file:", ev.target?.error)
+  }
+
+  reader.readAsText(file)
+}
+
+  return { ydkFile, downloadYDKFile, readYDKFile }
 }
