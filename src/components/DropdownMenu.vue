@@ -55,16 +55,17 @@ function handleInput(e: Event) {
  * Click function encompassing ydk file/ydke url import/export functionalities
  */
 function clickHandler() {
-  if (usage.value === 'ydk-file-export') {
-    if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length) isErrorYDKExport.value = true
-    else downloadYDKFile(fileName.value)
-  } else if (usage.value === 'ydk-file-import') {
-    if (ydkFile.value && ydkFile.value.name.endsWith('.ydk')) {
-      isErrorYDKImport.value = false
-      readYDKFile(ydkFile.value)
-    } else {
-      isErrorYDKImport.value = true
-    }
+  switch (usage.value) {
+    case 'ydk-file-export':
+      if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length) isErrorYDKExport.value = true
+      else downloadYDKFile(fileName.value)
+      break
+    case 'ydk-file-import':
+      if (ydkFile.value && ydkFile.value.name.endsWith('.ydk')) readYDKFile(ydkFile.value)
+      else isErrorYDKImport.value = true
+      break
+    default:
+      break
   }
 }
 
