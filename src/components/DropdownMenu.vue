@@ -20,6 +20,7 @@ const { downloadYDKFile, parseYDK } = useYdkFile()
 
 const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
 
+const isDialogOpen = ref(false)
 const toggleState = ref(false)
 const usage = ref<DropdownMenuUsage | null>(null)
 const fileName = ref('')
@@ -99,8 +100,11 @@ function readYDKFile(file: File) {
   reader.onload = (ev) => {
     if (ev.target && ev.target.result) {
       const fileContent = ev.target.result
-      if (typeof fileContent === 'string') parseYDK(fileContent)
-      else console.error('YDK file is not valid.')
+      if (typeof fileContent === 'string') {
+        parseYDK(fileContent)
+        isDialogOpen.value = false
+      } else
+        console.error('YDK file is not valid.')
     }
   }
 
@@ -134,7 +138,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
 </script>
 
 <template>
-  <DialogRoot v-on:update:open="handleDialogOpen">
+  <DialogRoot v-model:open="isDialogOpen" v-on:update:open="handleDialogOpen">
     <DropdownMenuRoot v-model:open="toggleState" :modal="false">
       <DropdownMenuTrigger :aria-label="type + ' options'"
         class="flex place-items-center gap-1 px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base text-white bg-neutral-500 hover:bg-neutral-600 active:bg-neutral-700 transition-[background-color] duration-200">
