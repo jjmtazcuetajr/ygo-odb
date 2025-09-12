@@ -66,6 +66,11 @@ export function useYdkFile() {
     const lines = content.split('\n').map(line => line.trim())
     let currentSection: 'main' | 'extra' | 'side' = 'main'
 
+    // clear main/extra/side deck contents
+    mainDeck.value.length = 0
+    extraDeck.value.length = 0
+    sideDeck.value.length = 0
+
     for (const line of lines) {
       // determine current deck section
       if (line === '#main') {

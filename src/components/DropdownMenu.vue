@@ -185,7 +185,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
       <DialogOverlay
         class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto dark:[color-scheme:dark]">
         <DialogContent :aria-describedby="undefined" @pointer-down-outside="persistDialog"
-          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto mt-[50%] sm:mt-[10%] mb-[10%] w-[90vw] max-w-[450px] p-6 z-100 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
+          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto mt-[50%] sm:mt-[10%] mb-[10%] w-[90vw] max-w-[500px] p-6 z-100 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
           <DialogTitle class="text-lg font-semibold dark:text-neutral-300">
             {{ type }} {{ usage && usage.includes('ydk-file') ? 'YDK file' : 'YDKe URL' }}
           </DialogTitle>
@@ -194,6 +194,9 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <label for="file-import" class="text-sm sm:text-base">Please upload a YDK file:</label>
               <input id="file-import" type="file" accept=".ydk" @change="handleFileUpload"
                 class="w-full py-10 px-2 text-xs sm:text-base rounded-lg border-[2px] border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
+              <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
+                <strong>Note:</strong> Importing will remove your current progress in deck-building.
+              </span>
               <span class="opacity-0 text-xs sm:text-sm text-red-600 dark:text-red-400"
                 :class="{ 'opacity-100': isErrorYDKImport }">
                 You did not upload a YDK file!
@@ -210,7 +213,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
               </label>
               <input v-model="fileName" @input="handleInput" id="deck-name" type="text"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 border border-neutral-500 bg-neutral-50 dark:bg-neutral-950 dark:focus-within:outline dark:focus-within:outline-neutral-300">
-              <span class="text-xs text-neutral-500 dark:text-neutral-400">
+              <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                 You may only type letters, numbers, spaces, hyphens, and underscores.
               </span>
               <span v-if="isErrorYDKExport" class="text-xs sm:text-sm text-red-600 dark:text-red-400">
