@@ -26,8 +26,8 @@ const isDialogOpen = ref(false)
 const toggleState = ref(false)
 const usage = ref<DropdownMenuUsage | null>(null)
 const fileName = ref('')
-const isErrorYDKExport = ref(false)
-const isErrorYDKImport = ref(false)
+const isErrorYDKFileExport = ref(false)
+const isErrorYDKFileImport = ref(false)
 const ydkeUrl = ref('')
 const isCopySuccess = ref(false)
 const isErrorYDKeUrlExport = ref(false)
@@ -65,7 +65,7 @@ function handleInput(e: Event) {
 function clickHandler() {
   switch (usage.value) {
     case 'ydk-file-export':
-      if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length) isErrorYDKExport.value = true // show ydk export error message
+      if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length) isErrorYDKFileExport.value = true // show ydk file export error message
       else downloadYDKFile(fileName.value)
       break
     case 'ydk-file-import':
@@ -73,7 +73,7 @@ function clickHandler() {
         readYDKFile(ydkFile.value)
         isDialogOpen.value = false // close the dialog
       } else
-        isErrorYDKImport.value = true // show ydk import error message
+        isErrorYDKFileImport.value = true // show ydk file import error message
       break
     case 'ydke-url-export':
       if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length)
@@ -95,8 +95,8 @@ function clickHandler() {
 function handleDialogOpen(isOpen: boolean) {
   if (!isOpen) {
     // hide error messages
-    isErrorYDKExport.value = false
-    isErrorYDKImport.value = false
+    isErrorYDKFileExport.value = false
+    isErrorYDKFileImport.value = false
     isErrorYDKeUrlExport.value = false
   }
 }
@@ -112,7 +112,7 @@ function handleFileUpload(e: Event) {
   if (!selectedFile) return
 
   ydkFile.value = selectedFile
-  isErrorYDKImport.value = false // hide ydk import error message
+  isErrorYDKFileImport.value = false // hide ydk file import error message
 }
 
 /**
@@ -208,7 +208,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
                 <strong>Note:</strong> Importing will remove your current progress in deck-building.
               </span>
               <span class="opacity-0 text-xs sm:text-sm text-red-600 dark:text-red-400"
-                :class="{ 'opacity-100': isErrorYDKImport }">
+                :class="{ 'opacity-100': isErrorYDKFileImport }">
                 You did not upload a YDK file!
               </span>
             </template>
@@ -226,7 +226,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                 You may only type letters, numbers, spaces, hyphens, and underscores.
               </span>
-              <span v-if="isErrorYDKExport" class="text-xs sm:text-sm text-red-600 dark:text-red-400">
+              <span v-if="isErrorYDKFileExport" class="text-xs sm:text-sm text-red-600 dark:text-red-400">
                 Please add at least <strong>one</strong> card in either the main, extra, or side deck.
               </span>
             </template>
