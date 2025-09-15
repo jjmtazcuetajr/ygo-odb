@@ -7,6 +7,7 @@ import {
 } from 'reka-ui'
 import ButtonCTA from './ButtonCTA.vue'
 import { useYdkFile } from '@/composables/ydkFile'
+import { useYdkeUrl } from '@/composables/ydkeURL'
 import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 
@@ -17,6 +18,7 @@ defineProps<{
 type DropdownMenuUsage = 'ydk-file-import' | 'ydke-url-import' | 'ydk-file-export' | 'ydke-url-export'
 
 const { ydkFile, downloadYDKFile, readYDKFile } = useYdkFile()
+const { generateYDKeURL, parseYDKeURL, validateYDKeURL, copyYDKeURLToClipboard } = useYdkeUrl()
 
 const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
 
@@ -26,11 +28,18 @@ const usage = ref<DropdownMenuUsage | null>(null)
 const fileName = ref('')
 const isErrorYDKExport = ref(false)
 const isErrorYDKImport = ref(false)
+const ydkeUrl = ref('')
+const isCopySuccess = ref(false)
+const isErrorYDKeUrlExport = ref(false)
+let timeoutID: number | undefined = undefined
 
 const handleYdkFileImport = () => { usage.value = 'ydk-file-import' }
 const handleYdkeUrlImport = () => { usage.value = 'ydke-url-import' }
 const handleYdkFileExport = () => { usage.value = 'ydk-file-export' }
-const handleYdkeUrlExport = () => { usage.value = 'ydke-url-export' }
+const handleYdkeUrlExport = () => {
+  usage.value = 'ydke-url-export'
+  ydkeUrl.value = generateYDKeURL()
+}
 
 /**
  * Produce a compliant deck name for YDK file download
@@ -66,6 +75,14 @@ function clickHandler() {
       } else
         isErrorYDKImport.value = true // show ydk import error message
       break
+    case 'ydke-url-export':
+      if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length)
+        isErrorYDKeUrlExport.value = true // show ydke url export error message
+      else {
+        copyYDKeURLToClipboard(ydkeUrl.value)
+        showCopiedMessage()
+      }
+      break
     default:
       break
   }
@@ -80,6 +97,7 @@ function handleDialogOpen(isOpen: boolean) {
     // hide error messages
     isErrorYDKExport.value = false
     isErrorYDKImport.value = false
+    isErrorYDKeUrlExport.value = false
   }
 }
 
@@ -95,6 +113,17 @@ function handleFileUpload(e: Event) {
 
   ydkFile.value = selectedFile
   isErrorYDKImport.value = false // hide ydk import error message
+}
+
+/**
+ * Show a `Copied!` message after a successful YDKe URL copy to clipboard
+ */
+function showCopiedMessage() {
+  clearTimeout(timeoutID)
+  isCopySuccess.value = true
+  timeoutID = setTimeout(() => {
+    isCopySuccess.value = false
+  }, 2000)
 }
 
 function sortByName() {
@@ -202,11 +231,19 @@ function persistDialog(event: PointerDownOutsideEvent) {
               </span>
             </template>
             <template v-else-if="usage === 'ydke-url-export'">
-              <textarea id="ydke-export" rows="7"
+              <textarea id="ydke-export" rows="7" v-model="ydkeUrl"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
+              <span class="opacity-0 text-xs sm:text-sm text-red-600 dark:text-red-400"
+                :class="{ 'opacity-100': isErrorYDKeUrlExport }">
+                Please add at least <strong>one</strong> card in either the main, extra, or side deck.
+              </span>
             </template>
           </div>
-          <div class="mt-5 mr-1 flex justify-end gap-2">
+          <div class="mt-5 flex justify-end items-center gap-2">
+            <span :class="{ 'opacity-100': isCopySuccess }"
+              class="opacity-0 text-xs sm:text-sm text-emerald-700 dark:text-emerald-500 transition-[opacity] duration-100">
+              <strong>Copied!</strong>
+            </span>
             <ButtonCTA variant="emerald" @click="clickHandler"
               :text-content="usage === 'ydk-file-export' ? 'Download YDK file' : usage === 'ydke-url-export' ? 'Copy to clipboard' : 'Import'" />
             <DialogClose as-child>
