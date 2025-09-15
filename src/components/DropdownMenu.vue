@@ -28,7 +28,7 @@ const usage = ref<DropdownMenuUsage | null>(null)
 const fileName = ref('')
 const isErrorYDKFileExport = ref(false)
 const isErrorYDKFileImport = ref(false)
-const ydkeUrl = ref('')
+const ydkeUrlExport = ref('')
 const isCopySuccess = ref(false)
 const isErrorYDKeUrlExport = ref(false)
 
@@ -40,14 +40,14 @@ const handleYdkeUrlImport = () => { usage.value = 'ydke-url-import' }
 const handleYdkFileExport = () => { usage.value = 'ydk-file-export' }
 const handleYdkeUrlExport = () => {
   usage.value = 'ydke-url-export'
-  ydkeUrl.value = generateYDKeURL()
+  ydkeUrlExport.value = generateYDKeURL()
 }
 
 /**
  * Produce a compliant deck name for YDK file download
  * @param e The event object
  */
-function handleInput(e: Event) {
+function handleInputDeckName(e: Event) {
   const target = e.target as HTMLInputElement
   let value = target.value
 
@@ -86,7 +86,7 @@ function clickHandler() {
       if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length)
         isErrorYDKeUrlExport.value = true // show ydke url export error message
       else {
-        copyYDKeURLToClipboard(ydkeUrl.value)
+        copyYDKeURLToClipboard(ydkeUrlExport.value)
         showCopiedMessage()
       }
       break
@@ -236,7 +236,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <label for="deck-name" class="text-sm sm:text-base">
                 (Optional) You may enter your preferred file name:
               </label>
-              <input v-model="fileName" @input="handleInput" id="deck-name" type="text"
+              <input v-model="fileName" @input="handleInputDeckName" id="deck-name" type="text"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 border border-neutral-500 bg-neutral-50 dark:bg-neutral-950 dark:focus-within:outline dark:focus-within:outline-neutral-300">
               <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                 You may only type letters, numbers, spaces, hyphens, and underscores.
@@ -247,7 +247,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
               </span>
             </template>
             <template v-else-if="usage === 'ydke-url-export'">
-              <textarea id="ydke-export" rows="7" v-model="ydkeUrl"
+              <textarea id="ydke-export" rows="7" v-model="ydkeUrlExport"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
               <span class="invisible text-xs sm:text-sm text-red-600 dark:text-red-400"
                 :class="{ 'visible': isErrorYDKeUrlExport }" aria-live="polite">
