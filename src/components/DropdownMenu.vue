@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { FileInput, FileOutput, ChevronDown, ArrowDownUp, X } from 'lucide-vue-next'
 import {
   DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger,
@@ -31,7 +31,9 @@ const isErrorYDKFileImport = ref(false)
 const ydkeUrl = ref('')
 const isCopySuccess = ref(false)
 const isErrorYDKeUrlExport = ref(false)
+
 let timeoutID: number | undefined = undefined
+const fileInput = useTemplateRef<HTMLInputElement>('file-input')
 
 const handleYdkFileImport = () => { usage.value = 'ydk-file-import' }
 const handleYdkeUrlImport = () => { usage.value = 'ydke-url-import' }
@@ -72,8 +74,13 @@ function clickHandler() {
       if (ydkFile.value && ydkFile.value.name.endsWith('.ydk')) {
         readYDKFile(ydkFile.value)
         isDialogOpen.value = false // close the dialog
-      } else
+      } else {
         isErrorYDKFileImport.value = true // show ydk file import error message
+        if (fileInput.value) {
+          fileInput.value.setAttribute('aria-invalid', 'true')
+          fileInput.value.focus()
+        }
+      }
       break
     case 'ydke-url-export':
       if (!mainDeck.value.length && !extraDeck.value.length && !sideDeck.value.length)
@@ -113,6 +120,10 @@ function handleFileUpload(e: Event) {
 
   ydkFile.value = selectedFile
   isErrorYDKFileImport.value = false // hide ydk file import error message
+  if (fileInput.value) {
+    fileInput.value.removeAttribute('aria-invalid')
+    fileInput.value.blur()
+  }
 }
 
 /**
@@ -202,13 +213,14 @@ function persistDialog(event: PointerDownOutsideEvent) {
           <div class="flex flex-col gap-2 mt-3 dark:text-neutral-300">
             <template v-if="usage === 'ydk-file-import'">
               <label for="file-import" class="text-sm sm:text-base">Please upload a YDK file:</label>
-              <input id="file-import" type="file" accept=".ydk" @change="handleFileUpload"
-                class="w-full py-10 px-2 text-xs sm:text-base rounded-lg border-[2px] border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
+              <input ref="file-input" id="file-import" type="file" accept=".ydk" @change="handleFileUpload"
+                aria-errormessage="ydk-file-import-error"
+                class="w-full py-10 px-2 text-xs sm:text-base focus:outline-2 focus:-outline-offset-2 dark:focus:outline-white rounded-lg border-[2px] border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
               <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                 <strong>Note:</strong> Importing will remove your current progress in deck-building.
               </span>
-              <span class="opacity-0 text-xs sm:text-sm text-red-600 dark:text-red-400"
-                :class="{ 'opacity-100': isErrorYDKFileImport }">
+              <span id="ydk-file-import-error" class="invisible text-xs sm:text-sm text-red-600 dark:text-red-400"
+                :class="{ 'visible': isErrorYDKFileImport }">
                 You did not upload a YDK file!
               </span>
             </template>
@@ -226,23 +238,23 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                 You may only type letters, numbers, spaces, hyphens, and underscores.
               </span>
-              <span class="opacity-0 text-xs sm:text-sm text-red-600 dark:text-red-400"
-                :class="{ 'opacity-100': isErrorYDKFileExport }">
+              <span class="invisible text-xs sm:text-sm text-red-600 dark:text-red-400"
+                :class="{ 'visible': isErrorYDKFileExport }" aria-live="polite">
                 Please add at least <strong>one</strong> card in either the main, extra, or side deck.
               </span>
             </template>
             <template v-else-if="usage === 'ydke-url-export'">
               <textarea id="ydke-export" rows="7" v-model="ydkeUrl"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
-              <span class="opacity-0 text-xs sm:text-sm text-red-600 dark:text-red-400"
-                :class="{ 'opacity-100': isErrorYDKeUrlExport }">
+              <span class="invisible text-xs sm:text-sm text-red-600 dark:text-red-400"
+                :class="{ 'visible': isErrorYDKeUrlExport }" aria-live="polite">
                 Please add at least <strong>one</strong> card in either the main, extra, or side deck.
               </span>
             </template>
           </div>
           <div class="mt-3 flex justify-end items-center gap-2">
-            <span :class="{ 'opacity-100': isCopySuccess }"
-              class="opacity-0 text-xs sm:text-sm text-emerald-700 dark:text-emerald-500 transition-[opacity] duration-100">
+            <span role="status" :class="{ 'visible': isCopySuccess }"
+              class="invisible text-xs sm:text-sm text-emerald-700 dark:text-emerald-500">
               <strong>Copied!</strong>
             </span>
             <ButtonCTA variant="emerald" @click="clickHandler"
