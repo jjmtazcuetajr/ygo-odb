@@ -105,6 +105,9 @@ function handleDialogOpen(isOpen: boolean) {
     isErrorYDKFileExport.value = false
     isErrorYDKFileImport.value = false
     isErrorYDKeUrlExport.value = false
+
+    // remove the value of this variable
+    if (ydkFile.value) ydkFile.value = null
   }
 }
 
