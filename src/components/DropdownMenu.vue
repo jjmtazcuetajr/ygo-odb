@@ -226,7 +226,8 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                 You may only type letters, numbers, spaces, hyphens, and underscores.
               </span>
-              <span v-if="isErrorYDKFileExport" class="text-xs sm:text-sm text-red-600 dark:text-red-400">
+              <span class="opacity-0 text-xs sm:text-sm text-red-600 dark:text-red-400"
+                :class="{ 'opacity-100': isErrorYDKFileExport }">
                 Please add at least <strong>one</strong> card in either the main, extra, or side deck.
               </span>
             </template>
@@ -239,7 +240,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
               </span>
             </template>
           </div>
-          <div class="mt-5 flex justify-end items-center gap-2">
+          <div class="mt-3 flex justify-end items-center gap-2">
             <span :class="{ 'opacity-100': isCopySuccess }"
               class="opacity-0 text-xs sm:text-sm text-emerald-700 dark:text-emerald-500 transition-[opacity] duration-100">
               <strong>Copied!</strong>
