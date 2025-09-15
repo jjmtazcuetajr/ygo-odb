@@ -96,10 +96,10 @@ function clickHandler() {
 }
 
 /**
- * Handle opening of dialog
+ * Handle closing of dialog
  * @param isOpen Open state of dialog
  */
-function handleDialogOpen(isOpen: boolean) {
+function handleDialogClose(isOpen: boolean) {
   if (!isOpen) {
     // hide error messages
     isErrorYDKFileExport.value = false
@@ -163,7 +163,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
 </script>
 
 <template>
-  <DialogRoot v-model:open="isDialogOpen" v-on:update:open="handleDialogOpen">
+  <DialogRoot v-model:open="isDialogOpen" v-on:update:open="handleDialogClose">
     <DropdownMenuRoot v-model:open="toggleState" :modal="false">
       <DropdownMenuTrigger :aria-label="type + ' options'"
         class="flex place-items-center gap-1 px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base text-white bg-neutral-500 hover:bg-neutral-600 active:bg-neutral-700 transition-[background-color] duration-200">
