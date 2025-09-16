@@ -112,6 +112,7 @@ export function useYdkeUrl() {
    */
   function injectCardIDsToDeck(cardIDs: number[], targetDeck: YGOCardData[]) {
     const referenceCardArray: YGOCardData[] = []
+    targetDeck.length = 0 // clear the target deck's contents
 
     for (const cardID of cardIDs) {
       const existingCard = referenceCardArray.find(card => card.id === cardID)
@@ -186,12 +187,13 @@ export function useYdkeUrl() {
    */
   function validateYDKeURL(ydkeUrl: string): { isValid: boolean; error?: string } {
     try {
-      if (!ydkeUrl.startsWith('ydke://')) return { isValid: false, error: 'YDKe URL must start with ydke://' }
+      if (ydkeUrl === '') return { isValid: false, error: 'You did not input a YDKe URL.' }
+      if (!ydkeUrl.startsWith('ydke://')) return { isValid: false, error: 'YDKe URL must start with the prefix ydke://' }
 
       const urlData = ydkeUrl.replace(/^ydke:\/\//, '')
       const parts = urlData.split('!')
 
-      if (parts.length < 4) return { isValid: false, error: 'Invalid YDKe URL format - missing exclamation marks' }
+      if (parts.length !== 4) return { isValid: false, error: 'Invalid YDKe URL format - expecting 3 exclamation marks' }
 
       return { isValid: true }
     } catch (error) {

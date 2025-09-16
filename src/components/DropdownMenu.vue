@@ -31,9 +31,13 @@ const isErrorYDKFileImport = ref(false)
 const ydkeUrlExport = ref('')
 const isCopySuccess = ref(false)
 const isErrorYDKeUrlExport = ref(false)
+const ydkeUrlImport = ref('')
+const isErrorYDKeUrlImport = ref(false)
+const ydkeUrlImportErrorMessage = ref('YDKe import error')
 
 let timeoutID: number | undefined = undefined
 const fileInput = useTemplateRef<HTMLInputElement>('file-input')
+const ydkeInput = useTemplateRef<HTMLInputElement>('ydke-input')
 
 const handleYdkFileImport = () => { usage.value = 'ydk-file-import' }
 const handleYdkeUrlImport = () => { usage.value = 'ydke-url-import' }
@@ -77,6 +81,7 @@ function clickHandler() {
       } else {
         isErrorYDKFileImport.value = true // show ydk file import error message
         if (fileInput.value) {
+          // give focus to ydk file input if there's an import error
           fileInput.value.setAttribute('aria-invalid', 'true')
           fileInput.value.focus()
         }
@@ -88,6 +93,22 @@ function clickHandler() {
       else {
         copyYDKeURLToClipboard(ydkeUrlExport.value)
         showCopiedMessage()
+      }
+      break
+    case 'ydke-url-import':
+      if (validateYDKeURL(ydkeUrlImport.value).isValid) {
+        parseYDKeURL(ydkeUrlImport.value)
+        isDialogOpen.value = false // close the dialog
+      } else {
+        const errorMessage = validateYDKeURL(ydkeUrlImport.value).error
+        isErrorYDKeUrlImport.value = true // show ydke url import error message
+        ydkeUrlImportErrorMessage.value = errorMessage || ''
+
+        if (ydkeInput.value) {
+          // give focus to ydke textarea input if there's an import error
+          ydkeInput.value.setAttribute('aria-invalid', 'true')
+          ydkeInput.value.focus()
+        }
       }
       break
     default:
@@ -105,6 +126,7 @@ function handleDialogClose(isOpen: boolean) {
     isErrorYDKFileExport.value = false
     isErrorYDKFileImport.value = false
     isErrorYDKeUrlExport.value = false
+    isErrorYDKeUrlImport.value = false
 
     // remove the value of this variable
     if (ydkFile.value) ydkFile.value = null
@@ -124,6 +146,7 @@ function handleFileUpload(e: Event) {
   ydkFile.value = selectedFile
   isErrorYDKFileImport.value = false // hide ydk file import error message
   if (fileInput.value) {
+    // remove focus and aria-invalid when changing the input
     fileInput.value.removeAttribute('aria-invalid')
     fileInput.value.blur()
   }
@@ -138,6 +161,20 @@ function showCopiedMessage() {
   timeoutID = setTimeout(() => {
     isCopySuccess.value = false
   }, 2000)
+}
+
+/**
+ * Handle the change of input in the YDKe URL textarea
+ * @param e Event object
+ */
+function handleInputYDKeURL(e: Event) {
+  const target = e.target as HTMLTextAreaElement
+  const value = target.value
+  ydkeUrlImport.value = value
+  isErrorYDKeUrlImport.value = false
+
+  // remove aria-invalid when changing the input
+  if (ydkeInput.value) ydkeInput.value.removeAttribute('aria-invalid')
 }
 
 function sortByName() {
@@ -229,8 +266,13 @@ function persistDialog(event: PointerDownOutsideEvent) {
             </template>
             <template v-else-if="usage === 'ydke-url-import'">
               <label for="ydke-import">Please enter a YDKe URL:</label>
-              <textarea id="ydke-import" placeholder="ydke://..." rows="7"
-                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
+              <textarea ref="ydke-input" id="ydke-import" placeholder="ydke://xxx...!xxx...!xxx...!" rows="7"
+                v-model="ydkeUrlImport" @input="handleInputYDKeURL" aria-errormessage="ydke-url-import-error"
+                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:[color-scheme:dark] dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
+              <span id="ydke-url-import-error" class="invisible text-xs sm:text-sm text-red-600 dark:text-red-400"
+                :class="{ 'visible': isErrorYDKeUrlImport }">
+                {{ ydkeUrlImportErrorMessage }}
+              </span>
             </template>
             <template v-else-if="usage === 'ydk-file-export'">
               <label for="deck-name" class="text-sm sm:text-base">
