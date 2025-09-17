@@ -1,7 +1,8 @@
 import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
-import type { YGOCardData } from '@/utils/interfaces'
+import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
+import type { YGOCardData, Dropzone } from '@/utils/interfaces'
 
 export function useYdkeUrl() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
@@ -109,14 +110,21 @@ export function useYdkeUrl() {
    * Inject Yu-Gi-Oh! card objects into a type of deck
    * @param cardIDs Array of integer Yu-Gi-Oh! card IDs
    * @param targetDeck The type of deck (`main`, `extra`, or `side`) to insert card objects into
+   * @param identifier The name of the target deck
    */
-  function injectCardIDsToDeck(cardIDs: number[], targetDeck: YGOCardData[]) {
+  function injectCardIDsToDeck(cardIDs: number[], targetDeck: YGOCardData[], identifier: Dropzone) {
     const referenceCardArray: YGOCardData[] = []
     targetDeck.length = 0 // clear the target deck's contents
 
     for (const cardID of cardIDs) {
       const existingCard = referenceCardArray.find(card => card.id === cardID)
       if (existingCard) {
+        if (targetDeck.filter(card => card.id === existingCard.id).length > UNRESTRICTED_CARD_LIMIT - 1) {
+          // if a card's quantity exceeded 3, skip to next iteration
+          console.warn(`Card id: ${existingCard.id} with name: ${existingCard.name} has exceeded 3 copies. Importing only 3.`)
+          continue
+        }
+
         // add the card to the target deck type if a previous copy was found from the referenceCardArray array
         // this is to avoid querying the `cards` reactive array of 14k+ length
         targetDeck.push(existingCard)
@@ -127,7 +135,19 @@ export function useYdkeUrl() {
           // add the found card to both the reference array and target deck
           referenceCardArray.push(getCard)
           targetDeck.push(getCard)
+        } else {
+          // show warning to browser console if a card wasn't found in the YGOPRODeck API
+          console.warn(`Card id: ${cardID} not found in the YGOPRODeck API.`)
         }
+      }
+
+      // show warning to browser console if the target deck exceeded its card limit
+      if (identifier === 'main' && mainDeck.value.length > MAIN_DECK_LIMIT) {
+        console.warn(`Main deck has exceeded its ${MAIN_DECK_LIMIT} card limit.`)
+      } else if (identifier === 'extra' && extraDeck.value.length > EXTRA_AND_SIDE_DECK_LIMIT) {
+        console.warn(`Extra deck has exceeded its ${EXTRA_AND_SIDE_DECK_LIMIT} card limit.`)
+      } else if (identifier === 'side' && sideDeck.value.length > EXTRA_AND_SIDE_DECK_LIMIT) {
+        console.warn(`Side deck has exceeded its ${EXTRA_AND_SIDE_DECK_LIMIT} card limit.`)
       }
     }
 
@@ -175,9 +195,9 @@ export function useYdkeUrl() {
     const extraDeckCardIds = byteArrayToInteger(extraDeckBytes)
     const sideDeckCardIds = byteArrayToInteger(sideDeckBytes)
 
-    injectCardIDsToDeck(mainDeckCardIds, mainDeck.value)
-    injectCardIDsToDeck(extraDeckCardIds, extraDeck.value)
-    injectCardIDsToDeck(sideDeckCardIds, sideDeck.value)
+    injectCardIDsToDeck(mainDeckCardIds, mainDeck.value, 'main')
+    injectCardIDsToDeck(extraDeckCardIds, extraDeck.value, 'extra')
+    injectCardIDsToDeck(sideDeckCardIds, sideDeck.value, 'side')
   }
 
   /**

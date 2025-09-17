@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
 import type { YGOCardData } from '@/utils/interfaces'
 
 export function useYdkFile() {
@@ -98,6 +99,12 @@ export function useYdkFile() {
 
       const existingCard = referenceCardArray.find(card => card.id === cardId)
       if (existingCard) {
+        if (targetDeck.filter(card => card.id === existingCard.id).length > UNRESTRICTED_CARD_LIMIT - 1) {
+          // if a card's quantity exceeded 3, skip to next iteration
+          console.warn(`Card id: ${existingCard.id} with name: ${existingCard.name} has exceeded 3 copies. Importing only 3.`)
+          continue
+        }
+
         // add the card to the target deck type if a previous copy was found from the referenceCardArray array
         // this is to avoid querying the `cards` reactive array of 14k+ length
         targetDeck.push(existingCard)
@@ -108,7 +115,19 @@ export function useYdkFile() {
           // add the found card to both the reference array and target deck
           referenceCardArray.push(getCard)
           targetDeck.push(getCard)
+        } else {
+          // show warning to browser console if a card wasn't found in the YGOPRODeck API
+          console.warn(`Card id: ${cardId} not found in the YGOPRODeck API.`)
         }
+      }
+
+      // show warning to browser console if the target deck exceeded its card limit
+      if (currentSection === 'main' && mainDeck.value.length > MAIN_DECK_LIMIT) {
+        console.warn(`Main deck has exceeded its ${MAIN_DECK_LIMIT} card limit.`)
+      } else if (currentSection === 'extra' && extraDeck.value.length > EXTRA_AND_SIDE_DECK_LIMIT) {
+        console.warn(`Extra deck has exceeded its ${EXTRA_AND_SIDE_DECK_LIMIT} card limit.`)
+      } else if (currentSection === 'side' && sideDeck.value.length > EXTRA_AND_SIDE_DECK_LIMIT) {
+        console.warn(`Side deck has exceeded its ${EXTRA_AND_SIDE_DECK_LIMIT} card limit.`)
       }
     }
 
