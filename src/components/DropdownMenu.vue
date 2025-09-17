@@ -99,6 +99,7 @@ function clickHandler() {
       if (validateYDKeURL(ydkeUrlImport.value).isValid) {
         parseYDKeURL(ydkeUrlImport.value)
         isDialogOpen.value = false // close the dialog
+        if (ydkeUrlImport.value !== '') ydkeUrlImport.value = '' // clear the ydke url variable
       } else {
         const errorMessage = validateYDKeURL(ydkeUrlImport.value).error
         isErrorYDKeUrlImport.value = true // show ydke url import error message
@@ -128,8 +129,9 @@ function handleDialogClose(isOpen: boolean) {
     isErrorYDKeUrlExport.value = false
     isErrorYDKeUrlImport.value = false
 
-    // remove the value of this variable
+    // clear the corresponding value of these variables
     if (ydkFile.value) ydkFile.value = null
+    if (ydkeUrlImport.value !== '') ydkeUrlImport.value = ''
   }
 }
 
