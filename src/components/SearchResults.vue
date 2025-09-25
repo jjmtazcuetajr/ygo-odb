@@ -12,7 +12,7 @@ import ToastComponent from '@/components/ToastComponent.vue'
 import { sortTypes, sortDirections } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
-import { useImagesStore } from '@/stores/images'
+import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
 import { ref, computed, onMounted, watch } from 'vue'
 
@@ -23,9 +23,7 @@ const paginationStore = usePaginationStore()
 const { currentPage, paginatedResults } = storeToRefs(paginationStore)
 const { toFirst } = paginationStore
 
-const imagesStore = useImagesStore()
-const { allCurrentPageImagesLoaded } = storeToRefs(imagesStore)
-const { queueImagesForCurrentPage, processImageQueue, reset } = useImagesStore()
+const { queueImagesForCurrentPage, processImageQueue, hasFinishedLoadingImage } = useImageLoadingStore()
 
 const toastRef = ref<InstanceType<typeof ToastComponent>>()
 const toastMessage = ref('')
@@ -76,16 +74,20 @@ function handleToast(msg: string, feedback: boolean) {
   toastRef.value?.handleShow()
 }
 
-// reset image loading state when changing page or when filtered results change, then queue and process the images for the current page
+// watch for changes in the current page and the filtered cards, then queue and process the corresponding card images accordingly
 watch([currentPage, getFilteredCards], () => {
-  reset()
-  if (!allCurrentPageImagesLoaded.value) {
+  queueImagesForCurrentPage()
+  processImageQueue()
+})
+
+onMounted(() => {
+  // for mobile view only
+  if (window.innerWidth < 1024) {
+    searchValue.value = filters.value.search // retain the search input of the user
     queueImagesForCurrentPage()
     processImageQueue()
   }
-}, { immediate: true })
-
-onMounted(() => { searchValue.value = filters.value.search })
+})
 </script>
 <template>
   <div id="overlay" @click="$emit('handleOverlayClick', $event)"
@@ -139,16 +141,16 @@ onMounted(() => { searchValue.value = filters.value.search })
         <div
           class="hidden lg:grid grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-9 px-2 mt-3 content-start dark:[color-scheme:dark]">
           <template v-for="(card, index) in paginatedResults" :key="card.id">
-            <CardPlaceholder v-if="!allCurrentPageImagesLoaded" />
-            <CardTooltip v-else :card="card" :ban-list="banList" from="grid" :index="index" />
+            <CardTooltip :card="card" :ban-list="banList" from="grid" :index="index" />
           </template>
         </div>
         <div class="flex lg:hidden flex-col gap-3 overflow-y-auto grow shrink basis-0 pb-2 px-2 mt-3">
           <div v-for="card in paginatedResults" :key="card.id" class="flex gap-2">
-            <CardPlaceholder v-if="!allCurrentPageImagesLoaded" />
+            <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)" />
             <div v-else class="relative w-[70px] sm:w-[80px] flex-none">
-              <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy" draggable="false"
-                class="rounded-sm aspect-[268/391] text-xs">
+              <img
+                :src="hasFinishedLoadingImage(card.card_images[0].image_url_small) ? card.card_images[0].image_url_small : ''"
+                :alt="card.name" draggable="false" class="rounded-sm aspect-[268/391] text-xs">
               <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
               <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
             </div>
