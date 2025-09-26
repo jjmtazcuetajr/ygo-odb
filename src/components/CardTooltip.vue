@@ -39,7 +39,8 @@ const imgUrl = props.card.card_images[0].image_url_small
     class="draggable hidden lg:block cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
     <CardPlaceholder v-if="!hasFinishedLoadingImage(imgUrl)" />
     <img v-else :src="hasFinishedLoadingImage(imgUrl) ? imgUrl : ''" :alt="card.name"
-      class="rounded-sm aspect-[268/391] text-xs" @mousedown.left="handleMouseDown($event, card, from, index)"
+      class="rounded-sm aspect-[268/391] text-xs h-full bg-neutral-400/70 dark:bg-neutral-600 transition-[background-color] duration-400"
+      @mousedown.left="handleMouseDown($event, card, from, index)"
       @contextmenu="rightClickDeleteCard($event, index, from)">
     <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
     <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
@@ -51,12 +52,13 @@ const imgUrl = props.card.card_images[0].image_url_small
         </TooltipTrigger>
         <TooltipPortal>
           <TooltipContent :side-offset="5"
-            class="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade flex gap-2 w-xl select-none rounded-md p-2 z-35 text-sm shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-200 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
+            class="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade flex gap-2 w-xl select-none rounded-md p-2 z-35 text-sm dark:text-neutral-300 shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-200 dark:bg-neutral-800 transition-[background-color,box-shadow,color] duration-400 border border-emerald-600 will-change-[transform,opacity]">
             <CardPlaceholder v-if="!hasFinishedLoadingImage(imgUrl)" style="width: 150px;" />
             <img v-else :src="hasFinishedLoadingImage(imgUrl) ? imgUrl : ''" :alt="card.name" width="150"
-              class="rounded-sm aspect-[268/391] text-xs self-start">
+              class="rounded-sm aspect-[268/391] text-xs self-start shrink-0 bg-neutral-400/50 dark:bg-neutral-700 transition-[background-color] duration-400">
             <CardInfo :card="card" />
-            <TooltipArrow :height="10" :width="20" class="fill-neutral-200 dark:fill-neutral-800 stroke-emerald-600" />
+            <TooltipArrow :height="10" :width="20"
+              class="fill-neutral-200 dark:fill-neutral-800 stroke-emerald-600 transition-[fill] duration-400" />
           </TooltipContent>
         </TooltipPortal>
       </TooltipRoot>
