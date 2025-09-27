@@ -4,8 +4,10 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { X } from 'lucide-vue-next'
 import ButtonCTA from './ButtonCTA.vue'
 import CardInfo from './tooltip-content/CardInfo.vue'
+import CardPlaceholder from './CardPlaceholder.vue'
 import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
 import { useDeckStore } from '@/stores/deck'
+import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
 import { useToast } from '@/composables/toast'
 import type { YGOCardData, Dropzone, BanList } from '@/utils/interfaces'
@@ -20,8 +22,11 @@ const isDialogOpen = ref(false)
 
 const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
 const { addCardToDeck } = useDeckStore()
+const { hasFinishedLoadingImage } = useImageLoadingStore()
 
 const { toastMessage, isSuccessToast, createToastMessage } = useToast()
+
+const imgUrl = props.card.card_images[0].image_url_small
 
 /**
  * Add a card to a type of deck and show a toast
@@ -60,13 +65,14 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
           <DialogOverlay
             class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto dark:[color-scheme:dark]">
             <DialogContent :aria-describedby="undefined"
-              class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] w-[90vw] max-w-[450px] px-3 sm:px-6 py-6 z-100 text-sm rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
+              class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] w-[90vw] max-w-[450px] px-3 sm:px-6 py-6 z-100 text-sm dark:text-neutral-300 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
               <VisuallyHidden>
                 <DialogTitle>Card Details</DialogTitle>
               </VisuallyHidden>
               <div class="flex justify-center px-14 mb-2">
-                <img :src="card.card_images[0].image_url_small" :alt="card.name" width="170" loading="lazy"
-                  draggable="false" class="rounded-sm aspect-[268/391] text-xs">
+                <CardPlaceholder v-if="!hasFinishedLoadingImage(imgUrl)" class="w-[170px]" />
+                <img v-else :src="hasFinishedLoadingImage(imgUrl) ? imgUrl : ''" :alt="card.name" width="170"
+                  draggable="false" class="rounded-sm aspect-[268/391] text-xs bg-neutral-400/70 dark:bg-neutral-600">
               </div>
               <CardInfo :card="card" />
               <DialogClose aria-label="Close"

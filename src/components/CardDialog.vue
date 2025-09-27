@@ -4,10 +4,12 @@ import { X } from 'lucide-vue-next'
 import { onMounted, onUnmounted } from 'vue'
 import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
+import CardPlaceholder from './CardPlaceholder.vue'
 import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
 import { useMobileDragAndDrop } from '@/composables/mobileDragAndDrop'
+import { useImageLoadingStore } from '@/stores/imageLoading'
 
-defineProps<{
+const props = defineProps<{
   card: YGOCardData
   banList: BanList
   from: Dropzone
@@ -15,6 +17,10 @@ defineProps<{
 }>()
 
 const { handleTouchStart, isDialogOpen } = useMobileDragAndDrop()
+
+const { hasFinishedLoadingImage } = useImageLoadingStore()
+
+const imgUrl = props.card.card_images[0].image_url_small
 
 function hideDialog() {
   if (window.innerWidth >= 1024 && isDialogOpen.value) isDialogOpen.value = false
@@ -25,9 +31,11 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
 </script>
 <template>
   <button type="button"
-    class="relative rounded-sm block lg:hidden active:opacity-80 shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
-    <img :src="card.card_images[0].image_url_small" :alt="card.name" loading="lazy" draggable="false"
-      class="rounded-sm aspect-[268/391] text-xs" @touchstart="handleTouchStart($event, card, from, index)">
+    class="relative rounded-sm block lg:hidden active:opacity-80 w-full shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+    <CardPlaceholder v-if="!hasFinishedLoadingImage(imgUrl)" />
+    <img v-else :src="hasFinishedLoadingImage(imgUrl) ? imgUrl : ''" :alt="card.name" draggable="false"
+      class="rounded-sm aspect-[268/391] text-xs bg-neutral-400/70 dark:bg-neutral-600 transition-[background-color] duration-400"
+      @touchstart="handleTouchStart($event, card, from, index)">
     <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
     <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
   </button>

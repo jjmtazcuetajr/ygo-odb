@@ -146,11 +146,12 @@ onMounted(() => {
         </div>
         <div class="flex lg:hidden flex-col gap-3 overflow-y-auto grow shrink basis-0 pb-2 px-2 mt-3">
           <div v-for="card in paginatedResults" :key="card.id" class="flex gap-2">
-            <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)" />
-            <div v-else class="relative w-[70px] sm:w-[80px] flex-none">
-              <img
+            <div class="relative w-[70px] sm:w-[80px] flex-none">
+              <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)" />
+              <img v-else
                 :src="hasFinishedLoadingImage(card.card_images[0].image_url_small) ? card.card_images[0].image_url_small : ''"
-                :alt="card.name" draggable="false" class="rounded-sm aspect-[268/391] text-xs">
+                :alt="card.name" draggable="false"
+                class="rounded-sm aspect-[268/391] text-xs bg-neutral-400/70 dark:bg-neutral-600">
               <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
               <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
             </div>
