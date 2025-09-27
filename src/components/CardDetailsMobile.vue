@@ -26,8 +26,6 @@ const { hasFinishedLoadingImage } = useImageLoadingStore()
 
 const { toastMessage, isSuccessToast, createToastMessage } = useToast()
 
-const imgUrl = props.card.card_images[0].image_url_small
-
 /**
  * Add a card to a type of deck and show a toast
  * @param to Destination of the card to be added
@@ -70,9 +68,10 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
                 <DialogTitle>Card Details</DialogTitle>
               </VisuallyHidden>
               <div class="flex justify-center px-14 mb-2">
-                <CardPlaceholder v-if="!hasFinishedLoadingImage(imgUrl)" class="w-[170px]" />
-                <img v-else :src="hasFinishedLoadingImage(imgUrl) ? imgUrl : ''" :alt="card.name" width="170"
-                  draggable="false" class="rounded-sm aspect-[268/391] text-xs bg-neutral-400/70 dark:bg-neutral-600">
+                <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)"
+                  class="w-[170px]" />
+                <img v-else :src="card.card_images[0].image_url_small" :alt="card.name" width="170" draggable="false"
+                  class="rounded-sm aspect-[268/391] text-xs bg-neutral-400/70 dark:bg-neutral-600">
               </div>
               <CardInfo :card="card" />
               <DialogClose aria-label="Close"

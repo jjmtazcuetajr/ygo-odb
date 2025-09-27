@@ -9,7 +9,7 @@ import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
 import { useMobileDragAndDrop } from '@/composables/mobileDragAndDrop'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 
-const props = defineProps<{
+defineProps<{
   card: YGOCardData
   banList: BanList
   from: Dropzone
@@ -19,8 +19,6 @@ const props = defineProps<{
 const { handleTouchStart, isDialogOpen } = useMobileDragAndDrop()
 
 const { hasFinishedLoadingImage } = useImageLoadingStore()
-
-const imgUrl = props.card.card_images[0].image_url_small
 
 function hideDialog() {
   if (window.innerWidth >= 1024 && isDialogOpen.value) isDialogOpen.value = false
@@ -32,8 +30,8 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
 <template>
   <button type="button"
     class="relative rounded-sm block lg:hidden active:opacity-80 w-full shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
-    <CardPlaceholder v-if="!hasFinishedLoadingImage(imgUrl)" />
-    <img v-else :src="hasFinishedLoadingImage(imgUrl) ? imgUrl : ''" :alt="card.name" draggable="false"
+    <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)" />
+    <img v-else :src="card.card_images[0].image_url_small" :alt="card.name" draggable="false"
       class="rounded-sm aspect-[268/391] text-xs overflow-hidden bg-neutral-400/70 dark:bg-neutral-600 transition-[background-color] duration-400"
       @touchstart="handleTouchStart($event, card, from, index)">
     <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
