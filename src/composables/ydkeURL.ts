@@ -1,12 +1,14 @@
 import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { useImageLoadingStore } from '@/stores/imageLoading'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
 import type { YGOCardData, Dropzone } from '@/utils/interfaces'
 
 export function useYdkeUrl() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
   const { cards } = storeToRefs(useYgoCardsStore())
+  const { queueImagesInDeck, processImageQueue } = useImageLoadingStore()
 
   /**
    * Converts a 32-bit number to little-endian byte array
@@ -198,6 +200,12 @@ export function useYdkeUrl() {
     injectCardIDsToDeck(mainDeckCardIds, mainDeck.value, 'main')
     injectCardIDsToDeck(extraDeckCardIds, extraDeck.value, 'extra')
     injectCardIDsToDeck(sideDeckCardIds, sideDeck.value, 'side')
+
+    // load card images
+    queueImagesInDeck(mainDeck.value)
+    queueImagesInDeck(extraDeck.value)
+    queueImagesInDeck(sideDeck.value)
+    processImageQueue()
   }
 
   /**

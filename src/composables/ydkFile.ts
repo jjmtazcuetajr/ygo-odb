@@ -2,12 +2,14 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { useImageLoadingStore } from '@/stores/imageLoading'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
 import type { YGOCardData } from '@/utils/interfaces'
 
 export function useYdkFile() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
   const { cards } = storeToRefs(useYgoCardsStore())
+  const { queueImagesInDeck, processImageQueue } = useImageLoadingStore()
 
   const ydkFile = ref<File | null>(null)
 
@@ -148,6 +150,12 @@ function readYDKFile(file: File) {
       if (typeof fileContent === 'string') {
         parseYDK(fileContent)
         ydkFile.value = null // empty the variable holding the ydk file
+
+        // load card images
+        queueImagesInDeck(mainDeck.value)
+        queueImagesInDeck(extraDeck.value)
+        queueImagesInDeck(sideDeck.value)
+        processImageQueue()
       } else
         console.error('YDK file is not valid.')
     }

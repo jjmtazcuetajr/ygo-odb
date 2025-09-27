@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { usePaginationStore } from './pagination'
-import { useDeckStore } from './deck'
+import type { YGOCardData } from '@/utils/interfaces'
 
 interface LoadingImage {
   imageUrl: string
@@ -33,42 +33,18 @@ export const useImageLoadingStore = defineStore('imageLoading', () => {
     })
   }
 
-  function queueImagesInDeck() {
-    const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
+  /**
+   * Queue card image URLs when importing from a ydk file or ydke URL
+   * @param targetDeck The type of deck (`main`, `extra`, or `side`)
+   */
+  function queueImagesInDeck(targetDeck: YGOCardData[]) {
+    if (targetDeck.length > 0) {
+      // add the card image URLs to the queue
+      targetDeck.forEach(card => {
+        const imageUrl = card.card_images[0].image_url_small
 
-    if (mainDeck.value.length > 0) {
-      mainDeck.value.forEach(card => {
-        const imageUrl = card.card_images[0].image_url_small
-        if (!loadedImages.value.has(imageUrl)) {
-          imageQueue.value.push({
-            imageUrl,
-            status: 'pending'
-          })
-        }
-      })
-    }
-    
-    if (extraDeck.value.length > 0) {
-      extraDeck.value.forEach(card => {
-        const imageUrl = card.card_images[0].image_url_small
-        if (!loadedImages.value.has(imageUrl)) {
-          imageQueue.value.push({
-            imageUrl,
-            status: 'pending'
-          })
-        }
-      })
-    }
-    
-    if (sideDeck.value.length > 0) {
-      sideDeck.value.forEach(card => {
-        const imageUrl = card.card_images[0].image_url_small
-        if (!loadedImages.value.has(imageUrl)) {
-          imageQueue.value.push({
-            imageUrl,
-            status: 'pending'
-          })
-        }
+      // only queue if not already loaded
+        if (!loadedImages.value.has(imageUrl)) imageQueue.value.push({ imageUrl, status: 'pending' })
       })
     }
   }
@@ -123,5 +99,5 @@ export const useImageLoadingStore = defineStore('imageLoading', () => {
     img.src = nextImage.imageUrl
   }
 
-  return { imageQueue, loadedImages, errorImages, processImageQueue, hasFinishedLoadingImage, queueImagesForCurrentPage }
+  return { imageQueue, loadedImages, errorImages, processImageQueue, hasFinishedLoadingImage, queueImagesForCurrentPage, queueImagesInDeck }
 })
