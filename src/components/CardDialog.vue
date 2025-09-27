@@ -34,7 +34,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
     class="relative rounded-sm block lg:hidden active:opacity-80 w-full shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
     <CardPlaceholder v-if="!hasFinishedLoadingImage(imgUrl)" />
     <img v-else :src="hasFinishedLoadingImage(imgUrl) ? imgUrl : ''" :alt="card.name" draggable="false"
-      class="rounded-sm aspect-[268/391] text-xs bg-neutral-400/70 dark:bg-neutral-600 transition-[background-color] duration-400"
+      class="rounded-sm aspect-[268/391] text-xs overflow-hidden bg-neutral-400/70 dark:bg-neutral-600 transition-[background-color] duration-400"
       @touchstart="handleTouchStart($event, card, from, index)">
     <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
     <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
@@ -50,7 +50,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
           </VisuallyHidden>
           <div class="flex justify-center px-14 mb-2">
             <img :src="card.card_images[0].image_url_small" :alt="card.name" width="170" loading="lazy"
-              draggable="false" class="rounded-sm aspect-[268/391] text-xs">
+              draggable="false" class="rounded-sm aspect-[268/391] text-xs bg-neutral-400/70 dark:bg-neutral-600">
           </div>
           <CardInfo :card="card" />
           <DialogClose aria-label="Close"
