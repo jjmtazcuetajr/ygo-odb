@@ -53,7 +53,7 @@ const imgUrl = props.card.card_images[0].image_url_small
         <TooltipPortal>
           <TooltipContent :side-offset="5"
             class="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade flex gap-2 w-xl select-none rounded-md p-2 z-35 text-sm dark:text-neutral-300 shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-200 dark:bg-neutral-800 transition-[background-color,box-shadow,color] duration-400 border border-emerald-600 will-change-[transform,opacity]">
-            <CardPlaceholder v-if="!hasFinishedLoadingImage(imgUrl)" style="width: 150px;" />
+            <CardPlaceholder v-if="!hasFinishedLoadingImage(imgUrl)" class="w-[150px]" />
             <img v-else :src="hasFinishedLoadingImage(imgUrl) ? imgUrl : ''" :alt="card.name" width="150"
               class="rounded-sm aspect-[268/391] text-xs self-start shrink-0 bg-neutral-400/50 dark:bg-neutral-700 transition-[background-color] duration-400">
             <CardInfo :card="card" />
