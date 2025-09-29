@@ -12,7 +12,7 @@ import { useImageLoadingStore } from '@/stores/imageLoading'
 defineProps<{
   card: YGOCardData
   banList: BanList
-  from: Dropzone
+  from: Dropzone | 'grid'
   index: number
 }>()
 
@@ -29,7 +29,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
 </script>
 <template>
   <button type="button"
-    class="relative rounded-sm block lg:hidden active:opacity-80 w-full shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+    class="draggable relative rounded-sm active:opacity-80 w-full shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
     <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)" />
     <img v-else :src="card.card_images[0].image_url_small" :alt="card.name" draggable="false"
       class="rounded-sm aspect-[268/391] text-xs overflow-hidden bg-neutral-400/70 dark:bg-neutral-600 transition-[background-color] duration-400"

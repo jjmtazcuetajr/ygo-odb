@@ -34,7 +34,7 @@ const isPopoverOpen = ref(false)
 </script>
 <template>
   <div @mouseenter="isHovered = true" @mouseleave="isHovered = false"
-    class="draggable hidden lg:block cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
+    class="draggable cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200">
     <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)" />
     <img v-else :src="card.card_images[0].image_url_small" :alt="card.name"
       class="rounded-sm aspect-[268/391] text-xs h-full bg-neutral-400/70 dark:bg-neutral-600 transition-[background-color] duration-400"

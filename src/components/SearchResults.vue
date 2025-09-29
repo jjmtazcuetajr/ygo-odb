@@ -5,6 +5,7 @@ import SelectOption from './SelectOption.vue'
 import Pagination from './Pagination.vue'
 import ButtonCTA from './ButtonCTA.vue'
 import CardTooltip from './CardTooltip.vue'
+import CardDialog from './CardDialog.vue'
 import BanStatus from './BanStatus.vue'
 import CardDetailsMobile from './CardDetailsMobile.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
@@ -15,6 +16,7 @@ import { usePaginationStore } from '@/stores/pagination'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
 import { ref, computed, onMounted, watch } from 'vue'
+import { useDetectHover } from '@/composables/detectHover'
 
 const cardStore = useYgoCardsStore()
 const { filters, sortBy, sortDir, isLoading, isError, banList, getFilteredCards } = storeToRefs(cardStore)
@@ -24,6 +26,8 @@ const { currentPage, paginatedResults } = storeToRefs(paginationStore)
 const { toFirst } = paginationStore
 
 const { queueImagesForCurrentPage, processImageQueue, hasFinishedLoadingImage } = useImageLoadingStore()
+
+const { isHoverDetected } = useDetectHover()
 
 const toastRef = ref<InstanceType<typeof ToastComponent>>()
 const toastMessage = ref('')
@@ -141,7 +145,8 @@ onMounted(() => {
         <div
           class="hidden lg:grid grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-9 px-2 mt-3 content-start dark:[color-scheme:dark]">
           <template v-for="(card, index) in paginatedResults" :key="card.id">
-            <CardTooltip :card="card" :ban-list="banList" from="grid" :index="index" />
+            <CardTooltip v-if="isHoverDetected" :card="card" :ban-list="banList" from="grid" :index="index" />
+            <CardDialog v-else :card="card" :ban-list="banList" from="grid" :index="index" />
           </template>
         </div>
         <div class="flex lg:hidden flex-col gap-3 overflow-y-auto grow shrink basis-0 pb-2 px-2 mt-3">

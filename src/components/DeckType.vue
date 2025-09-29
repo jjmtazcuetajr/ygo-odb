@@ -5,6 +5,7 @@ import type { YGOCardData } from '@/utils/interfaces'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { storeToRefs } from 'pinia'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
+import { useDetectHover } from '@/composables/detectHover'
 
 defineProps<{
   type: 'main' | 'extra' | 'side'
@@ -39,6 +40,8 @@ const deckTypeMap: Record<string, DeckProps> = {
     colors: 'border-cyan-400 bg-cyan-200 dark:border-cyan-600 dark:bg-cyan-900'
   }
 }
+
+const { isHoverDetected } = useDetectHover()
 </script>
 <template>
   <div>
@@ -63,10 +66,10 @@ const deckTypeMap: Record<string, DeckProps> = {
     </div>
     <div :id="type + '-deck'" :class="deckTypeMap[type].colors"
       class="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-15 gap-1 sm:gap-1.5 p-1 sm:p-1.5 content-start mt-1 border rounded-md transition-colors duration-400 min-h-15 sm:min-h-35 lg:min-h-20 xl:min-h-25">
-      <div v-for="(card, index) in deck" :key="index" class="draggable rounded-sm">
-        <CardTooltip :card="card" :ban-list="banList" :from="type" :index="index" />
-        <CardDialog :card="card" :ban-list="banList" :from="type" :index="index" />
-      </div>
+      <template v-for="(card, index) in deck" :key="index">
+        <CardTooltip v-if="isHoverDetected" :card="card" :ban-list="banList" :from="type" :index="index" />
+        <CardDialog v-else :card="card" :ban-list="banList" :from="type" :index="index" />
+      </template>
     </div>
   </div>
 </template>

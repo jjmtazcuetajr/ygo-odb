@@ -7,7 +7,7 @@ import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
 
 export function useMobileDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
-  const { addCardToDeck, removeCardFromDeck } = useDeckStore()
+  const { addCardToDeck, isCardWithinLimit, removeCardFromDeck } = useDeckStore()
 
   // variables related to dragging
   const offset = {x: 0, y: 0}
@@ -16,7 +16,7 @@ export function useMobileDragAndDrop() {
   let draggedCard: YGOCardData | null = null
   let currentDropTarget: Dropzone | null = null
   let cardIndex = -1
-  let source: Dropzone | null = null
+  let source: Dropzone | 'grid' = 'grid'
   let toIndex = -1
 
   interface TouchPosition {
@@ -50,7 +50,7 @@ export function useMobileDragAndDrop() {
    * @param from Source of draggable card
    * @param fromIndex Index of draggable card from source
    */
-  function handleTouchStart(e: TouchEvent, card: YGOCardData, from: Dropzone, fromIndex: number) {
+  function handleTouchStart(e: TouchEvent, card: YGOCardData, from: Dropzone | 'grid', fromIndex: number) {
     if (e.touches.length !== 1) return
 
     if (e.cancelable) e.preventDefault()
@@ -129,7 +129,7 @@ export function useMobileDragAndDrop() {
         stopAutoScroll()
       } else if (longPressDuration >= config.longPressDelay) {
         // remove card after long press
-        if (source) removeCardFromDeck(cardIndex, source)
+        if (source !== 'grid') removeCardFromDeck(cardIndex, source)
       } else if (longPressDuration < config.longPressDelay) {
         // handle tap events
         const currentTime = Date.now()
@@ -188,6 +188,20 @@ export function useMobileDragAndDrop() {
       if (
         (extraDeckDropzone && isMainDeckCard(cardFrame)) || // main deck card dragged into the extra deck
         (mainDeckDropzone && isExtraDeckCard(cardFrame)) || // extra deck card dragged into the main deck
+        (
+          // card dragged from the paginated results to the deck dropzones has reached its limit
+          source === 'grid' &&
+          (!isCardWithinLimit(draggedCard, 'main') || !isCardWithinLimit(draggedCard, 'extra') || !isCardWithinLimit(draggedCard, 'side'))
+        ) ||
+        (
+          // card dragged from the paginated results to the already full deck dropzones
+          source === 'grid' && 
+          (
+            mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT ||
+            extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT ||
+            sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT
+          )
+        ) ||
         // card dragged from the main deck to the already full side deck
         (source === 'main' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
         // card dragged from the extra deck to the already full side deck
@@ -250,7 +264,7 @@ export function useMobileDragAndDrop() {
 
     // remove card from deck dropzone source
     if (toIndex !== -1) {
-      if (source) removeCardFromDeck(cardIndex, source)
+      if (source !== 'grid') removeCardFromDeck(cardIndex, source)
     }
 
     // add card to new deck dropzone
@@ -260,7 +274,7 @@ export function useMobileDragAndDrop() {
     draggedCard = null
     currentDropTarget = null
     cardIndex = -1
-    source = null
+    source = 'grid'
     toIndex = -1
     isDragging = false
   }
