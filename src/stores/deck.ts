@@ -168,6 +168,19 @@ export const useDeckStore = defineStore('deck', () => {
     }
   }
 
+  /**
+   * Sort cards inside a deck by name
+   * @param deckType Type of deck. Either `main`, `extra`, or `side`
+   */
+  function sortDeckByName(deckType: Dropzone) {
+    const deck = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
+    deck.value.sort((a, b) => {
+      const collator = new Intl.Collator('en', { sensitivity: 'base' })
+      const nameComparison = collator.compare(a.name, b.name)
+      return nameComparison
+    })
+  }
+
   return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
-    sideDeckMonsters, sideDeckSpells, sideDeckTraps, getCardFrequency, addCardToDeck, isCardWithinLimit, removeCardFromDeck }
+    sideDeckMonsters, sideDeckSpells, sideDeckTraps, getCardFrequency, addCardToDeck, isCardWithinLimit, removeCardFromDeck, sortDeckByName }
 })

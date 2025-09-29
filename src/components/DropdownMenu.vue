@@ -21,6 +21,7 @@ const { ydkFile, downloadYDKFile, readYDKFile } = useYdkFile()
 const { generateYDKeURL, parseYDKeURL, validateYDKeURL, copyYDKeURLToClipboard } = useYdkeUrl()
 
 const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
+const { sortDeckByName } = useDeckStore()
 
 const isDialogOpen = ref(false)
 const toggleState = ref(false)
@@ -179,9 +180,15 @@ function handleInputYDKeURL(e: Event) {
   if (ydkeInput.value) ydkeInput.value.removeAttribute('aria-invalid')
 }
 
+/**
+ * Sort all cards in the `main`, `extra`, and `side` decks by name
+ */
 function sortByName() {
-  console.log('sort by name');
+  sortDeckByName('main')
+  sortDeckByName('extra')
+  sortDeckByName('side')
 }
+
 function sortByArchetype() {
   console.log('sort by archetype');
 }
