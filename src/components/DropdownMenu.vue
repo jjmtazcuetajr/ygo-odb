@@ -21,7 +21,7 @@ const { ydkFile, downloadYDKFile, readYDKFile } = useYdkFile()
 const { generateYDKeURL, parseYDKeURL, validateYDKeURL, copyYDKeURLToClipboard } = useYdkeUrl()
 
 const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
-const { sortDeckByName } = useDeckStore()
+const { sortDeckByName, sortDeckByCardType } = useDeckStore()
 
 const isDialogOpen = ref(false)
 const toggleState = ref(false)
@@ -189,8 +189,13 @@ function sortByName() {
   sortDeckByName('side')
 }
 
-function sortByArchetype() {
-  console.log('sort by archetype');
+/**
+ * Sort all cards in the `main`, `extra`, and `side` decks by card type
+ */
+function sortByCardType() {
+  sortDeckByCardType('main')
+  sortDeckByCardType('extra')
+  sortDeckByCardType('side')
 }
 
 type PointerDownOutsideEvent = CustomEvent<{ originalEvent: PointerEvent }>
@@ -241,9 +246,9 @@ function persistDialog(event: PointerDownOutsideEvent) {
               class="text-sm rounded flex items-center h-6 px-3 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
               By name
             </DropdownMenuItem>
-            <DropdownMenuItem @click="sortByArchetype"
+            <DropdownMenuItem @click="sortByCardType"
               class="text-sm rounded flex items-center h-6 px-3 select-none outline-none text-emerald-700 data-[highlighted]:bg-emerald-500 data-[highlighted]:text-neutral-50 dark:text-emerald-400">
-              By archetype
+              By card type
             </DropdownMenuItem>
           </template>
           <DropdownMenuArrow

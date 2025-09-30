@@ -181,6 +181,50 @@ export const useDeckStore = defineStore('deck', () => {
     })
   }
 
+  /**
+   * Sort cards inside a deck by card type
+   * @param deckType Type of deck. Either `main`, `extra`, or `side`
+   */
+  function sortDeckByCardType(deckType: Dropzone) {
+    const deck = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
+    const collator = new Intl.Collator('en', { sensitivity: 'base' })
+    const FRAME_TYPE_ORDER: Record<string, number> = {
+      'normal': 0,
+      'normal_pendulum': 1,
+      'effect': 2,
+      'effect_pendulum': 3,
+      'ritual': 4,
+      'ritual_pendulum': 5,
+      'spell': 6,
+      'trap': 7,
+      'fusion': 8,
+      'fusion_pendulum': 9,
+      'synchro': 10,
+      'synchro_pendulum': 11,
+      'xyz': 12,
+      'xyz_pendulum': 13,
+      'link': 14,
+    }
+
+    /**
+     * Return the card type priority if found, otherwise return a high number for unknown types
+     * @param frameType Frame type of card
+     * @returns Number
+     */
+    function getCardTypePriority(frameType: string): number {
+      return FRAME_TYPE_ORDER[frameType] ?? 99
+    }
+    
+    deck.value.sort((a, b) => {
+      const priorityA = getCardTypePriority(a.frameType)
+      const priorityB = getCardTypePriority(b.frameType)
+
+      // if same frame type, sort by card name
+      if (priorityA !== priorityB) return priorityA - priorityB
+      return collator.compare(a.name, b.name)
+    })
+  }
+
   return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
-    sideDeckMonsters, sideDeckSpells, sideDeckTraps, getCardFrequency, addCardToDeck, isCardWithinLimit, removeCardFromDeck, sortDeckByName }
+    sideDeckMonsters, sideDeckSpells, sideDeckTraps, getCardFrequency, addCardToDeck, isCardWithinLimit, removeCardFromDeck, sortDeckByName, sortDeckByCardType }
 })
