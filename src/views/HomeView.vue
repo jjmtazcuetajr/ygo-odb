@@ -39,9 +39,9 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
 <template>
   <main class="flex flex-col h-full p-5 dark:text-neutral-300 transition-[color] duration-400">
     <div class="flex justify-between flex-wrap gap-3">
-      <div>
-        <h2 class="text-3xl font-medium">YGO ODB</h2>
-        <h6 class="text-sm">An online, fan-made Yu-Gi-Oh! deck builder</h6>
+      <div class="flex flex-col">
+        <span class="text-3xl font-medium">YGO ODB</span>
+        <span class="text-sm">An online, fan-made Yu-Gi-Oh! deck builder</span>
       </div>
       <div class="flex gap-2 place-items-center flex-wrap">
         <DropdownMenu type="Import" />
