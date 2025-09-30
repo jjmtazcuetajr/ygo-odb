@@ -225,6 +225,15 @@ export const useDeckStore = defineStore('deck', () => {
     })
   }
 
+  /**
+   * Remove all cards from the `main`, `extra`, and `side` decks
+   */
+  function clearAllDecks() {
+    mainDeck.value.length = 0
+    extraDeck.value.length = 0
+    sideDeck.value.length = 0
+  }
+
   return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
-    sideDeckMonsters, sideDeckSpells, sideDeckTraps, getCardFrequency, addCardToDeck, isCardWithinLimit, removeCardFromDeck, sortDeckByName, sortDeckByCardType }
+    sideDeckMonsters, sideDeckSpells, sideDeckTraps, getCardFrequency, addCardToDeck, isCardWithinLimit, removeCardFromDeck, sortDeckByName, sortDeckByCardType, clearAllDecks }
 })

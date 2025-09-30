@@ -4,19 +4,23 @@ import { X } from 'lucide-vue-next'
 import CardFilters from './dialog-content/CardFilters.vue'
 import NumberField from './NumberField.vue'
 import ButtonCTA from './ButtonCTA.vue'
-import { useYgoCardsStore } from "@/stores/ygo-cards"
-import { usePaginationStore } from "@/stores/pagination"
+import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { usePaginationStore } from '@/stores/pagination'
+import { useDeckStore } from '@/stores/deck'
 import { ref } from 'vue'
-import { storeToRefs } from "pinia"
+import { storeToRefs } from 'pinia'
 
 const props = defineProps<{
   usage: 'filters' | 'clear-all' | 'help' | 'pagination'
 }>()
 
 const { resetFilters } = useYgoCardsStore()
+
 const paginationStore = usePaginationStore()
 const { currentPage, totalPages } = storeToRefs(paginationStore)
 const { toPage } = paginationStore
+
+const { clearAllDecks } = useDeckStore()
 
 const dialogTitle: Record<string, string> = {
   'filters': 'Filter Cards',
@@ -51,6 +55,14 @@ function handleKeyDown() {
     isDialogOpen.value = false
   }, 100)
 }
+
+/**
+ * Clear all decks, then close the dialog
+ */
+function handleClearDecks() {
+  clearAllDecks()
+  isDialogOpen.value = false
+}
 </script>
 
 <template>
@@ -82,7 +94,7 @@ function handleKeyDown() {
             <ButtonCTA variant="neutral" text-content="Reset filters" v-if="usage === 'filters'"
               @click="resetFilters" />
             <template v-else-if="usage === 'clear-all'">
-              <ButtonCTA variant="red" text-content="Clear" />
+              <ButtonCTA variant="red" text-content="Clear" @click="handleClearDecks" />
               <DialogClose as-child>
                 <ButtonCTA variant="neutral" text-content="Cancel" />
               </DialogClose>
