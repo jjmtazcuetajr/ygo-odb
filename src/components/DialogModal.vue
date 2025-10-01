@@ -74,17 +74,42 @@ function handleClearDecks() {
       <DialogOverlay
         class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto dark:[color-scheme:dark]">
         <DialogContent :aria-describedby="undefined"
-          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] w-[90vw] max-w-[450px] px-3 sm:px-6 py-6 z-100 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
-          <DialogTitle class="text-lg font-semibold ml-1 dark:text-neutral-300">
+          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] xl:my-[5%] w-[90vw] max-w-[450px] px-3 sm:px-6 py-6 z-100 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
+          <DialogTitle class="text-lg font-semibold dark:text-neutral-300">
             {{ setDialogTitle(usage) }}
           </DialogTitle>
           <CardFilters v-if="usage === 'filters'" />
-          <span class="ml-1 mt-3 text-xs sm:text-base dark:text-neutral-300" v-else-if="usage === 'clear-all'">
+          <span class="mt-3 text-xs sm:text-base dark:text-neutral-300" v-else-if="usage === 'clear-all'">
             Are you sure you want to clear the deck builder?
           </span>
-          <span class="ml-1 mt-3 text-xs sm:text-base dark:text-neutral-300" v-else-if="usage === 'help'">
-            Tips and hints to be added soon.
-          </span>
+          <div class="mt-3 text-sm sm:text-base dark:text-neutral-300" v-else-if="usage === 'help'">
+            <ol class="list-disc list-outside pl-5">
+              <li class="mb-2">
+                Placing your cursor over a card will show a hint that the card can be dragged.
+              </li>
+              <li class="mb-2">
+                Additionally, it will show controls for viewing card information and various operations like adding,
+                removing, and cross-deck transferring of cards.
+              </li>
+              <li class="mb-2">
+                When dragging cards, the dragged card or your cursor will show an appropriate feedback depending on
+                what is underneath it and your device.
+              </li>
+              <li class="mb-2">
+                Similarly, if it is another card that is below the dragged card, the former will be highlighted to
+                signify that the dragged card can be placed on the highlighted card's position.
+              </li>
+              <li class="mb-2">
+                When a card is inside the main, extra, or side deck, you can remove it either by right-clicking it
+                (for desktop users) or dragging outside its current place.
+              </li>
+              <li class="mb-2">
+                For users using a touchscreen device, you can drag cards by long pressing on a card and moving it
+                around. To view a card's information, do a double tap. To remove a card from a deck, tap and hold
+                on a card for a bit then release it.
+              </li>
+            </ol>
+          </div>
           <div class="flex justify-center dark:text-neutral-300 text-xs sm:text-base"
             v-else-if="usage === 'pagination'">
             <NumberField id="page" :min="1" :max="totalPages" label-val="Page Number" v-model="pageInputValue"
