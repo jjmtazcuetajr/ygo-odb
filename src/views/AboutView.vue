@@ -84,8 +84,13 @@
             class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-500 dark:hover:text-emerald-600 transition-[color] duration-400">here</a>
         </strong>
       </span>
-      <span>LICENSE</span>
+      <span>
+        <strong>
+          <a href="https://github.com/jjmtazcuetajr/ygo-odb/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"
+            class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-500 dark:hover:text-emerald-600 transition-[color] duration-400">LICENSE</a>
+        </strong>
+      </span>
     </div>
-    <div class="w-full text-center"><span>© 2025 Michael Azcueta</span></div>
+    <div class="w-full text-center"><span>© 2025 Jose Jenn Michael Azcueta</span></div>
   </div>
 </template>
