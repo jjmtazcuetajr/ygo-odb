@@ -39,18 +39,19 @@ function handleDisabledState(to: Dropzone, num: 1 | 2 | 3): boolean {
  * @param num Number of card copies to add
  */
 function handleAdd(to: Dropzone, num: 1 | 2 | 3) {
+  const cardsToAdd: YGOCardData[] = Array(num).fill(props.card)
   switch (to) {
     case 'main':
       if (isCardWithinLimit(props.card, to, num) && MAIN_DECK_LIMIT - mainDeck.value.length >= num)
-        addCardToDeck(props.card, mainDeck.value.length, to, num)
+        addCardToDeck(cardsToAdd, mainDeck.value.length, to)
       break
     case 'extra':
       if (isCardWithinLimit(props.card, to, num) && EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length >= num)
-        addCardToDeck(props.card, extraDeck.value.length, to, num)
+        addCardToDeck(cardsToAdd, extraDeck.value.length, to)
       break
     case 'side':
       if (isCardWithinLimit(props.card, to, num) && EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length >= num)
-        addCardToDeck(props.card, sideDeck.value.length, to, num)
+        addCardToDeck(cardsToAdd, sideDeck.value.length, to)
       break
     default:
       break
@@ -79,7 +80,7 @@ function isButtonVisible(card: YGOCardData, format: BanList, num: 2 | 3): boolea
     <span>To Main Deck:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
-        :disabled="handleDisabledState('main', 1)" @click="addCardToDeck(card, mainDeck.length, 'main')" />
+        :disabled="handleDisabledState('main', 1)" @click="addCardToDeck([card], mainDeck.length, 'main')" />
       <ButtonCTA v-if="isButtonVisible(card, banList, 2)" variant="emerald" class="w-full" text-content="&#xd7; 2"
         aria-label="Add 2 copies" :disabled="handleDisabledState('main', 2)" @click="handleAdd('main', 2)" />
       <ButtonCTA v-if="isButtonVisible(card, banList, 3)" variant="emerald" class="w-full" text-content="&#xd7; 3"
@@ -90,7 +91,7 @@ function isButtonVisible(card: YGOCardData, format: BanList, num: 2 | 3): boolea
     <span>To Extra Deck:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
-        :disabled="handleDisabledState('extra', 1)" @click="addCardToDeck(card, extraDeck.length, 'extra')" />
+        :disabled="handleDisabledState('extra', 1)" @click="addCardToDeck([card], extraDeck.length, 'extra')" />
       <ButtonCTA v-if="isButtonVisible(card, banList, 2)" variant="emerald" class="w-full" text-content="&#xd7; 2"
         aria-label="Add 2 copies" :disabled="handleDisabledState('extra', 2)" @click="handleAdd('extra', 2)" />
       <ButtonCTA v-if="isButtonVisible(card, banList, 3)" variant="emerald" class="w-full" text-content="&#xd7; 3"
@@ -101,7 +102,7 @@ function isButtonVisible(card: YGOCardData, format: BanList, num: 2 | 3): boolea
     <span>To Side Deck:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
-        :disabled="handleDisabledState('side', 1)" @click="addCardToDeck(card, sideDeck.length, 'side')" />
+        :disabled="handleDisabledState('side', 1)" @click="addCardToDeck([card], sideDeck.length, 'side')" />
       <ButtonCTA v-if="isButtonVisible(card, banList, 2)" variant="emerald" class="w-full" text-content="&#xd7; 2"
         aria-label="Add 2 copies" :disabled="handleDisabledState('side', 2)" @click="handleAdd('side', 2)" />
       <ButtonCTA v-if="isButtonVisible(card, banList, 3)" variant="emerald" class="w-full" text-content="&#xd7; 3"

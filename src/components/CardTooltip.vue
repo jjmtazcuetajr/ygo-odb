@@ -79,12 +79,12 @@ const isPopoverOpen = ref(false)
               <strong>Count</strong>
               <div class="w-full flex justify-between">
                 <span v-if="isMainDeckCard(card.frameType)" class="w-full">
-                  Main: {{ getCardFrequency(card.id, 'main') }}
+                  Main: {{ getCardFrequency(card, 'main') }}
                 </span>
                 <span v-else-if="isExtraDeckCard(card.frameType)" class="w-full">
-                  Extra: {{ getCardFrequency(card.id, 'extra') }}
+                  Extra: {{ getCardFrequency(card, 'extra') }}
                 </span>
-                <span class="w-full">Side: {{ getCardFrequency(card.id, 'side') }}</span>
+                <span class="w-full">Side: {{ getCardFrequency(card, 'side') }}</span>
               </div>
             </div>
             <template v-if="from === 'grid'">

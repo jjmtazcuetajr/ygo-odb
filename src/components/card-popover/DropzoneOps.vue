@@ -24,26 +24,26 @@ const { isCardWithinLimit, addCardToDeck, removeCardFromDeck } = useDeckStore()
  * @param num Number of card copies to transfer
  */
 function crossdeckCardTransfer(from: Dropzone, num: 1 | 2 | 3) {
-  const sameCardCount = deckStore.getCardFrequency(props.card.id, from)
+  const sameCardCount = deckStore.getCardFrequency(props.card, from)
 
   switch (from) {
     case 'main':
     case 'extra':
       if (sameCardCount >= num && EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length >= num) {
-        removeCardFromDeck(props.fromIndex, from, num)
-        addCardToDeck(props.card, sideDeck.value.length, 'side', num)
+        const removedCards = removeCardFromDeck(props.fromIndex, from, num)
+        addCardToDeck(removedCards, sideDeck.value.length, 'side')
       }
       break
     case 'side':
       if (isMainDeckCard(props.card.frameType)) {
         if (sameCardCount >= num && MAIN_DECK_LIMIT - mainDeck.value.length >= num) {
-          removeCardFromDeck(props.fromIndex, from, num)
-          addCardToDeck(props.card, mainDeck.value.length, 'main', num)
+          const removedCards = removeCardFromDeck(props.fromIndex, from, num)
+          addCardToDeck(removedCards, mainDeck.value.length, 'main')
         }
       } else if (isExtraDeckCard(props.card.frameType)) {
         if (sameCardCount >= num && EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length >= num) {
-          removeCardFromDeck(props.fromIndex, from, num)
-          addCardToDeck(props.card, extraDeck.value.length, 'extra', num)
+          const removedCards = removeCardFromDeck(props.fromIndex, from, num)
+          addCardToDeck(removedCards, extraDeck.value.length, 'extra')
         }
       }
       break
@@ -78,12 +78,12 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
   switch (from) {
     case 'main':
     case 'extra':
-      return getCardFrequency.value(props.card.id, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < num
+      return getCardFrequency.value(props.card, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < num
     case 'side':
       if (isMainDeckCard(props.card.frameType))
-        return getCardFrequency.value(props.card.id, props.source) < num || MAIN_DECK_LIMIT - mainDeck.value.length < num
+        return getCardFrequency.value(props.card, props.source) < num || MAIN_DECK_LIMIT - mainDeck.value.length < num
       else if (isExtraDeckCard(props.card.frameType))
-        return getCardFrequency.value(props.card.id, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < num
+        return getCardFrequency.value(props.card, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < num
       break
     default:
       break
@@ -98,12 +98,12 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
     <span>Add more:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="emerald" text-content="&#xd7; 1" class="w-full" aria-label="Add 1 Copy"
-        :disabled="!isCardWithinLimit(card, source)" @click="addCardToDeck(card, handleLastIndex(source), source)" />
+        :disabled="!isCardWithinLimit(card, source)" @click="addCardToDeck([card], handleLastIndex(source), source)" />
       <ButtonCTA
         v-if="(banList === 'ocg' && !card.banlist_info?.ban_ocg) || (banList === 'tcg' && !card.banlist_info?.ban_tcg) || banList === 'none'"
         variant="emerald" text-content="&#xd7; 2" class="w-full" aria-label="Add 2 Copies"
         :disabled="!isCardWithinLimit(card, source, 2)"
-        @click="addCardToDeck(card, handleLastIndex(source), source, 2)" />
+        @click="addCardToDeck([card, card], handleLastIndex(source), source)" />
     </div>
   </div>
   <div class="dark:text-neutral-300">
@@ -115,10 +115,10 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="neutral" text-content="&#xd7; 1" class="w-full" aria-label="Move 1 Copy"
         :disabled="handleDisabledState(source, 1)" @click="crossdeckCardTransfer(source, 1)" />
-      <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" variant="neutral" text-content="&#xd7; 2" class="w-full"
+      <ButtonCTA v-if="getCardFrequency(card, source) >= 2" variant="neutral" text-content="&#xd7; 2" class="w-full"
         aria-label="Move 2 Copies" :disabled="handleDisabledState(source, 2)"
         @click="crossdeckCardTransfer(source, 2)" />
-      <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" variant="neutral" text-content="&#xd7; 3" class="w-full"
+      <ButtonCTA v-if="getCardFrequency(card, source) === 3" variant="neutral" text-content="&#xd7; 3" class="w-full"
         aria-label="Move 3 Copies" :disabled="handleDisabledState(source, 3)"
         @click="crossdeckCardTransfer(source, 3)" />
     </div>
@@ -128,9 +128,9 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="red" text-content="&#xd7; 1" class="w-full" aria-label="Remove 1 Copy"
         @click="[removeCardFromDeck(fromIndex, source), popoverClose()]" />
-      <ButtonCTA v-if="getCardFrequency(card.id, source) >= 2" variant="red" text-content="&#xd7; 2" class="w-full"
+      <ButtonCTA v-if="getCardFrequency(card, source) >= 2" variant="red" text-content="&#xd7; 2" class="w-full"
         aria-label="Remove 2 Copies" @click="[removeCardFromDeck(fromIndex, source, 2), popoverClose()]" />
-      <ButtonCTA v-if="getCardFrequency(card.id, source) === 3" variant="red" text-content="&#xd7; 3" class="w-full"
+      <ButtonCTA v-if="getCardFrequency(card, source) === 3" variant="red" text-content="&#xd7; 3" class="w-full"
         aria-label="Remove 3 Copies" @click="[removeCardFromDeck(fromIndex, source, 3), popoverClose()]" />
     </div>
   </div>

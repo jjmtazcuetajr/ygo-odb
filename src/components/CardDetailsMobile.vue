@@ -33,7 +33,7 @@ const { toastMessage, isSuccessToast, createToastMessage } = useToast()
  */
 function handleClick(to: Dropzone, index: number) {
   createToastMessage(to, props.card, props.banList)
-  addCardToDeck(props.card, index, to)
+  addCardToDeck([props.card], index, to)
   emitToast()
 }
 

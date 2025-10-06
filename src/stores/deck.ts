@@ -66,31 +66,28 @@ export const useDeckStore = defineStore('deck', () => {
   })
 
   const getCardFrequency = computed(() => {
-    return (cardId: number, deckType: Dropzone) => {
+    return (cardParam: YGOCardData, deckType: Dropzone) => {
       const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
-      return array.value.filter(card => card.id === cardId).length
+      return array.value.filter(card => card.name === cardParam.name).length
     }
   })
 
   // actions
   /**
-   * Add a card to a deck
-   * @param card Object containing card info
+   * Add card/s to a deck
+   * @param cards An array of card objects
    * @param index Index to insert the card into
    * @param deckType Deck of either `main`, `extra`, or `side`
-   * @param num Number of cards about to add. Defaults to `1` copy
    */
-  function addCardToDeck(card: YGOCardData, index: number, deckType: Dropzone, num: number = 1) {
-    const cardLimit = isCardWithinLimit(card, deckType, num)
+  function addCardToDeck(cards: YGOCardData[], index: number, deckType: Dropzone) {
+    const cardLimit = isCardWithinLimit(cards[0], deckType, cards.length)
     if (cardLimit) {
       const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
       const deckLimit = deckType === 'main' ? MAIN_DECK_LIMIT : EXTRA_AND_SIDE_DECK_LIMIT
 
-      if (array.value.length < deckLimit && num <= deckLimit - array.value.length) {
-        for (let x = 0; x < num; x++) {
-          if (index >= array.value.length || index === -1) array.value.push(card)
-          else array.value.splice(index, 0, card)
-        }
+      if (array.value.length < deckLimit && cards.length <= deckLimit - array.value.length) {
+        if (index >= array.value.length || index === -1) array.value.push(...cards)
+        else array.value.splice(index, 0, ...cards)
       }
     }
   }
@@ -106,9 +103,9 @@ export const useDeckStore = defineStore('deck', () => {
     const { banList } = storeToRefs(useYgoCardsStore())
 
     // check the number of instances a card is within each of the deck types
-    const countInMainDeck = mainDeck.value.filter(c => c.id === card.id).length
-    const countInExtraDeck = extraDeck.value.filter(c => c.id === card.id).length
-    const countInSideDeck = sideDeck.value.filter(c => c.id === card.id).length
+    const countInMainDeck = mainDeck.value.filter(c => c.name === card.name).length
+    const countInExtraDeck = extraDeck.value.filter(c => c.name === card.name).length
+    const countInSideDeck = sideDeck.value.filter(c => c.name === card.name).length
 
     let totalCount = 0
     switch (deckType) {
@@ -146,26 +143,31 @@ export const useDeckStore = defineStore('deck', () => {
   }
 
   /**
-   * Remove a card from a deck
+   * Remove card/s from a deck, returning the deleted cards in an array
    * @param index Index to remove the card from
    * @param deckType Deck of either `main`, `extra`, or `side`
    * @param [num=1] Number of cards to remove. Defaults to `1` copy
+   * @returns An array containing the cards that were removed
    */
-  function removeCardFromDeck(index: number, deckType: Dropzone, num: number = 1) {
+  function removeCardFromDeck(index: number, deckType: Dropzone, num: 1 | 2 | 3 = 1): YGOCardData[] {
     const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
-    let removedCards: YGOCardData[] = []
+    const removedCards: YGOCardData[] = []
+
     if (array.value.length > 0) {
-      for (let i = 0; i < num; i++) {
-        if (i === 0) {
-          // remove selected card
-          removedCards.push(...array.value.splice(index, 1))
-        } else {
-          // remove copies starting from first instance found
-          const idx = array.value.findIndex(card => card.id === removedCards[0].id)
+      if (num === 1) {
+        // remove card from the specified index
+        removedCards.push(...array.value.splice(index, 1))
+      } else {
+        // remove cards from first instance found
+        const cardName = array.value[index].name // get card name
+        for (let i = 0; i < num; i++) {
+          const idx = array.value.findIndex(card => card.name === cardName) // get the first card instance
           removedCards.push(...array.value.splice(idx, 1))
         }
       }
     }
+
+    return removedCards
   }
 
   /**

@@ -182,13 +182,13 @@ export function useDragAndDrop() {
     // add card to new deck dropzone
     switch (currentDropTarget.value) {
       case 'main':
-        addCardToDeck(draggedCard.value, toIndex.value, 'main')
+        addCardToDeck([draggedCard.value], toIndex.value, 'main')
         break
       case 'extra':
-        addCardToDeck(draggedCard.value, toIndex.value, 'extra')
+        addCardToDeck([draggedCard.value], toIndex.value, 'extra')
         break
       case 'side':
-        addCardToDeck(draggedCard.value, toIndex.value, 'side')
+        addCardToDeck([draggedCard.value], toIndex.value, 'side')
         break
       default:
         break

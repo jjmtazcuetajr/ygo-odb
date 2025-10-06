@@ -268,7 +268,7 @@ export function useMobileDragAndDrop() {
     }
 
     // add card to new deck dropzone
-    if (currentDropTarget) addCardToDeck(draggedCard, toIndex, currentDropTarget)
+    if (currentDropTarget) addCardToDeck([draggedCard], toIndex, currentDropTarget)
     
     removeGhostElement()
     draggedCard = null
