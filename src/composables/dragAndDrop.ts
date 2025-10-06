@@ -164,35 +164,11 @@ export function useDragAndDrop() {
 
     // remove card from deck dropzone source
     if (toIndex.value !== -1) {
-      switch (source.value) {
-        case 'main':
-          removeCardFromDeck(cardIndex.value, 'main')
-          break
-        case 'extra':
-          removeCardFromDeck(cardIndex.value, 'extra')
-          break
-        case 'side':
-          removeCardFromDeck(cardIndex.value, 'side')
-          break
-        default:
-          break
-      }
+      if (source.value !== 'grid') removeCardFromDeck(cardIndex.value, source.value)
     }
 
     // add card to new deck dropzone
-    switch (currentDropTarget.value) {
-      case 'main':
-        addCardToDeck([draggedCard.value], toIndex.value, 'main')
-        break
-      case 'extra':
-        addCardToDeck([draggedCard.value], toIndex.value, 'extra')
-        break
-      case 'side':
-        addCardToDeck([draggedCard.value], toIndex.value, 'side')
-        break
-      default:
-        break
-    }
+    if (currentDropTarget.value) addCardToDeck([draggedCard.value], toIndex.value, currentDropTarget.value)
 
     // reset original image appearances
     const imageItems = document.querySelectorAll('.draggable')
