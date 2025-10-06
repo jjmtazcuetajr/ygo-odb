@@ -70,21 +70,19 @@ function popoverClose() {
 }
 
 /**
- * Determine the disabled state of buttons for cross-deck card transfer operations
- * @param from Deck type the card came from
- * @param num Number of card copies
+ * Determine the disabled state of buttons for the `add more` operations
+ * @param to Deck type to insert the card to
+ * @param num Number of card copies to add more
+ * @returns A boolean value of a button's disabled state
  */
-function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
-  switch (from) {
+function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
+  switch (to) {
     case 'main':
+      return !isCardWithinLimit(props.card, to, num) || MAIN_DECK_LIMIT - mainDeck.value.length < num
     case 'extra':
-      return getCardFrequency.value(props.card, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < num
+      return !isCardWithinLimit(props.card, to, num) || EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < num
     case 'side':
-      if (isMainDeckCard(props.card.frameType))
-        return getCardFrequency.value(props.card, props.source) < num || MAIN_DECK_LIMIT - mainDeck.value.length < num
-      else if (isExtraDeckCard(props.card.frameType))
-        return getCardFrequency.value(props.card, props.source) < num || EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < num
-      break
+      return !isCardWithinLimit(props.card, to, num) || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < num
     default:
       break
   }
@@ -98,11 +96,11 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
     <span>Add more:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="emerald" text-content="&#xd7; 1" class="w-full" aria-label="Add 1 Copy"
-        :disabled="!isCardWithinLimit(card, source)" @click="addCardToDeck([card], handleLastIndex(source), source)" />
+        :disabled="handleDisabledState(source, 1)" @click="addCardToDeck([card], handleLastIndex(source), source)" />
       <ButtonCTA
         v-if="(banList === 'ocg' && !card.banlist_info?.ban_ocg) || (banList === 'tcg' && !card.banlist_info?.ban_tcg) || banList === 'none'"
         variant="emerald" text-content="&#xd7; 2" class="w-full" aria-label="Add 2 Copies"
-        :disabled="!isCardWithinLimit(card, source, 2)"
+        :disabled="handleDisabledState(source, 2)"
         @click="addCardToDeck([card, card], handleLastIndex(source), source)" />
     </div>
   </div>
@@ -114,13 +112,11 @@ function handleDisabledState(from: Dropzone, num: 1 | 2 | 3): boolean {
     </template>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="neutral" text-content="&#xd7; 1" class="w-full" aria-label="Move 1 Copy"
-        :disabled="handleDisabledState(source, 1)" @click="crossdeckCardTransfer(source, 1)" />
+        @click="crossdeckCardTransfer(source, 1)" />
       <ButtonCTA v-if="getCardFrequency(card, source) >= 2" variant="neutral" text-content="&#xd7; 2" class="w-full"
-        aria-label="Move 2 Copies" :disabled="handleDisabledState(source, 2)"
-        @click="crossdeckCardTransfer(source, 2)" />
+        aria-label="Move 2 Copies" @click="crossdeckCardTransfer(source, 2)" />
       <ButtonCTA v-if="getCardFrequency(card, source) === 3" variant="neutral" text-content="&#xd7; 3" class="w-full"
-        aria-label="Move 3 Copies" :disabled="handleDisabledState(source, 3)"
-        @click="crossdeckCardTransfer(source, 3)" />
+        aria-label="Move 3 Copies" @click="crossdeckCardTransfer(source, 3)" />
     </div>
   </div>
   <div class="dark:text-neutral-300">
