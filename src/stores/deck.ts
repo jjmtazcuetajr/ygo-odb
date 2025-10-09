@@ -94,14 +94,14 @@ export const useDeckStore = defineStore('deck', () => {
   }
 
   /**
-   * Determine if a card to be added into a deck drop zone is within the limit allowed
+   * Check if a card to be added into a deck drop zone is within the limit allowed
    * @param cardToAdd Object containing card info
    * @param deckType Deck of either `main`, `extra`, or `side`
    * @param num Number of cards about to add. Defaults to `1` copy
-   * @returns Boolean value
+   * @returns Boolean value to determine if a card can be added
    */
   function isCardWithinLimit(cardToAdd: YGOCardData, deckType: Dropzone, num: number = 1): boolean {
-    const { banList } = storeToRefs(useYgoCardsStore())
+    const { format } = storeToRefs(useYgoCardsStore())
 
     // check the number of instances a card is within each of the deck types
     const countInMainDeck = getMatchingCardNames(mainDeck.value, cardToAdd).length
@@ -137,9 +137,9 @@ export const useDeckStore = defineStore('deck', () => {
 
     const numberToAdd = totalCount + (num - 1)
 
-    if (banList.value === 'ocg' && numberToAdd < limitOCG) return true
-    else if (banList.value === 'tcg' && numberToAdd < limitTCG) return true
-    else if (banList.value === 'none' && numberToAdd < UNRESTRICTED_CARD_LIMIT) return true
+    if (format.value === 'ocg' && numberToAdd < limitOCG) return true
+    else if (format.value === 'tcg' && numberToAdd < limitTCG) return true
+    else if (format.value === 'none' && numberToAdd < UNRESTRICTED_CARD_LIMIT) return true
     return false
   }
 

@@ -112,7 +112,7 @@ export const attributes = [
   { val: 'divine', textContent: 'DIVINE' }
 ]
 
-export const banRegion = [
+export const formats = [
   { val: 'none', textContent: 'None' },
   { val: 'ocg', textContent: 'OCG' },
   { val: 'tcg', textContent: 'TCG' }

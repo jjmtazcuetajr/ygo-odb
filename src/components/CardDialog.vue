@@ -5,13 +5,13 @@ import { onMounted, onUnmounted } from 'vue'
 import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
-import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
+import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
 import { useMobileDragAndDrop } from '@/composables/mobileDragAndDrop'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 
 defineProps<{
   card: YGOCardData
-  banList: BanList
+  format: Format
   from: Dropzone | 'grid'
   index: number
 }>()
@@ -34,8 +34,8 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
     <img v-else :src="card.card_images[0].image_url_small" :alt="card.name" draggable="false"
       class="rounded-sm aspect-[268/391] text-xs overflow-hidden bg-neutral-400/70 dark:bg-neutral-600 transition-[background-color] duration-400"
       @touchstart="handleTouchStart($event, card, from, index)">
-    <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
-    <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
+    <BanStatus v-if="format === 'ocg'" :status="card.banlist_info?.ban_ocg" />
+    <BanStatus v-else-if="format === 'tcg'" :status="card.banlist_info?.ban_tcg" />
   </button>
   <DialogRoot v-model:open="isDialogOpen">
     <DialogPortal disabled>

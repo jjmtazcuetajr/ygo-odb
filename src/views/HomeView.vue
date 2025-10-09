@@ -7,13 +7,13 @@ import ButtonCTA from '@/components/ButtonCTA.vue'
 import SelectOption from '@/components/SelectOption.vue'
 import { Trash2, CircleHelp, Search } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
-import { banRegion } from '@/utils/select-options'
+import { formats } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 
 const cardsStore = useYgoCardsStore()
-const { banList } = storeToRefs(cardsStore)
+const { format } = storeToRefs(cardsStore)
 
 const deckStore = useDeckStore()
 const { mainDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, sideDeck, sideDeckMonsters, sideDeckSpells, sideDeckTraps,
@@ -76,8 +76,8 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
     </div>
     <div class="flex gap-4 mt-3 h-full">
       <div class="flex flex-col gap-3 grow shrink basis-0">
-        <SelectOption id="ban-list" label-text="Format" parent-class="flex items-center gap-1" :options="banRegion"
-          v-model="banList" />
+        <SelectOption id="ban-list" label-text="Format" parent-class="flex items-center gap-1" :options="formats"
+          v-model="format" />
         <DeckType type="main" :deck="mainDeck" :monster-count="mainDeckMonsters.length"
           :spell-count="mainDeckSpells.length" :trap-count="mainDeckTraps.length" />
         <DeckType type="extra" :deck="extraDeck" :fusion-count="fusionMonsters.length"

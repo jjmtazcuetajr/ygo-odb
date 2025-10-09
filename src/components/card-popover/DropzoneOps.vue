@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ButtonCTA from '../ButtonCTA.vue'
-import type { YGOCardData, Dropzone, BanList } from '@/utils/interfaces'
+import type { YGOCardData, Dropzone, Format } from '@/utils/interfaces'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
@@ -10,7 +10,7 @@ const props = defineProps<{
   card: YGOCardData
   fromIndex: number
   source: Dropzone
-  banList: BanList
+  format: Format
 }>()
 const emit = defineEmits<{ 'handle-popover-close': [] }>()
 
@@ -91,14 +91,14 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
 </script>
 <template>
   <div
-    v-if="!((banList === 'ocg' && card.banlist_info?.ban_ocg === 'Limited') || (banList === 'tcg' && card.banlist_info?.ban_tcg === 'Limited'))"
+    v-if="!((format === 'ocg' && card.banlist_info?.ban_ocg === 'Limited') || (format === 'tcg' && card.banlist_info?.ban_tcg === 'Limited'))"
     class="dark:text-neutral-300">
     <span>Add more:</span>
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="emerald" text-content="&#xd7; 1" class="w-full" aria-label="Add 1 Copy"
         :disabled="handleDisabledState(source, 1)" @click="addCardToDeck([card], handleLastIndex(source), source)" />
       <ButtonCTA
-        v-if="(banList === 'ocg' && !card.banlist_info?.ban_ocg) || (banList === 'tcg' && !card.banlist_info?.ban_tcg) || banList === 'none'"
+        v-if="(format === 'ocg' && !card.banlist_info?.ban_ocg) || (format === 'tcg' && !card.banlist_info?.ban_tcg) || format === 'none'"
         variant="emerald" text-content="&#xd7; 2" class="w-full" aria-label="Add 2 Copies"
         :disabled="handleDisabledState(source, 2)"
         @click="addCardToDeck([card, card], handleLastIndex(source), source)" />

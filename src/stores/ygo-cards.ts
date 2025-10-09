@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory, BanList } from '@/utils/interfaces'
+import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory, Format } from '@/utils/interfaces'
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
   sortByMonsterStat, matchTrapType, matchBanStatus } from '@/utils/helpers'
 import { usePaginationStore } from './pagination'
@@ -32,7 +32,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   const sortDir = ref<SortDirection>('asc')
   const isLoading = ref(false)
   const isError = ref(false)
-  const banList = ref<BanList>('ocg')
+  const format = ref<Format>('ocg')
 
   // getters
   const getFilteredCards = computed(() => {
@@ -56,7 +56,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesAtk = matchAtk(card, filters.value.atk)
       const matchesDef = matchDef(card, filters.value.def)
       const matchesLinkArrows = matchLinkArrows(card, filters.value.linkArrows)
-      const matchesBanStatus = matchBanStatus(card, banList.value, filters.value.banStatus)
+      const matchesBanStatus = matchBanStatus(card, format.value, filters.value.banStatus)
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
         && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk && matchesDef && matchesLinkArrows
@@ -87,7 +87,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     isError.value = false
 
     const url = 'http://localhost:5173/src/utils/response.json'
-    //const url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php'
+    //const url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?format=genesys&misc=yes'
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -161,5 +161,5 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     toFirst()
   }
 
-  return { cards, filters, sortBy, sortDir, isLoading, isError, banList, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
+  return { cards, filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
 })

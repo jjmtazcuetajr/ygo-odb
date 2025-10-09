@@ -19,7 +19,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useDetectHover } from '@/composables/detectHover'
 
 const cardStore = useYgoCardsStore()
-const { filters, sortBy, sortDir, isLoading, isError, banList, getFilteredCards } = storeToRefs(cardStore)
+const { filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards } = storeToRefs(cardStore)
 
 const paginationStore = usePaginationStore()
 const { currentPage, paginatedResults } = storeToRefs(paginationStore)
@@ -145,8 +145,8 @@ onMounted(() => {
         <div
           class="hidden lg:grid grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-9 px-2 mt-3 content-start dark:[color-scheme:dark]">
           <template v-for="(card, index) in paginatedResults" :key="card.id">
-            <CardTooltip v-if="isHoverDetected" :card="card" :ban-list="banList" from="grid" :index="index" />
-            <CardDialog v-else :card="card" :ban-list="banList" from="grid" :index="index" />
+            <CardTooltip v-if="isHoverDetected" :card="card" :format="format" from="grid" :index="index" />
+            <CardDialog v-else :card="card" :format="format" from="grid" :index="index" />
           </template>
         </div>
         <div class="flex lg:hidden flex-col gap-3 overflow-y-auto grow shrink basis-0 pb-2 px-2 mt-3">
@@ -157,10 +157,10 @@ onMounted(() => {
                 :src="hasFinishedLoadingImage(card.card_images[0].image_url_small) ? card.card_images[0].image_url_small : ''"
                 :alt="card.name" draggable="false"
                 class="rounded-sm aspect-[268/391] text-xs overflow-hidden bg-neutral-400/70 dark:bg-neutral-600">
-              <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
-              <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
+              <BanStatus v-if="format === 'ocg'" :status="card.banlist_info?.ban_ocg" />
+              <BanStatus v-else-if="format === 'tcg'" :status="card.banlist_info?.ban_tcg" />
             </div>
-            <CardDetailsMobile :card="card" :ban-list="banList"
+            <CardDetailsMobile :card="card" :format="format"
               @show-toast="(msg, feedback) => handleToast(msg, feedback)" />
           </div>
         </div>

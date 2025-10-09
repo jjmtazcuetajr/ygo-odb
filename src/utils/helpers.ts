@@ -1,4 +1,4 @@
-import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory, BanList, BanStatus } from "@/utils/interfaces"
+import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory, Format, BanStatus } from "@/utils/interfaces"
 
 /**
  * Finds card matches based on card category
@@ -234,7 +234,7 @@ export function matchLinkArrows(card: YGOCardData, linkArrows: string[]): boolea
  * @param format Either OCG, TCG, or none
  * @param status Either Forbidden, Limited, or Semi-Limited
  */
-export function matchBanStatus(card: YGOCardData, format: BanList, status: BanStatus | 'Unrestricted' | ''): boolean {
+export function matchBanStatus(card: YGOCardData, format: Format, status: BanStatus | 'Unrestricted' | ''): boolean {
   if (format === 'ocg') {
     if (status !== '' && status !== 'Unrestricted') return card.banlist_info?.ban_ocg === status
     else if (status === 'Unrestricted') return card.banlist_info?.ban_ocg === undefined

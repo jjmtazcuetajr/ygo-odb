@@ -8,7 +8,7 @@ import BanStatus from './BanStatus.vue'
 import GridToDeck from './card-popover/GridToDeck.vue'
 import DropzoneOps from './card-popover/DropzoneOps.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
-import type { YGOCardData, BanList, Dropzone } from '@/utils/interfaces'
+import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
 import { ref } from 'vue'
 import { Info, Settings2, X } from 'lucide-vue-next'
@@ -19,7 +19,7 @@ import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
 
 defineProps<{
   card: YGOCardData
-  banList: BanList
+  format: Format
   from: Dropzone | 'grid'
   index: number
 }>()
@@ -40,8 +40,8 @@ const isPopoverOpen = ref(false)
       class="rounded-sm aspect-[268/391] text-xs h-full bg-neutral-400/70 dark:bg-neutral-600 transition-[background-color] duration-400"
       @mousedown.left="handleMouseDown($event, card, from, index)"
       @contextmenu="rightClickDeleteCard($event, index, from)">
-    <BanStatus v-if="banList === 'ocg'" :status="card.banlist_info?.ban_ocg" />
-    <BanStatus v-else-if="banList === 'tcg'" :status="card.banlist_info?.ban_tcg" />
+    <BanStatus v-if="format === 'ocg'" :status="card.banlist_info?.ban_ocg" />
+    <BanStatus v-else-if="format === 'tcg'" :status="card.banlist_info?.ban_tcg" />
     <TooltipProvider :delay-duration="100" :disable-hoverable-content="true" :ignore-non-keyboard-focus="true">
       <TooltipRoot>
         <TooltipTrigger aria-label="More Info" :class="{ 'opacity-100': isHovered }"
@@ -70,8 +70,8 @@ const isPopoverOpen = ref(false)
         <PopoverContent side="bottom" :side-offset="5"
           class="data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade flex flex-col gap-2 w-45 rounded-md p-3 z-30 text-sm dark:text-neutral-300 shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-100 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]">
           <span
-            v-if="(banList === 'ocg' && card.banlist_info?.ban_ocg === 'Forbidden') || (banList === 'tcg' && card.banlist_info?.ban_tcg === 'Forbidden')">
-            This card is <strong>Forbidden</strong> in <strong>{{ banList.toUpperCase() }}</strong> format. You cannot
+            v-if="(format === 'ocg' && card.banlist_info?.ban_ocg === 'Forbidden') || (format === 'tcg' && card.banlist_info?.ban_tcg === 'Forbidden')">
+            This card is <strong>Forbidden</strong> in <strong>{{ format.toUpperCase() }}</strong> format. You cannot
             add it!
           </span>
           <template v-else>
@@ -88,18 +88,18 @@ const isPopoverOpen = ref(false)
               </div>
             </div>
             <template v-if="from === 'grid'">
-              <GridToDeck :card="card" :ban-list="banList" />
+              <GridToDeck :card="card" :format="format" />
             </template>
             <template v-else-if="from === 'main'">
-              <DropzoneOps :card="card" :from-index="index" :source="'main'" :ban-list="banList"
+              <DropzoneOps :card="card" :from-index="index" :source="'main'" :format="format"
                 @handle-popover-close="isPopoverOpen = false" />
             </template>
             <template v-else-if="from === 'extra'">
-              <DropzoneOps :card="card" :from-index="index" :source="'extra'" :ban-list="banList"
+              <DropzoneOps :card="card" :from-index="index" :source="'extra'" :format="format"
                 @handle-popover-close="isPopoverOpen = false" />
             </template>
             <template v-else-if="from === 'side'">
-              <DropzoneOps :card="card" :from-index="index" :source="'side'" :ban-list="banList"
+              <DropzoneOps :card="card" :from-index="index" :source="'side'" :format="format"
                 @handle-popover-close="isPopoverOpen = false" />
             </template>
           </template>

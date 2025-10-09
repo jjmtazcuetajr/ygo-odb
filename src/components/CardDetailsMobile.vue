@@ -10,11 +10,11 @@ import { useDeckStore } from '@/stores/deck'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
 import { useToast } from '@/composables/toast'
-import type { YGOCardData, Dropzone, BanList } from '@/utils/interfaces'
+import type { YGOCardData, Dropzone, Format } from '@/utils/interfaces'
 
 const props = defineProps<{
   card: YGOCardData
-  banList: BanList
+  format: Format
 }>()
 const emit = defineEmits<{ 'show-toast': [toastMsg: string, isSuccess: boolean] }>()
 
@@ -32,7 +32,7 @@ const { toastMessage, isSuccessToast, createToastMessage } = useToast()
  * @param index Card count of the deck destination it currently has
  */
 function handleClick(to: Dropzone, index: number) {
-  createToastMessage(to, props.card, props.banList)
+  createToastMessage(to, props.card, props.format)
   addCardToDeck([props.card], index, to)
   emitToast()
 }
