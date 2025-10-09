@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, FORBIDDEN_CARD_LIMIT, LIMITED_CARD_LIMIT, SEMI_LIMITED_CARD_LIMIT } from '@/utils/constants'
 import type { YGOCardData, Dropzone, BanStatus, BanList } from '@/utils/interfaces'
+import { parseAlwaysTreatedAs } from '@/utils/helpers'
 
 export function useToast() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
@@ -44,11 +45,12 @@ export function useToast() {
           'Limited': LIMITED_CARD_LIMIT,
           'Semi-Limited': SEMI_LIMITED_CARD_LIMIT
         }
-        const isSingular = cardLimitMap[banStatus] === 1 ? 'card' : 'cards'
-        const limitText = cardLimitMap[banStatus] === 0 ? 'You cannot add it' : `Limit is ${cardLimitMap[banStatus]} ${isSingular}`
+        const isSingular = cardLimitMap[banStatus] === LIMITED_CARD_LIMIT ? 'card' : 'cards'
+        const limitText = cardLimitMap[banStatus] === FORBIDDEN_CARD_LIMIT ? 'You cannot add it' : `Limit is ${cardLimitMap[banStatus]} ${isSingular}`
         toastMessage.value = `${card.name} is ${banStatus} in ${banList} format. ${limitText}!`
       } else {
-        toastMessage.value = `3 card limit for ${card.name} reached!`
+        const cardName = parseAlwaysTreatedAs(card.desc) || card.name
+        toastMessage.value = `3 card limit for ${cardName} reached!`
       }
       isSuccessToast.value = false
     }
