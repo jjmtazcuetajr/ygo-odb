@@ -3,7 +3,7 @@ import { defineStore, storeToRefs } from 'pinia'
 import { useYgoCardsStore } from './ygo-cards'
 import type { YGOCardData, BanStatus, Dropzone } from '@/utils/interfaces'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, FORBIDDEN_CARD_LIMIT, LIMITED_CARD_LIMIT, SEMI_LIMITED_CARD_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
-import { isMainDeckCard } from '@/utils/components'
+import { isMainDeckCard } from '@/utils/helpers'
 import { parseAlwaysTreatedAs, getMatchingCardNames } from '@/utils/helpers'
 
 export const useDeckStore = defineStore('deck', () => {

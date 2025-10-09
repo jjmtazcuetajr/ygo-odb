@@ -3,7 +3,7 @@ import ButtonCTA from '../ButtonCTA.vue'
 import type { YGOCardData, Dropzone, BanList } from '@/utils/interfaces'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
-import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
+import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
 
 const props = defineProps<{

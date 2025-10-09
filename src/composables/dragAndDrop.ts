@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import type { YGOCardData, Dropzone } from '@/utils/interfaces'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
-import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
+import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
 
 export function useDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())

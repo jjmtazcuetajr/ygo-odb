@@ -15,7 +15,7 @@ import { Info, Settings2, X } from 'lucide-vue-next'
 import { useDeckStore } from '@/stores/deck'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
-import { isMainDeckCard, isExtraDeckCard } from '@/utils/components'
+import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
 
 defineProps<{
   card: YGOCardData
