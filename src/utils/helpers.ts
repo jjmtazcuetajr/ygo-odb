@@ -379,3 +379,39 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
   // for spells and traps, just sort by name alphabetically regardless of sort direction
   return collator.compare(cardA.name, cardB.name)
 }
+
+/**
+ * Parse card effects and check if they have the "always treated as" keywords or some other variant
+ * @param description Card effect (`desc` property from the API)
+ * @returns The card name of which it is always treated as, or `undefined` if the aforementioned keywords doesn't exist
+ */
+export function parseAlwaysTreatedAs(description: string): string | undefined {
+  if (!description) return undefined
+
+  // common patterns for "always treated as" in card effects
+  const patterns = [
+    /this card'?s? (?:name )?is (?:always )?treated as (?:"|"|')([^"'"]+)(?:"|"|')/i,
+    /this card'?s? (?:name )?is (?:always )?treated as "?([^".]+)"?/i
+  ]
+
+  for (const pattern of patterns) {
+    const match = description.match(pattern)
+    if (match && match[1]) return match[1].trim()
+  }
+
+  return undefined
+}
+
+/**
+ * Get all matching card names based on actual card name and being "always treated as" of a certain card name
+ * @param deck Array of cards from a type of deck (`main`, `extra`, or `side`)
+ * @param cardToAdd Card to add to deck
+ * @returns An array of matching card names
+ */
+export function getMatchingCardNames(deck: YGOCardData[], cardToAdd: YGOCardData): YGOCardData[] {
+  return deck.filter(card => {
+    const cardNameInDeck = parseAlwaysTreatedAs(card.desc) || card.name
+    const nameOfCardToAdd = parseAlwaysTreatedAs(cardToAdd.desc) || cardToAdd.name
+    return card.name === cardToAdd.name || cardNameInDeck === nameOfCardToAdd
+  })
+}

@@ -4,6 +4,7 @@ import { useYgoCardsStore } from './ygo-cards'
 import type { YGOCardData, BanStatus, Dropzone } from '@/utils/interfaces'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, FORBIDDEN_CARD_LIMIT, LIMITED_CARD_LIMIT, SEMI_LIMITED_CARD_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
 import { isMainDeckCard } from '@/utils/components'
+import { parseAlwaysTreatedAs, getMatchingCardNames } from '@/utils/helpers'
 
 export const useDeckStore = defineStore('deck', () => {
   // states
@@ -68,7 +69,7 @@ export const useDeckStore = defineStore('deck', () => {
   const getCardFrequency = computed(() => {
     return (cardParam: YGOCardData, deckType: Dropzone) => {
       const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
-      return array.value.filter(card => card.name === cardParam.name).length
+      return getMatchingCardNames(array.value, cardParam).length
     }
   })
 
@@ -93,19 +94,19 @@ export const useDeckStore = defineStore('deck', () => {
   }
 
   /**
-   * Determine if a card added into a deck dropzone is within the limit allowed
-   * @param card Object containing card info
+   * Determine if a card to be added into a deck drop zone is within the limit allowed
+   * @param cardToAdd Object containing card info
    * @param deckType Deck of either `main`, `extra`, or `side`
    * @param num Number of cards about to add. Defaults to `1` copy
    * @returns Boolean value
    */
-  function isCardWithinLimit(card: YGOCardData, deckType: Dropzone, num: number = 1): boolean {
+  function isCardWithinLimit(cardToAdd: YGOCardData, deckType: Dropzone, num: number = 1): boolean {
     const { banList } = storeToRefs(useYgoCardsStore())
 
     // check the number of instances a card is within each of the deck types
-    const countInMainDeck = mainDeck.value.filter(c => c.name === card.name).length
-    const countInExtraDeck = extraDeck.value.filter(c => c.name === card.name).length
-    const countInSideDeck = sideDeck.value.filter(c => c.name === card.name).length
+    const countInMainDeck = getMatchingCardNames(mainDeck.value, cardToAdd).length
+    const countInExtraDeck = getMatchingCardNames(extraDeck.value, cardToAdd).length
+    const countInSideDeck = getMatchingCardNames(sideDeck.value, cardToAdd).length
 
     let totalCount = 0
     switch (deckType) {
@@ -119,7 +120,7 @@ export const useDeckStore = defineStore('deck', () => {
         break
       case 'side':
         // since the side deck can contain both main & extra deck cards, check the frame type of the card first
-        totalCount = (isMainDeckCard(card.frameType) ? countInMainDeck : countInExtraDeck) + countInSideDeck
+        totalCount = (isMainDeckCard(cardToAdd.frameType) ? countInMainDeck : countInExtraDeck) + countInSideDeck
         break
       default:
         break
@@ -131,8 +132,8 @@ export const useDeckStore = defineStore('deck', () => {
       'Limited': LIMITED_CARD_LIMIT,
       'Semi-Limited': SEMI_LIMITED_CARD_LIMIT
     }
-    const limitOCG = cardLimitMap[card.banlist_info?.ban_ocg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
-    const limitTCG = cardLimitMap[card.banlist_info?.ban_tcg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
+    const limitOCG = cardLimitMap[cardToAdd.banlist_info?.ban_ocg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
+    const limitTCG = cardLimitMap[cardToAdd.banlist_info?.ban_tcg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
 
     const numberToAdd = totalCount + (num - 1)
 
@@ -159,9 +160,13 @@ export const useDeckStore = defineStore('deck', () => {
         removedCards.push(...array.value.splice(index, 1))
       } else {
         // remove cards from first instance found
-        const cardName = array.value[index].name // get card name
+        const cardAtIndex = array.value[index] // get card at index
         for (let i = 0; i < num; i++) {
-          const idx = array.value.findIndex(card => card.name === cardName) // get the first card instance
+          const idx = array.value.findIndex(card => {
+            const cardNameInDeck = parseAlwaysTreatedAs(card.desc) || card.name
+            const cardNameAtIndex = parseAlwaysTreatedAs(cardAtIndex.desc) || cardAtIndex.name
+            return card.name === cardAtIndex.name || cardNameInDeck === cardNameAtIndex
+          }) // get the first card instance
           removedCards.push(...array.value.splice(idx, 1))
         }
       }
