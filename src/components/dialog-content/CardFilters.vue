@@ -10,15 +10,16 @@ import { usePaginationStore } from "@/stores/pagination"
 import { storeToRefs } from "pinia"
 
 const store = useYgoCardsStore()
-const { filters } = storeToRefs(store)
+const { filters, format } = storeToRefs(store)
 
 const { toFirst } = usePaginationStore()
 </script>
 
 <template>
   <div class="flex flex-col mt-3 dark:text-neutral-300 text-xs sm:text-base">
-    <SelectOption id="ban-status" label-text="Ban Status" parent-class="flex items-center gap-1 mb-2"
-      :options="banStatus" v-model="filters.banStatus" @change="toFirst" />
+    <SelectOption v-if="format === 'ocg' || format === 'tcg'" id="ban-status"
+      :label-text="`${format.toUpperCase()} Status`" parent-class="flex items-center gap-1 mb-2" :options="banStatus"
+      v-model="filters.banStatus" @change="toFirst" />
     <div class="flex items-center flex-wrap gap-2">
       <div class="flex items-start sm:items-end gap-1">
         Card Category
