@@ -5,7 +5,8 @@ import SearchResults from '@/components/SearchResults.vue'
 import DialogModal from '@/components/DialogModal.vue'
 import ButtonCTA from '@/components/ButtonCTA.vue'
 import SelectOption from '@/components/SelectOption.vue'
-import { Trash2, CircleHelp, Search } from 'lucide-vue-next'
+import NumberField from '@/components/NumberField.vue'
+import { Trash2, CircleHelp, Search, Pen, Check, X } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { formats } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
@@ -16,10 +17,14 @@ const cardsStore = useYgoCardsStore()
 const { format } = storeToRefs(cardsStore)
 
 const deckStore = useDeckStore()
-const { mainDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, sideDeck, sideDeckMonsters, sideDeckSpells, sideDeckTraps,
-  extraDeck, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters } = storeToRefs(deckStore)
+const {
+  mainDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, sideDeck, sideDeckMonsters, sideDeckSpells, sideDeckTraps,
+  extraDeck, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters, genesysLimit
+} = storeToRefs(deckStore)
 
 const isSideDrawerShown = ref(false)
+const isEditingGenesysLimit = ref(false)
+const newGenesysPointLimit = ref(0)
 
 function closeSideDrawer(ev: MouseEvent) {
   if (ev && (ev.target as HTMLElement).id === 'overlay' && isSideDrawerShown.value) isSideDrawerShown.value = false
@@ -27,6 +32,22 @@ function closeSideDrawer(ev: MouseEvent) {
 
 function showSideDrawerOnLargeScreens() {
   if (window.innerWidth >= 1024 && !isSideDrawerShown.value) isSideDrawerShown.value = true
+}
+
+/**
+ * Edit the current Genesys point limit
+ */
+function editGenesysLimit() {
+  isEditingGenesysLimit.value = true
+  newGenesysPointLimit.value = genesysLimit.value
+}
+
+/**
+ * Set the new Genesys point limit
+ */
+function setGenesysLimit() {
+  genesysLimit.value = newGenesysPointLimit.value
+  isEditingGenesysLimit.value = false
 }
 
 onMounted(() => {
@@ -76,8 +97,37 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
     </div>
     <div class="flex gap-4 mt-3 h-full">
       <div class="flex flex-col gap-3 grow shrink basis-0">
-        <SelectOption id="ban-list" label-text="Format" parent-class="flex items-center gap-1" :options="formats"
-          v-model="format" />
+        <div class="flex flex-wrap gap-3 justify-between items-center text-xs sm:text-base">
+          <SelectOption id="ban-list" label-text="Format" parent-class="flex items-center gap-1" :options="formats"
+            v-model="format" />
+          <template v-if="format === 'genesys'">
+            <div v-if="!isEditingGenesysLimit" class="flex gap-3 items-center">
+              <span>Genesys Points: <strong>0/{{ genesysLimit.toLocaleString() }}</strong></span>
+              <ButtonCTA variant="neutral" has-icon class="!rounded-full !p-1.5" aria-label="Change Genesys point limit"
+                title="Change Genesys point limit" @click="editGenesysLimit">
+                <template #textWithIcon>
+                  <Pen :size="16" aria-hidden="true" />
+                </template>
+              </ButtonCTA>
+            </div>
+            <div v-else class="flex gap-3 items-center">
+              <NumberField id="genesys-limit" label-val="Edit Genesys Limit" class="!flex-row !gap-2" :max="10000"
+                v-model="newGenesysPointLimit" @keydown.enter="setGenesysLimit" />
+              <ButtonCTA variant="emerald" has-icon class="!rounded-full !p-1.5"
+                aria-label="Confirm Genesys point limit change" title="Confirm" @click="setGenesysLimit">
+                <template #textWithIcon>
+                  <Check :size="16" aria-hidden="true" />
+                </template>
+              </ButtonCTA>
+              <ButtonCTA variant="red" has-icon class="!rounded-full !p-1.5"
+                aria-label="Cancel Genesys point limit change" title="Cancel" @click="isEditingGenesysLimit = false">
+                <template #textWithIcon>
+                  <X :size="16" aria-hidden="true" />
+                </template>
+              </ButtonCTA>
+            </div>
+          </template>
+        </div>
         <DeckType type="main" :deck="mainDeck" :monster-count="mainDeckMonsters.length"
           :spell-count="mainDeckSpells.length" :trap-count="mainDeckTraps.length" />
         <DeckType type="extra" :deck="extraDeck" :fusion-count="fusionMonsters.length"

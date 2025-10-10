@@ -2,7 +2,9 @@ import { ref, computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useYgoCardsStore } from './ygo-cards'
 import type { YGOCardData, BanStatus, Dropzone } from '@/utils/interfaces'
-import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, FORBIDDEN_CARD_LIMIT, LIMITED_CARD_LIMIT, SEMI_LIMITED_CARD_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
+import {
+  MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, FORBIDDEN_CARD_LIMIT, LIMITED_CARD_LIMIT, SEMI_LIMITED_CARD_LIMIT, UNRESTRICTED_CARD_LIMIT, GENESYS_STANDARD_POINT_LIMIT
+} from '@/utils/constants'
 import { isMainDeckCard } from '@/utils/helpers'
 import { parseAlwaysTreatedAs, getMatchingCardNames } from '@/utils/helpers'
 
@@ -11,6 +13,7 @@ export const useDeckStore = defineStore('deck', () => {
   const mainDeck = ref<YGOCardData[]>([])
   const extraDeck = ref<YGOCardData[]>([])
   const sideDeck = ref<YGOCardData[]>([])
+  const genesysLimit = ref(GENESYS_STANDARD_POINT_LIMIT)
 
   // getters
   const mainDeckMonsters = computed(() => {
@@ -241,6 +244,6 @@ export const useDeckStore = defineStore('deck', () => {
     sideDeck.value.length = 0
   }
 
-  return { mainDeck, extraDeck, sideDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
+  return { mainDeck, extraDeck, sideDeck, genesysLimit, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
     sideDeckMonsters, sideDeckSpells, sideDeckTraps, getCardFrequency, addCardToDeck, isCardWithinLimit, removeCardFromDeck, sortDeckByName, sortDeckByCardType, clearAllDecks }
 })
