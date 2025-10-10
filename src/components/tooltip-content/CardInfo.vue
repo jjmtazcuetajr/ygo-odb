@@ -67,5 +67,9 @@ defineProps<{ card: YGOCardData }>()
         </span>
       </span>
     </div>
+    <span v-if="card.misc_info[0].genesys_points > 0">
+      <span class="font-bold">Genesys Points: </span>
+      <span class="text-emerald-700 dark:text-emerald-500">{{ card.misc_info[0].genesys_points }}</span>
+    </span>
   </div>
 </template>

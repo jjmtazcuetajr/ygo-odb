@@ -30,6 +30,7 @@ interface CardSets {
 interface MiscInfo {
   downvotes: number
   formats: string[]
+  genesys_points: number
   has_effect: number
   konami_id: number
   md_rarity: string
@@ -104,5 +105,5 @@ export type CardCategory = 'monster' | 'spell' | 'trap'
 export type SortDirection = 'asc' | 'desc'
 export type SortByMonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'link-rating'
 export type BanStatus = 'Forbidden' | 'Limited' | 'Semi-Limited'
-export type Format = 'ocg' | 'tcg' | 'none'
+export type Format = 'ocg' | 'tcg' | 'none' | 'genesys'
 export type Dropzone = 'main' | 'extra' | 'side'

@@ -9,7 +9,8 @@ import CardDialog from './CardDialog.vue'
 import BanStatus from './BanStatus.vue'
 import CardDetailsMobile from './CardDetailsMobile.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
-import ToastComponent from '@/components/ToastComponent.vue'
+import ToastComponent from './ToastComponent.vue'
+import GenesysPoint from './GenesysPoint.vue'
 import { sortTypes, sortDirections } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
@@ -159,6 +160,8 @@ onMounted(() => {
                 class="rounded-sm aspect-[268/391] text-xs overflow-hidden bg-neutral-400/70 dark:bg-neutral-600">
               <BanStatus v-if="format === 'ocg'" :status="card.banlist_info?.ban_ocg" />
               <BanStatus v-else-if="format === 'tcg'" :status="card.banlist_info?.ban_tcg" />
+              <GenesysPoint v-else-if="format === 'genesys'" :point-value="card.misc_info[0].genesys_points"
+                :frame-type="card.frameType" />
             </div>
             <CardDetailsMobile :card="card" :format="format"
               @show-toast="(msg, feedback) => handleToast(msg, feedback)" />

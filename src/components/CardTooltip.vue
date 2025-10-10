@@ -8,6 +8,7 @@ import BanStatus from './BanStatus.vue'
 import GridToDeck from './card-popover/GridToDeck.vue'
 import DropzoneOps from './card-popover/DropzoneOps.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
+import GenesysPoint from './GenesysPoint.vue'
 import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
 import { ref } from 'vue'
@@ -42,6 +43,8 @@ const isPopoverOpen = ref(false)
       @contextmenu="rightClickDeleteCard($event, index, from)">
     <BanStatus v-if="format === 'ocg'" :status="card.banlist_info?.ban_ocg" />
     <BanStatus v-else-if="format === 'tcg'" :status="card.banlist_info?.ban_tcg" />
+    <GenesysPoint v-else-if="format === 'genesys'" :point-value="card.misc_info[0].genesys_points"
+      :frame-type="card.frameType" />
     <TooltipProvider :delay-duration="100" :disable-hoverable-content="true" :ignore-non-keyboard-focus="true">
       <TooltipRoot>
         <TooltipTrigger aria-label="More Info" :class="{ 'opacity-100': isHovered }"

@@ -5,6 +5,7 @@ import { onMounted, onUnmounted } from 'vue'
 import CardInfo from './tooltip-content/CardInfo.vue'
 import BanStatus from './BanStatus.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
+import GenesysPoint from './GenesysPoint.vue'
 import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
 import { useMobileDragAndDrop } from '@/composables/mobileDragAndDrop'
 import { useImageLoadingStore } from '@/stores/imageLoading'
@@ -36,6 +37,8 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
       @touchstart="handleTouchStart($event, card, from, index)">
     <BanStatus v-if="format === 'ocg'" :status="card.banlist_info?.ban_ocg" />
     <BanStatus v-else-if="format === 'tcg'" :status="card.banlist_info?.ban_tcg" />
+    <GenesysPoint v-else-if="format === 'genesys'" :point-value="card.misc_info[0].genesys_points"
+      :frame-type="card.frameType" />
   </button>
   <DialogRoot v-model:open="isDialogOpen">
     <DialogPortal disabled>

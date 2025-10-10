@@ -115,7 +115,8 @@ export const attributes = [
 export const formats = [
   { val: 'none', textContent: 'None' },
   { val: 'ocg', textContent: 'OCG' },
-  { val: 'tcg', textContent: 'TCG' }
+  { val: 'tcg', textContent: 'TCG' },
+  { val: 'genesys', textContent: 'Genesys' }
 ]
 
 export const banStatus = [
