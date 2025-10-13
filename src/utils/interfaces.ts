@@ -93,6 +93,10 @@ export interface FilterOptions {
   spellType: string
   trapType: string
   banStatus: BanStatus | 'Unrestricted' | ''
+  isGreaterThanZeroGenesysPoints: boolean
+  isZeroGenesysPoints: boolean
+  exactGenesysPoint: number | undefined
+  genesysPointRange: [number, number]
 }
 
 export interface LoadingImage {

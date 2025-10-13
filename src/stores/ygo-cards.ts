@@ -4,6 +4,7 @@ import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonster
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
   sortByMonsterStat, matchTrapType, matchBanStatus } from '@/utils/helpers'
 import { usePaginationStore } from './pagination'
+import { GENESYS_STANDARD_POINT_LIMIT } from '@/utils/constants'
 
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // states
@@ -26,7 +27,11 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     def: undefined,
     spellType: '',
     trapType: '',
-    banStatus: ''
+    banStatus: '',
+    isGreaterThanZeroGenesysPoints: false,
+    isZeroGenesysPoints: false,
+    exactGenesysPoint: undefined,
+    genesysPointRange: [0, GENESYS_STANDARD_POINT_LIMIT]
   })
   const sortBy = ref<SortByMonsterStat | 'name'>('name')
   const sortDir = ref<SortDirection>('asc')
@@ -57,10 +62,17 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesDef = matchDef(card, filters.value.def)
       const matchesLinkArrows = matchLinkArrows(card, filters.value.linkArrows)
       const matchesBanStatus = matchBanStatus(card, format.value, filters.value.banStatus)
+      const matchesGreaterThanZeroGenesysPoints = filters.value.isGreaterThanZeroGenesysPoints ? card.misc_info[0].genesys_points > 0 : true
+      const matchesZeroGenesysPoints = filters.value.isZeroGenesysPoints
+        ? card.misc_info[0].genesys_points === 0 && card.frameType !== 'link' && !card.frameType.includes('pendulum')
+        : true
+      const matchesGenesysPoint = filters.value.exactGenesysPoint ? card.misc_info[0].genesys_points === filters.value.exactGenesysPoint : true
+      const matchesGenesysPointRange = card.misc_info[0].genesys_points >= filters.value.genesysPointRange[0]
+        && card.misc_info[0].genesys_points <= filters.value.genesysPointRange[1]
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
         && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk && matchesDef && matchesLinkArrows
-        && matchesBanStatus
+        && matchesBanStatus && matchesGreaterThanZeroGenesysPoints && matchesZeroGenesysPoints && matchesGenesysPoint && matchesGenesysPointRange
     }).sort((a, b) => {
       if (sortBy.value === 'name') {
         const collator = new Intl.Collator('en', { sensitivity: 'base' })
@@ -136,6 +148,16 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   }
 
   /**
+   * Reset filters for Genesys format
+   */
+  function resetGenesysFilters() {
+    filters.value.isGreaterThanZeroGenesysPoints = false
+    filters.value.isZeroGenesysPoints = false
+    filters.value.exactGenesysPoint = undefined
+    filters.value.genesysPointRange = [0, GENESYS_STANDARD_POINT_LIMIT]
+  }
+
+  /**
    * Reset all filters
    */
   function resetFilters() {
@@ -159,6 +181,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     
     const { toFirst } = usePaginationStore()
     toFirst()
+
+    resetGenesysFilters()
   }
 
   return { cards, filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
