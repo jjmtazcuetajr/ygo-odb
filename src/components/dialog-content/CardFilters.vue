@@ -10,11 +10,64 @@ import { usePaginationStore } from '@/stores/pagination'
 import { storeToRefs } from 'pinia'
 import { SwitchRoot, SwitchThumb, SliderRange, SliderRoot, SliderThumb, SliderTrack } from 'reka-ui'
 import { GENESYS_STANDARD_POINT_LIMIT } from '@/utils/constants'
+import { debounce } from '@/utils/helpers'
+import { ref, onMounted } from 'vue'
 
 const store = useYgoCardsStore()
 const { filters, format } = storeToRefs(store)
 
 const { toFirst } = usePaginationStore()
+
+const minGenesysPoint = ref(0)
+const maxGenesysPoint = ref(GENESYS_STANDARD_POINT_LIMIT)
+
+/**
+ * Debounced function for filtering cards if they have greater than zero Genesys points
+ * @param isGreaterThanZero If a card has greater than zero Genesys points
+ */
+const handleIsGreaterThanZeroGenesysPoints = debounce((isGreaterThanZero: boolean) => {
+  filters.value.isGreaterThanZeroGenesysPoints = isGreaterThanZero
+}, 300)
+
+/**
+ * Debounced function for filtering cards if they have zero Genesys points
+ * @param isZeroPoints If a card has zero Genesys points
+ */
+const handleIsZeroGenesysPointsFilter = debounce((isZeroPoints: boolean) => {
+  filters.value.isZeroGenesysPoints = isZeroPoints
+}, 300)
+
+/**
+ * Debounced function for filtering cards based on exact Genesys points
+ * @param gp Genesys point value
+ */
+const handleExactGenesysPointFilter = debounce((gp: number) => {
+  filters.value.exactGenesysPoint = gp
+}, 500)
+
+/**
+ * Update the displayed minimum and maximum Genesys points
+ * @param range Minimum and maximum Genesys points
+ */
+function updateDisplayedGenesysPointRange(range: number[] | undefined) {
+  if (range === undefined) return
+  minGenesysPoint.value = range[0]
+  maxGenesysPoint.value = range[1]
+}
+
+/**
+ * Debounced function for filtering cards based on the minimum and maximum Genesys points
+ * @param range Minimum and maximum Genesys points
+ */
+const handleGenesysPointRangeFilter = debounce((range: number[] | undefined) => {
+  if (range === undefined) return
+  filters.value.genesysPointRange = [range[0], range[1]]
+}, 500)
+
+onMounted(() => {
+  minGenesysPoint.value = filters.value.genesysPointRange[0]
+  maxGenesysPoint.value = filters.value.genesysPointRange[1]
+})
 </script>
 
 <template>
@@ -24,7 +77,8 @@ const { toFirst } = usePaginationStore()
       v-model="filters.banStatus" @change="toFirst" />
     <div v-else-if="format === 'genesys'" class="flex flex-col gap-2 mb-5">
       <div class="flex items-center gap-1.5">
-        <SwitchRoot id="gt-zero-genesys-pts" v-model="filters.isGreaterThanZeroGenesysPoints"
+        <SwitchRoot id="gt-zero-genesys-pts" :default-value="filters.isGreaterThanZeroGenesysPoints"
+          @update:model-value="handleIsGreaterThanZeroGenesysPoints"
           class="w-[42px] h-[22px] shadow-sm rounded-full cursor-pointer shrink-0 border border-neutral-400 dark:border-neutral-500 bg-neutral-300 dark:bg-neutral-500 data-[state=checked]:bg-emerald-700 transition-[background-color] duration-300">
           <SwitchThumb
             class="flex justify-center items-center size-[16px] bg-white rounded-full translate-x-[2px] will-change-transform data-[state=checked]:translate-x-[21px] transition-transform duration-300">
@@ -35,7 +89,8 @@ const { toFirst } = usePaginationStore()
         </label>
       </div>
       <div class="flex items-center gap-1.5">
-        <SwitchRoot id="is-zero-genesys-pts" v-model="filters.isZeroGenesysPoints"
+        <SwitchRoot id="is-zero-genesys-pts" :default-value="filters.isZeroGenesysPoints"
+          @update:model-value="handleIsZeroGenesysPointsFilter"
           class="w-[42px] h-[22px] shadow-sm rounded-full cursor-pointer shrink-0 border border-neutral-400 dark:border-neutral-500 bg-neutral-300 dark:bg-neutral-500 data-[state=checked]:bg-emerald-700 transition-[background-color] duration-300">
           <SwitchThumb
             class="flex justify-center items-center size-[16px] bg-white rounded-full translate-x-[2px] will-change-transform data-[state=checked]:translate-x-[21px] transition-transform duration-300">
@@ -46,14 +101,16 @@ const { toFirst } = usePaginationStore()
         </label>
       </div>
       <NumberField id="genesys-pts-filter" label-val="Filter by exact Genesys points" class="!flex-row !gap-2" :min="1"
-        :max="GENESYS_STANDARD_POINT_LIMIT" v-model="filters.exactGenesysPoint" @update:model-value="toFirst" />
+        :max="GENESYS_STANDARD_POINT_LIMIT" :model-value="filters.exactGenesysPoint"
+        @update:model-value="handleExactGenesysPointFilter($event)" />
       <div class="flex flex-col">
         <span>Filter by Genesys point range</span>
         <div class="flex justify-between mb-3">
-          <span>Min: <strong>{{ filters.genesysPointRange[0] }}</strong></span>
-          <span>Max: <strong>{{ filters.genesysPointRange[1] }}</strong></span>
+          <span>Min: <strong>{{ minGenesysPoint }}</strong></span>
+          <span>Max: <strong>{{ maxGenesysPoint }}</strong></span>
         </div>
-        <SliderRoot v-model="filters.genesysPointRange"
+        <SliderRoot :default-value="filters.genesysPointRange"
+          @update:model-value="[updateDisplayedGenesysPointRange($event), handleGenesysPointRangeFilter($event)]"
           class="relative flex items-center select-none touch-none w-full h-3" :min="0"
           :max="GENESYS_STANDARD_POINT_LIMIT" :step="1" :min-steps-between-thumbs="1">
           <SliderTrack class="bg-neutral-300 dark:bg-neutral-700 relative grow rounded-full h-2">

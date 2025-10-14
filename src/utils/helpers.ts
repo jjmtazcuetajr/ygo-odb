@@ -504,3 +504,25 @@ export function sortByGenesysPoint(cardA: YGOCardData, cardB: YGOCardData, dir: 
   // sort by name if two cards have the same Genesys points
   return collator.compare(cardA.name, cardB.name)
 }
+
+/**
+ * Creates a debounced function that delays invoking `func` until after `wait` milliseconds
+ * have elapsed since the last time the debounced function was invoked
+ * @param func The function to debounce
+ * @param wait The number of milliseconds to delay
+ * @returns A debounced version of the function
+ */
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: ReturnType<typeof setTimeout> | null = null
+
+  return function(...args: Parameters<T>) {
+    if (timeout) clearTimeout(timeout)
+
+    timeout = setTimeout(() => {
+      func(...args)
+    }, wait)
+  }
+}
