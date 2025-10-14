@@ -27,6 +27,7 @@ const maxGenesysPoint = ref(GENESYS_STANDARD_POINT_LIMIT)
  */
 const handleIsGreaterThanZeroGenesysPoints = debounce((isGreaterThanZero: boolean) => {
   filters.value.isGreaterThanZeroGenesysPoints = isGreaterThanZero
+  toFirst()
 }, 300)
 
 /**
@@ -35,6 +36,7 @@ const handleIsGreaterThanZeroGenesysPoints = debounce((isGreaterThanZero: boolea
  */
 const handleIsZeroGenesysPointsFilter = debounce((isZeroPoints: boolean) => {
   filters.value.isZeroGenesysPoints = isZeroPoints
+  toFirst()
 }, 300)
 
 /**
@@ -43,6 +45,7 @@ const handleIsZeroGenesysPointsFilter = debounce((isZeroPoints: boolean) => {
  */
 const handleExactGenesysPointFilter = debounce((gp: number) => {
   filters.value.exactGenesysPoint = gp
+  toFirst()
 }, 500)
 
 /**
@@ -62,6 +65,7 @@ function updateDisplayedGenesysPointRange(range: number[] | undefined) {
 const handleGenesysPointRangeFilter = debounce((range: number[] | undefined) => {
   if (range === undefined) return
   filters.value.genesysPointRange = [range[0], range[1]]
+  toFirst()
 }, 500)
 
 onMounted(() => {
