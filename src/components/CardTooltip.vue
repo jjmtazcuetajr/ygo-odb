@@ -90,21 +90,9 @@ const isPopoverOpen = ref(false)
                 <span class="w-full">Side: {{ getCardFrequency(card, 'side') }}</span>
               </div>
             </div>
-            <template v-if="from === 'grid'">
-              <GridToDeck :card="card" :format="format" />
-            </template>
-            <template v-else-if="from === 'main'">
-              <DropzoneOps :card="card" :from-index="index" :source="'main'" :format="format"
-                @handle-popover-close="isPopoverOpen = false" />
-            </template>
-            <template v-else-if="from === 'extra'">
-              <DropzoneOps :card="card" :from-index="index" :source="'extra'" :format="format"
-                @handle-popover-close="isPopoverOpen = false" />
-            </template>
-            <template v-else-if="from === 'side'">
-              <DropzoneOps :card="card" :from-index="index" :source="'side'" :format="format"
-                @handle-popover-close="isPopoverOpen = false" />
-            </template>
+            <GridToDeck v-if="from === 'grid'" :card="card" :format="format" />
+            <DropzoneOps v-else :card="card" :from-index="index" :source="from" :format="format"
+              @handle-popover-close="isPopoverOpen = false" />
           </template>
           <PopoverClose aria-label="Close"
             class="absolute top-1 right-1 flex justify-center items-center size-[24px] rounded-full cursor-pointer dark:text-white hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
