@@ -92,15 +92,15 @@ const { toFirst } = usePaginationStore()
             v-model="filters.attribute" @change="toFirst" />
         </div>
         <div class="flex flex-col gap-1">
-          <NumberField id="level" :max="12" label-val="Level" v-model="filters.level" @change="toFirst" />
-          <NumberField id="rank" :max="13" label-val="Rank" v-model="filters.rank" @change="toFirst" />
-          <NumberField id="scale" :max="13" label-val="Scale" v-model="filters.scale" @change="toFirst" />
+          <NumberField id="level" :max="12" label-val="Level" v-model="filters.level" @update:model-value="toFirst" />
+          <NumberField id="rank" :max="13" label-val="Rank" v-model="filters.rank" @update:model-value="toFirst" />
+          <NumberField id="scale" :max="13" label-val="Scale" v-model="filters.scale" @update:model-value="toFirst" />
           <NumberField id="link" :min="1" :max="6" label-val="Link Rating" v-model="filters.linkRating"
-            @change="toFirst" />
+            @update:model-value="toFirst" />
           <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" :is-atk-or-def="true"
-            v-model="filters.atk" @change="toFirst" />
+            v-model="filters.atk" @update:model-value="toFirst" />
           <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" v-model="filters.def"
-            @change="toFirst" />
+            @update:model-value="toFirst" />
         </div>
         <div>
           <div class="flex items-start sm:items-end gap-1">
