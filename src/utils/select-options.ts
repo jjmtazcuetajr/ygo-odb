@@ -34,7 +34,8 @@ export const sortTypes = [
   { val: 'level', textContent: 'Level' },
   { val: 'rank', textContent: 'Rank' },
   { val: 'scale', textContent: 'Scale' },
-  { val: 'link-rating', textContent: 'Link Rating' }
+  { val: 'link-rating', textContent: 'Link Rating' },
+  { val: 'genesys-point', textContent: 'Genesys Point' }
 ]
 
 export const sortDirections = [

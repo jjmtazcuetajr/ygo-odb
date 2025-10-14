@@ -304,7 +304,7 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         break
       case 'level':
         /**
-         * Determine if card is a not a Xyz and Link Monster
+         * Determine if card is not a Xyz and Link Monster
          * @param card Yu-Gi-Oh! card data
          */
         const isNotXyzAndLink = (card: YGOCardData): boolean => !card.frameType.includes('xyz') && card.frameType !== 'link'
@@ -376,7 +376,7 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
   if (cardA.frameType === 'spell' && cardB.frameType === 'trap') return -1 // spells first
   if (cardA.frameType === 'trap' && cardB.frameType === 'spell') return 1 // then traps
 
-  // for spells and traps, just sort by name alphabetically regardless of sort direction
+  // sort by name (default sort)
   return collator.compare(cardA.name, cardB.name)
 }
 
@@ -473,4 +473,34 @@ export function getMatchingCardNames(deck: YGOCardData[], cardToAdd: YGOCardData
     const nameOfCardToAdd = parseAlwaysTreatedAs(cardToAdd.desc) || cardToAdd.name
     return card.name === cardToAdd.name || cardNameInDeck === nameOfCardToAdd
   })
+}
+
+/**
+ * Sort cards by Genesys point
+ * @param cardA Current/previous card
+ * @param cardB Next card
+ * @param dir Sort direction. Either ascending or descending
+ * @returns Number to determine the sorting order
+ */
+export function sortByGenesysPoint(cardA: YGOCardData, cardB: YGOCardData, dir: SortDirection): number {
+  const collator = new Intl.Collator('en', { sensitivity: 'base' })
+
+  /**
+   * Determine if a card is not a Pendulum and Link Monster
+   * @param card Yu-Gi-Oh! card data
+   * @returns Boolean value
+   */
+  const isNotPendulumAndLink = (card: YGOCardData): boolean => !card.frameType.includes('pendulum') && card.frameType !== 'link'
+
+  // monsters that aren't Pendulum and Link come first before them
+  if (isNotPendulumAndLink(cardA) && !isNotPendulumAndLink(cardB)) return -1
+  if (!isNotPendulumAndLink(cardA) && isNotPendulumAndLink(cardB)) return 1
+
+  if (isNotPendulumAndLink(cardA) && isNotPendulumAndLink(cardB)) {
+    const genesysPointComparison = (cardA.misc_info[0].genesys_points ?? 0) - (cardB.misc_info[0].genesys_points ?? 0)
+    if (genesysPointComparison !== 0) return dir === 'asc' ? genesysPointComparison : -genesysPointComparison
+  }
+
+  // sort by name if two cards have the same Genesys points
+  return collator.compare(cardA.name, cardB.name)
 }

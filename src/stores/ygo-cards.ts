@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory, Format } from '@/utils/interfaces'
 import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
-  sortByMonsterStat, matchTrapType, matchBanStatus } from '@/utils/helpers'
+  sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint } from '@/utils/helpers'
 import { usePaginationStore } from './pagination'
 import { GENESYS_STANDARD_POINT_LIMIT } from '@/utils/constants'
 
@@ -33,7 +33,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     exactGenesysPoint: undefined,
     genesysPointRange: [0, GENESYS_STANDARD_POINT_LIMIT]
   })
-  const sortBy = ref<SortByMonsterStat | 'name'>('name')
+  const sortBy = ref<SortByMonsterStat | 'name' | 'genesys-point'>('name')
   const sortDir = ref<SortDirection>('asc')
   const isLoading = ref(false)
   const isError = ref(false)
@@ -78,6 +78,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         const collator = new Intl.Collator('en', { sensitivity: 'base' })
         const nameComparison = collator.compare(a.name, b.name)
         return sortDir.value === 'asc' ? nameComparison : -nameComparison
+      } else if (sortBy.value === 'genesys-point') {
+        return sortByGenesysPoint(a, b, sortDir.value)
       } else {
         // Handle all numeric stats
         const statProperties = ['atk', 'def', 'level', 'rank', 'scale', 'link-rating']
