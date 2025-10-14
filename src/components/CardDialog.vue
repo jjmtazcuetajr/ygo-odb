@@ -2,7 +2,7 @@
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, VisuallyHidden } from 'reka-ui'
 import { X } from 'lucide-vue-next'
 import { onMounted, onUnmounted } from 'vue'
-import CardInfo from './tooltip-content/CardInfo.vue'
+import CardInfo from './CardInfo.vue'
 import BanStatus from './BanStatus.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
 import GenesysPoint from './GenesysPoint.vue'

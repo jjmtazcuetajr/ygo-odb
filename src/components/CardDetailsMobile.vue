@@ -3,7 +3,7 @@ import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, Di
 import { ref, onMounted, onUnmounted } from 'vue'
 import { X } from 'lucide-vue-next'
 import ButtonCTA from './ButtonCTA.vue'
-import CardInfo from './tooltip-content/CardInfo.vue'
+import CardInfo from './CardInfo.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
 import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
 import { useDeckStore } from '@/stores/deck'

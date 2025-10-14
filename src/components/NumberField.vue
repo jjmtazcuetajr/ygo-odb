@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput, NumberFieldRoot } from 'reka-ui'
 import { Plus, Minus } from 'lucide-vue-next'
-import PopOver from './dialog-content/PopOver.vue'
+import PopOver from './card-filtering/PopOver.vue'
 
 defineProps<{
   id: string,

@@ -3,10 +3,10 @@ import {
   TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRoot, TooltipTrigger,
   PopoverArrow, PopoverClose, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger
 } from 'reka-ui'
-import CardInfo from './tooltip-content/CardInfo.vue'
+import CardInfo from './CardInfo.vue'
 import BanStatus from './BanStatus.vue'
-import GridToDeck from './card-popover/GridToDeck.vue'
-import DropzoneOps from './card-popover/DropzoneOps.vue'
+import GridToDeck from './card-operations/GridToDeck.vue'
+import DropzoneOps from './card-operations/DropzoneOps.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
 import GenesysPoint from './GenesysPoint.vue'
 import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger } from 'reka-ui'
 import { X } from 'lucide-vue-next'
-import CardFilters from './dialog-content/CardFilters.vue'
+import CardFilters from './card-filtering/CardFilters.vue'
 import NumberField from './NumberField.vue'
 import ButtonCTA from './ButtonCTA.vue'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
