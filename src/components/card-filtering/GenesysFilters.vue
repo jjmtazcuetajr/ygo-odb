@@ -93,7 +93,7 @@ onMounted(() => {
       </label>
     </div>
     <NumberField id="genesys-pts-filter" label-val="Filter by exact Genesys points" class="!flex-row !gap-2" :min="1"
-      :max="GENESYS_STANDARD_POINT_LIMIT" :model-value="filters.exactGenesysPoint"
+      :max="GENESYS_STANDARD_POINT_LIMIT" :default-value="filters.exactGenesysPoint"
       @update:model-value="handleExactGenesysPointFilter($event)" />
     <div class="flex flex-col">
       <span>Filter by Genesys point range</span>
