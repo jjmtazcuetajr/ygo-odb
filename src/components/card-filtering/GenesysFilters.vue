@@ -13,6 +13,7 @@ const { toFirst } = usePaginationStore()
 
 const minGenesysPoint = ref(0)
 const maxGenesysPoint = ref(GENESYS_STANDARD_POINT_LIMIT)
+const exactGenesysPoint = ref<number | undefined>(undefined)
 
 /**
  * Debounced function for filtering cards if they have greater than zero Genesys points
@@ -36,8 +37,8 @@ const handleIsZeroGenesysPointsFilter = debounce((isZeroPoints: boolean) => {
  * Debounced function for filtering cards based on exact Genesys points
  * @param gp Genesys point value
  */
-const handleExactGenesysPointFilter = debounce((gp: number) => {
-  filters.value.exactGenesysPoint = gp
+const handleExactGenesysPointFilter = debounce(() => {
+  filters.value.exactGenesysPoint = exactGenesysPoint.value
   toFirst()
 }, 500)
 
@@ -64,6 +65,7 @@ const handleGenesysPointRangeFilter = debounce((range: number[] | undefined) => 
 onMounted(() => {
   minGenesysPoint.value = filters.value.genesysPointRange[0]
   maxGenesysPoint.value = filters.value.genesysPointRange[1]
+  exactGenesysPoint.value = filters.value.exactGenesysPoint
 })
 </script>
 <template>
@@ -93,8 +95,8 @@ onMounted(() => {
       </label>
     </div>
     <NumberField id="genesys-pts-filter" label-val="Filter by exact Genesys points" class="!flex-row !gap-2" :min="1"
-      :max="GENESYS_STANDARD_POINT_LIMIT" :default-value="filters.exactGenesysPoint"
-      @update:model-value="handleExactGenesysPointFilter($event)" />
+      :max="GENESYS_STANDARD_POINT_LIMIT" v-model="exactGenesysPoint"
+      @update:model-value="handleExactGenesysPointFilter" />
     <div class="flex flex-col">
       <span>Filter by Genesys point range</span>
       <div class="flex justify-between mb-3">

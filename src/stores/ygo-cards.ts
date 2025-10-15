@@ -66,13 +66,13 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesZeroGenesysPoints = filters.value.isZeroGenesysPoints
         ? card.misc_info[0].genesys_points === 0 && card.frameType !== 'link' && !card.frameType.includes('pendulum')
         : true
-      const matchesGenesysPoint = filters.value.exactGenesysPoint ? card.misc_info[0].genesys_points === filters.value.exactGenesysPoint : true
+      const matchesExactGenesysPoint = filters.value.exactGenesysPoint !== undefined ? card.misc_info[0].genesys_points === filters.value.exactGenesysPoint : true
       const matchesGenesysPointRange = card.misc_info[0].genesys_points >= filters.value.genesysPointRange[0]
         && card.misc_info[0].genesys_points <= filters.value.genesysPointRange[1]
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
         && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk && matchesDef && matchesLinkArrows
-        && matchesBanStatus && matchesGreaterThanZeroGenesysPoints && matchesZeroGenesysPoints && matchesGenesysPoint && matchesGenesysPointRange
+        && matchesBanStatus && matchesGreaterThanZeroGenesysPoints && matchesZeroGenesysPoints && matchesExactGenesysPoint && matchesGenesysPointRange
     }).sort((a, b) => {
       if (sortBy.value === 'name') {
         const collator = new Intl.Collator('en', { sensitivity: 'base' })
