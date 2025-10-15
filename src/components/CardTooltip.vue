@@ -77,6 +77,10 @@ const isPopoverOpen = ref(false)
             This card is <strong>Forbidden</strong> in <strong>{{ format.toUpperCase() }}</strong> format. You cannot
             add it!
           </span>
+          <span v-else-if="format === 'genesys' && (card.frameType.includes('pendulum') || card.frameType === 'link')">
+            <strong>Pendulum</strong> and <strong>Link</strong> monsters cannot be added in <strong>Genesys</strong>
+            format.
+          </span>
           <template v-else>
             <div>
               <strong>Count</strong>
