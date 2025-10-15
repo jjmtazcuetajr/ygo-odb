@@ -19,7 +19,7 @@ const { format } = storeToRefs(cardsStore)
 const deckStore = useDeckStore()
 const {
   mainDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, sideDeck, sideDeckMonsters, sideDeckSpells, sideDeckTraps,
-  extraDeck, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters, genesysLimit
+  extraDeck, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters, genesysLimit, getSumOfGenesysPoints
 } = storeToRefs(deckStore)
 
 const isSideDrawerShown = ref(false)
@@ -102,7 +102,9 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
             v-model="format" />
           <template v-if="format === 'genesys'">
             <div v-if="!isEditingGenesysLimit" class="flex gap-3 items-center">
-              <span>Genesys Points: <strong>0/{{ genesysLimit.toLocaleString() }}</strong></span>
+              <span>Genesys Points:
+                <strong>{{ `${getSumOfGenesysPoints.toLocaleString()}/${genesysLimit.toLocaleString()}` }}</strong>
+              </span>
               <ButtonCTA variant="neutral" has-icon class="!rounded-full !p-1.5" aria-label="Change Genesys point limit"
                 title="Change Genesys point limit" @click="editGenesysLimit">
                 <template #textWithIcon>
