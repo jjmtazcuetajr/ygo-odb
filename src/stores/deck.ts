@@ -76,6 +76,13 @@ export const useDeckStore = defineStore('deck', () => {
     }
   })
 
+  const getSumOfGenesysPoints = computed(() => {
+    const combinedDeckTypes = [...mainDeck.value, ... extraDeck.value, ...sideDeck.value]
+    return combinedDeckTypes.reduce((accumulator, currentItem) => {
+      return accumulator + currentItem.misc_info[0].genesys_points
+    }, 0)
+  })
+
   // actions
   /**
    * Add card/s to a deck
@@ -143,6 +150,13 @@ export const useDeckStore = defineStore('deck', () => {
     if (format.value === 'ocg' && numberToAdd < limitOCG) return true
     else if (format.value === 'tcg' && numberToAdd < limitTCG) return true
     else if (format.value === 'none' && numberToAdd < UNRESTRICTED_CARD_LIMIT) return true
+    else if (
+      format.value === 'genesys' &&
+      cardToAdd.frameType !== 'link' &&
+      !cardToAdd.frameType.includes('pendulum') &&
+      numberToAdd < UNRESTRICTED_CARD_LIMIT &&
+      cardToAdd.misc_info[0].genesys_points <= genesysLimit.value - getSumOfGenesysPoints.value
+    ) return true
     return false
   }
 
@@ -244,6 +258,10 @@ export const useDeckStore = defineStore('deck', () => {
     sideDeck.value.length = 0
   }
 
-  return { mainDeck, extraDeck, sideDeck, genesysLimit, mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters,
-    sideDeckMonsters, sideDeckSpells, sideDeckTraps, getCardFrequency, addCardToDeck, isCardWithinLimit, removeCardFromDeck, sortDeckByName, sortDeckByCardType, clearAllDecks }
+  return {
+    mainDeck, extraDeck, sideDeck, genesysLimit,
+    mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters, sideDeckMonsters, sideDeckSpells, sideDeckTraps,
+    getCardFrequency, getSumOfGenesysPoints,
+    addCardToDeck, isCardWithinLimit, removeCardFromDeck, sortDeckByName, sortDeckByCardType, clearAllDecks
+  }
 })
