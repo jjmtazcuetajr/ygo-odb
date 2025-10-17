@@ -97,9 +97,12 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
     <div class="flex gap-2 mt-1">
       <ButtonCTA variant="emerald" text-content="&#xd7; 1" class="w-full" aria-label="Add 1 Copy"
         :disabled="handleDisabledState(source, 1)" @click="addCardToDeck([card], handleLastIndex(source), source)" />
-      <ButtonCTA
-        v-if="(format === 'ocg' && !card.banlist_info?.ban_ocg) || (format === 'tcg' && !card.banlist_info?.ban_tcg) || format === 'none'"
-        variant="emerald" text-content="&#xd7; 2" class="w-full" aria-label="Add 2 Copies"
+      <ButtonCTA v-if="
+        (format === 'ocg' && !card.banlist_info?.ban_ocg) ||
+        (format === 'tcg' && !card.banlist_info?.ban_tcg) ||
+        format === 'none' ||
+        format === 'genesys'
+      " variant="emerald" text-content="&#xd7; 2" class="w-full" aria-label="Add 2 Copies"
         :disabled="handleDisabledState(source, 2)"
         @click="addCardToDeck([card, card], handleLastIndex(source), source)" />
     </div>
