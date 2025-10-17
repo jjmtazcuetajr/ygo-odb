@@ -155,7 +155,7 @@ export const useDeckStore = defineStore('deck', () => {
       cardToAdd.frameType !== 'link' &&
       !cardToAdd.frameType.includes('pendulum') &&
       numberToAdd < UNRESTRICTED_CARD_LIMIT &&
-      cardToAdd.misc_info[0].genesys_points <= genesysLimit.value - getSumOfGenesysPoints.value
+      cardToAdd.misc_info[0].genesys_points * num <= genesysLimit.value - getSumOfGenesysPoints.value
     ) return true
     return false
   }
