@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { SwitchRoot, SwitchThumb, SliderRange, SliderRoot, SliderThumb, SliderTrack } from 'reka-ui'
+import { SwitchRoot, SwitchThumb } from 'reka-ui'
 import { GENESYS_STANDARD_POINT_LIMIT } from '@/utils/constants'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { debounce } from '@/utils/helpers'
 import NumberField from '../NumberField.vue'
+import SliderComponent from '../SliderComponent.vue'
 
 const { filters } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
@@ -103,20 +104,8 @@ onMounted(() => {
         <span>Min: <strong>{{ minGenesysPoint }}</strong></span>
         <span>Max: <strong>{{ maxGenesysPoint }}</strong></span>
       </div>
-      <SliderRoot :default-value="filters.genesysPointRange"
-        @update:model-value="[updateDisplayedGenesysPointRange($event), handleGenesysPointRangeFilter($event)]"
-        class="relative flex items-center select-none touch-none w-full h-3" :min="0"
-        :max="GENESYS_STANDARD_POINT_LIMIT" :step="1" :min-steps-between-thumbs="1">
-        <SliderTrack class="bg-neutral-300 dark:bg-neutral-700 relative grow rounded-full h-2">
-          <SliderRange class="absolute bg-emerald-600 rounded-full h-full" />
-        </SliderTrack>
-        <SliderThumb
-          class="block size-6 rounded-full shadow-md bg-neutral-500 dark:bg-white hover:bg-neutral-600 dark:hover:bg-neutral-200 focus:outline-2 focus:outline-emerald-500 dark:focus:outline-emerald-400 transition-[background-color] duration-300"
-          aria-label="Minimum Genesys point" />
-        <SliderThumb
-          class="block size-6 rounded-full shadow-md bg-neutral-500 dark:bg-white hover:bg-neutral-600 dark:hover:bg-neutral-200 focus:outline-2 focus:outline-emerald-500 dark:focus:outline-emerald-400 transition-[background-color] duration-300"
-          aria-label="Maximum Genesys point" />
-      </SliderRoot>
+      <SliderComponent :default-value="filters.genesysPointRange" :min="0" :max="GENESYS_STANDARD_POINT_LIMIT"
+        @update:model-value="[updateDisplayedGenesysPointRange($event), handleGenesysPointRangeFilter($event)]" />
     </div>
   </div>
 </template>
