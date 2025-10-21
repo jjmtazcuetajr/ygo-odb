@@ -104,7 +104,7 @@ onMounted(() => {
         <span>Min: <strong>{{ minGenesysPoint }}</strong></span>
         <span>Max: <strong>{{ maxGenesysPoint }}</strong></span>
       </div>
-      <SliderComponent :default-value="filters.genesysPointRange" :min="0" :max="GENESYS_STANDARD_POINT_LIMIT"
+      <SliderComponent :default-value="filters.genesysPointRange" :max="GENESYS_STANDARD_POINT_LIMIT"
         @update:model-value="[updateDisplayedGenesysPointRange($event), handleGenesysPointRangeFilter($event)]" />
     </div>
   </div>
