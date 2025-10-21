@@ -161,6 +161,17 @@ export function matchPendulumScale(card: YGOCardData, scale: number | undefined)
 }
 
 /**
+ * Returns the correct Attack value for certain Monsters
+ * @param card Yu-Gi-Oh! card data object
+ */
+function getCorrectAtk(card: YGOCardData): number {
+  const attackOverrides: Record<number, number> = {
+    64257161: 1400, // Goblin Biker Mean Merciless
+  }
+  return attackOverrides[card.id] ?? card.atk ?? 0
+}
+
+/**
  * Finds Monster card matches based on ATK
  * @see {@link https://yugipedia.com/wiki/ATK}
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
@@ -177,6 +188,19 @@ export function matchAtk(card: YGOCardData, atk: number | undefined): boolean {
   const isCorrectAtkData = correctAtkData[atk]?.includes(card.id)
 
   return (card.atk === atk && !isExcluded) || isCorrectAtkData
+}
+
+/**
+ * Finds Monster card matches based on a specified ATK range
+ * @param card Yu-Gi-Oh! card data object
+ * @param range A number array containing two items in the form [`min`, `max`]
+ * @returns Monster cards whose attack value is within the specified range
+ */
+export function matchAtkRange(card: YGOCardData, range: [number, number]): boolean {
+  if (range[0] === 0 && range[1] === 5000) return true
+  if (card.atk == null) return true
+
+  return getCorrectAtk(card) >= range[0] && getCorrectAtk(card) <= range[1]
 }
 
 /**
@@ -268,13 +292,6 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
   if (isMonster(cardA) && isMonster(cardB)) {
     switch (stat) {
       case 'atk':
-        /**
-         * Returns the correct Attack value for certain Monsters
-         * 
-         * **Note**: this should handle the correct Atk value of `Goblin Biker Mean Merciless`
-         * @param card Yu-Gi-Oh! card data
-         */
-        const getCorrectAtk = (card: YGOCardData): number => card.id === 64257161 ? 1400 : (card.atk ?? 0)
         const atkComparison = getCorrectAtk(cardA) - getCorrectAtk(cardB)
         if (atkComparison !== 0) return dir === 'asc' ? atkComparison : -atkComparison
         break

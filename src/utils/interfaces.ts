@@ -97,6 +97,7 @@ export interface FilterOptions {
   isZeroGenesysPoints: boolean
   exactGenesysPoint: number | undefined
   genesysPointRange: [number, number]
+  atkRange: [number, number]
 }
 
 export interface LoadingImage {

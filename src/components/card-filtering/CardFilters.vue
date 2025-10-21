@@ -5,15 +5,42 @@ import NumberField from '../NumberField.vue'
 import LinkArrows from './LinkArrows.vue'
 import PopOver from './PopOver.vue'
 import GenesysFilters from './GenesysFilters.vue'
+import SliderComponent from '../SliderComponent.vue'
 import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tuners, pendulums, attributes, banStatus } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { storeToRefs } from 'pinia'
+import { ref, onMounted } from 'vue'
+import { debounce } from '@/utils/helpers'
 
-const store = useYgoCardsStore()
-const { filters, format } = storeToRefs(store)
-
+const { filters, format } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
+
+const minAtk = ref(0)
+const maxAtk = ref(5000)
+
+/**
+ * Update the displayed minimum and maximum ATK
+ * @param range Minimum and maximum ATK
+ */
+function updateDisplayedAtkRange(range: number[]) {
+  minAtk.value = range[0]
+  maxAtk.value = range[1]
+}
+
+/**
+ * Debounced function for filtering monsters based on the minimum and maximum ATK
+ * @param range Minimum and maximum ATK
+ */
+const handleAtkRangeFilter = debounce((range: number[]) => {
+  filters.value.atkRange = [range[0], range[1]]
+  toFirst()
+}, 500)
+
+onMounted(() => {
+  minAtk.value = filters.value.atkRange[0]
+  maxAtk.value = filters.value.atkRange[1]
+})
 </script>
 
 <template>
@@ -63,6 +90,15 @@ const { toFirst } = usePaginationStore()
           </div>
           <LinkArrows class="mt-1" v-model="filters.linkArrows" @update:model-value="toFirst" />
         </div>
+      </div>
+      <div class="mt-3">
+        <span>Filter by ATK range</span>
+        <div class="flex justify-between mb-3">
+          <span>Min: <strong>{{ minAtk }}</strong></span>
+          <span>Max: <strong>{{ maxAtk }}</strong></span>
+        </div>
+        <SliderComponent :default-value="filters.atkRange" :max="5000" :step="50"
+          @update:model-value="[updateDisplayedAtkRange($event), handleAtkRangeFilter($event)]" />
       </div>
     </template>
     <template v-else-if="filters.category === 'spell'">

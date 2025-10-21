@@ -1,8 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory, Format } from '@/utils/interfaces'
-import { matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
-  sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint } from '@/utils/helpers'
+import {
+  matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
+  sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint, matchAtkRange
+} from '@/utils/helpers'
 import { usePaginationStore } from './pagination'
 import { GENESYS_STANDARD_POINT_LIMIT } from '@/utils/constants'
 
@@ -31,7 +33,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     isGreaterThanZeroGenesysPoints: false,
     isZeroGenesysPoints: false,
     exactGenesysPoint: undefined,
-    genesysPointRange: [0, GENESYS_STANDARD_POINT_LIMIT]
+    genesysPointRange: [0, GENESYS_STANDARD_POINT_LIMIT],
+    atkRange: [0, 5000]
   })
   const sortBy = ref<SortByMonsterStat | 'name' | 'genesys-point'>('name')
   const sortDir = ref<SortDirection>('asc')
@@ -69,10 +72,11 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesExactGenesysPoint = filters.value.exactGenesysPoint !== undefined ? card.misc_info[0].genesys_points === filters.value.exactGenesysPoint : true
       const matchesGenesysPointRange = card.misc_info[0].genesys_points >= filters.value.genesysPointRange[0]
         && card.misc_info[0].genesys_points <= filters.value.genesysPointRange[1]
+      const matchesAtkRange = matchAtkRange(card, filters.value.atkRange)
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
         && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk && matchesDef && matchesLinkArrows
-        && matchesBanStatus && matchesGreaterThanZeroGenesysPoints && matchesZeroGenesysPoints && matchesExactGenesysPoint && matchesGenesysPointRange
+        && matchesBanStatus && matchesGreaterThanZeroGenesysPoints && matchesZeroGenesysPoints && matchesExactGenesysPoint && matchesGenesysPointRange && matchesAtkRange
     }).sort((a, b) => {
       if (sortBy.value === 'name') {
         const collator = new Intl.Collator('en', { sensitivity: 'base' })
