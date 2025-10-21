@@ -1,4 +1,5 @@
-import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory, Format, BanStatus } from "@/utils/interfaces"
+import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory, Format, BanStatus } from '@/utils/interfaces'
+import { MAX_ATK_DEF } from './constants'
 
 /**
  * Finds card matches based on card category
@@ -163,6 +164,7 @@ export function matchPendulumScale(card: YGOCardData, scale: number | undefined)
 /**
  * Returns the correct Attack value for certain Monsters
  * @param card Yu-Gi-Oh! card data object
+ * @returns ATK value of a monster card
  */
 function getCorrectAtk(card: YGOCardData): number {
   const attackOverrides: Record<number, number> = {
@@ -197,10 +199,27 @@ export function matchAtk(card: YGOCardData, atk: number | undefined): boolean {
  * @returns Monster cards whose attack value is within the specified range
  */
 export function matchAtkRange(card: YGOCardData, range: [number, number]): boolean {
-  if (range[0] === 0 && range[1] === 5000) return true
-  if (card.atk == null) return true
+  if (range[0] === 0 && range[1] === MAX_ATK_DEF) return true
 
   return getCorrectAtk(card) >= range[0] && getCorrectAtk(card) <= range[1]
+}
+
+/**
+ * Returns the correct Defense value for certain Monsters
+ * @param card Yu-Gi-Oh! card data object
+ * @returns DEF value of a monster card
+ */
+function getCorrectDef(card: YGOCardData): number {
+  const defenseOverrides: Record<number, number> = {
+    26270847: 700, // Performapal Silver Claw
+    10602628: 1200, // Blackwing - Boreastorm the Wicked Wind
+    21368273: 1300, // Mannadium Trisukta
+    86239173: 1800, // Horned Saurus
+    16037007: 2300, // Number 74: Master of Blades
+    77754169: 2800, // Super Armored Robot Armed Black Iron "C"
+    27134209: 2800 // Beargram, Shelled Emperor of the Forest Crown
+  }
+  return defenseOverrides[card.id] ?? card.def ?? 0
 }
 
 /**
@@ -234,6 +253,19 @@ export function matchDef(card: YGOCardData, def: number | undefined): boolean {
   const isCorrectDefData = correctDefData[def]?.includes(card.id)
 
   return (card.def === def && !isExcluded) || isCorrectDefData
+}
+
+/**
+ * Finds Monster card matches based on a specified DEF range
+ * @param card Yu-Gi-Oh! card data object
+ * @param range A number array containing two items in the form [`min`, `max`]
+ * @returns Monster cards whose defense value is within the specified range
+ */
+export function matchDefRange(card: YGOCardData, range: [number, number]): boolean {
+  if (range[0] === 0 && range[1] === MAX_ATK_DEF) return true
+  if (card.frameType === 'link') return false
+
+  return getCorrectDef(card) >= range[0] && getCorrectDef(card) <= range[1]
 }
 
 /**
@@ -300,22 +332,6 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         if (cardA.frameType !== 'link' && cardB.frameType === 'link') return -1
         if (cardA.frameType === 'link' && cardB.frameType !== 'link') return 1
 
-        /**
-         * Returns the correct Defense value for certain Monsters
-         * @param card Yu-Gi-Oh! card data
-         */
-        function getCorrectDef(card: YGOCardData): number {
-          const defenseOverrides: Record<number, number> = {
-            26270847: 700, // Performapal Silver Claw
-            10602628: 1200, // Blackwing - Boreastorm the Wicked Wind
-            21368273: 1300, // Mannadium Trisukta
-            86239173: 1800, // Horned Saurus
-            16037007: 2300, // Number 74: Master of Blades
-            77754169: 2800, // Super Armored Robot Armed Black Iron "C"
-            27134209: 2800 // Beargram, Shelled Emperor of the Forest Crown
-          }
-          return defenseOverrides[card.id] ?? card.def ?? 0
-        }
         const defComparison = getCorrectDef(cardA) - getCorrectDef(cardB)
         if (defComparison !== 0) return dir === 'asc' ? defComparison : -defComparison
         break

@@ -12,34 +12,48 @@ import { usePaginationStore } from '@/stores/pagination'
 import { storeToRefs } from 'pinia'
 import { ref, onMounted } from 'vue'
 import { debounce } from '@/utils/helpers'
+import { MAX_ATK_DEF } from '@/utils/constants'
 
 const { filters, format } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
 
 const minAtk = ref(0)
-const maxAtk = ref(5000)
+const maxAtk = ref(MAX_ATK_DEF)
+const minDef = ref(0)
+const maxDef = ref(MAX_ATK_DEF)
 
 /**
- * Update the displayed minimum and maximum ATK
- * @param range Minimum and maximum ATK
+ * Update the displayed minimum and maximum ATK or DEF
+ * @param range Minimum and maximum ATK or DEF
+ * @param usage Whether to use this function for ATK or DEF
  */
-function updateDisplayedAtkRange(range: number[]) {
-  minAtk.value = range[0]
-  maxAtk.value = range[1]
+function updateDisplayedRange(range: number[], usage: 'atk' | 'def') {
+  if (usage === 'atk') {
+    minAtk.value = range[0]
+    maxAtk.value = range[1]
+  } else {
+    minDef.value = range[0]
+    maxDef.value = range[1]
+  }
 }
 
 /**
- * Debounced function for filtering monsters based on the minimum and maximum ATK
- * @param range Minimum and maximum ATK
+ * Debounced function for filtering monsters based on the minimum and maximum ATK or DEF
+ * @param range Minimum and maximum ATK or DEF
+ * @param usage Whether to use this function for ATK or DEF
  */
-const handleAtkRangeFilter = debounce((range: number[]) => {
-  filters.value.atkRange = [range[0], range[1]]
+const handleRangeFilter = debounce((range: number[], usage: 'atk' | 'def') => {
+  if (usage === 'atk') filters.value.atkRange = [range[0], range[1]]
+  else filters.value.defRange = [range[0], range[1]]
   toFirst()
 }, 500)
 
 onMounted(() => {
   minAtk.value = filters.value.atkRange[0]
   maxAtk.value = filters.value.atkRange[1]
+
+  minDef.value = filters.value.defRange[0]
+  maxDef.value = filters.value.defRange[1]
 })
 </script>
 
@@ -98,7 +112,16 @@ onMounted(() => {
           <span>Max: <strong>{{ maxAtk }}</strong></span>
         </div>
         <SliderComponent :default-value="filters.atkRange" :max="5000" :step="50"
-          @update:model-value="[updateDisplayedAtkRange($event), handleAtkRangeFilter($event)]" />
+          @update:model-value="[updateDisplayedRange($event, 'atk'), handleRangeFilter($event, 'atk')]" />
+      </div>
+      <div class="mt-3">
+        <span>Filter by DEF range</span>
+        <div class="flex justify-between mb-3">
+          <span>Min: <strong>{{ minDef }}</strong></span>
+          <span>Max: <strong>{{ maxDef }}</strong></span>
+        </div>
+        <SliderComponent :default-value="filters.defRange" :max="5000" :step="50"
+          @update:model-value="[updateDisplayedRange($event, 'def'), handleRangeFilter($event, 'def')]" />
       </div>
     </template>
     <template v-else-if="filters.category === 'spell'">
