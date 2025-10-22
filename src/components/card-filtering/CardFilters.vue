@@ -18,10 +18,19 @@ import { MAX_ATK_DEF } from '@/utils/constants'
 const { filters, format } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
 
+const linkArrows = ref<string[]>([])
 const isUnknownAtk = ref(false)
 const isUnknownDef = ref(false)
 const atkRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
+
+/**
+ * Debounced function for link arrow filtering
+ */
+const handleLinkArrows = debounce(() => {
+  filters.value.linkArrows = linkArrows.value
+  toFirst()
+}, 300)
 
 /**
  * Debounced function for filtering monsters that have "`?`" ATK or DEF
@@ -30,6 +39,7 @@ const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const handleUnknownAtkDef = debounce((usage: 'atk' | 'def') => {
   if (usage === 'atk') filters.value.isUnknownAtk = isUnknownAtk.value
   else filters.value.isUnknownDef = isUnknownDef.value
+  toFirst()
 }, 300)
 
 /**
@@ -46,6 +56,7 @@ const handleRangeFilter = debounce((usage: 'atk' | 'def') => {
  * Set the values of local refs from the related store
  */
 function setValues() {
+  linkArrows.value = filters.value.linkArrows
   isUnknownAtk.value = filters.value.isUnknownAtk
   isUnknownDef.value = filters.value.isUnknownDef
   atkRange.value = filters.value.atkRange
@@ -56,6 +67,7 @@ onBeforeMount(() => setValues())
 
 watch(
   [
+    () => filters.value.linkArrows,
     () => filters.value.isUnknownAtk,
     () => filters.value.isUnknownDef,
     () => filters.value.atkRange,
@@ -110,7 +122,7 @@ watch(
             Link Arrows
             <PopOver usage="link-arrows" />
           </div>
-          <LinkArrows class="mt-1" v-model="filters.linkArrows" @update:model-value="toFirst" />
+          <LinkArrows class="mt-1" v-model="linkArrows" @update:model-value="handleLinkArrows" />
         </div>
       </div>
       <div class="flex flex-col gap-2 mt-3">
