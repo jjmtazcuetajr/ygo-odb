@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, CardCategory, Format } from '@/utils/interfaces'
+import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, Format } from '@/utils/interfaces'
 import {
   matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
   sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint, matchAtkRange, matchDefRange
@@ -127,35 +127,26 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   }
 
   /**
-   * Reset certain filters depending on the card category
-   * @param category Either monster, spell, or trap card
+   * Reset certain filters that are tied to card categories
    */
-  function resetCardCategory(category: CardCategory) {
-    if (category === 'monster') {
-      filters.value.spellType = ''
-      filters.value.trapType = ''
-    } else if (category === 'spell' || category === 'trap') {
-      filters.value.monsterCardType = ''
-      filters.value.monsterAbility = ''
-      filters.value.tunerType = ''
-      filters.value.pendulumType = ''
-      filters.value.monsterType = ''
-      filters.value.attribute = ''
-      filters.value.level = undefined
-      filters.value.rank = undefined
-      filters.value.scale = undefined
-      filters.value.linkRating = undefined
-      filters.value.linkArrows = []
-      filters.value.atk = undefined
-      filters.value.def = undefined
-      filters.value.atkRange = [0, MAX_ATK_DEF]
-      filters.value.defRange = [0, MAX_ATK_DEF]
-      if (category === 'spell') filters.value.trapType = ''
-      else if (category === 'trap') filters.value.spellType = ''
-    }
-
-    const { toFirst } = usePaginationStore()
-    toFirst()
+  function resetCardCategoryFilters() {
+    filters.value.monsterCardType = ''
+    filters.value.monsterAbility = ''
+    filters.value.tunerType = ''
+    filters.value.pendulumType = ''
+    filters.value.monsterType = ''
+    filters.value.attribute = ''
+    filters.value.level = undefined
+    filters.value.rank = undefined
+    filters.value.scale = undefined
+    filters.value.linkRating = undefined
+    filters.value.linkArrows = []
+    filters.value.atk = undefined
+    filters.value.def = undefined
+    filters.value.atkRange = [0, MAX_ATK_DEF]
+    filters.value.defRange = [0, MAX_ATK_DEF]
+    filters.value.spellType = ''
+    filters.value.trapType = ''
   }
 
   /**
@@ -174,30 +165,14 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   function resetFilters() {
     filters.value.search = ''
     filters.value.category = undefined
-    filters.value.monsterCardType = ''
-    filters.value.monsterAbility = ''
-    filters.value.tunerType == ''
-    filters.value.pendulumType = ''
-    filters.value.monsterType = ''
-    filters.value.attribute = ''
-    filters.value.level = undefined
-    filters.value.rank = undefined
-    filters.value.scale = undefined
-    filters.value.linkRating = undefined
-    filters.value.linkArrows = []
-    filters.value.atk = undefined
-    filters.value.def = undefined
-    filters.value.spellType = ''
-    filters.value.trapType = ''
     filters.value.banStatus = ''
-    filters.value.atkRange = [0, MAX_ATK_DEF]
-    filters.value.defRange = [0, MAX_ATK_DEF]
 
+    resetCardCategoryFilters()
     resetGenesysFilters()
     
     const { toFirst } = usePaginationStore()
     toFirst()
   }
 
-  return { cards, filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
+  return { cards, filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards, fetchCards, resetCardCategoryFilters, resetFilters }
 })
