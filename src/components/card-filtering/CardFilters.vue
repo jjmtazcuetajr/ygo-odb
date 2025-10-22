@@ -10,51 +10,45 @@ import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tu
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { debounce } from '@/utils/helpers'
 import { MAX_ATK_DEF } from '@/utils/constants'
 
 const { filters, format } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
 
-const minAtk = ref(0)
-const maxAtk = ref(MAX_ATK_DEF)
-const minDef = ref(0)
-const maxDef = ref(MAX_ATK_DEF)
-
-/**
- * Update the displayed minimum and maximum ATK or DEF
- * @param range Minimum and maximum ATK or DEF
- * @param usage Whether to use this function for ATK or DEF
- */
-function updateDisplayedRange(range: number[], usage: 'atk' | 'def') {
-  if (usage === 'atk') {
-    minAtk.value = range[0]
-    maxAtk.value = range[1]
-  } else {
-    minDef.value = range[0]
-    maxDef.value = range[1]
-  }
-}
+const atkRange = ref([0, MAX_ATK_DEF])
+const defRange = ref([0, MAX_ATK_DEF])
 
 /**
  * Debounced function for filtering monsters based on the minimum and maximum ATK or DEF
- * @param range Minimum and maximum ATK or DEF
  * @param usage Whether to use this function for ATK or DEF
  */
-const handleRangeFilter = debounce((range: number[], usage: 'atk' | 'def') => {
-  if (usage === 'atk') filters.value.atkRange = [range[0], range[1]]
-  else filters.value.defRange = [range[0], range[1]]
+const handleRangeFilter = debounce((usage: 'atk' | 'def') => {
+  if (usage === 'atk') filters.value.atkRange = [atkRange.value[0], atkRange.value[1]]
+  else filters.value.defRange = [defRange.value[0], defRange.value[1]]
   toFirst()
 }, 500)
 
-onMounted(() => {
-  minAtk.value = filters.value.atkRange[0]
-  maxAtk.value = filters.value.atkRange[1]
+/**
+ * Set the values of local refs from the related store
+ */
+function setValues() {
+  atkRange.value[0] = filters.value.atkRange[0]
+  atkRange.value[1] = filters.value.atkRange[1]
+  defRange.value[0] = filters.value.defRange[0]
+  defRange.value[1] = filters.value.defRange[1]
+}
 
-  minDef.value = filters.value.defRange[0]
-  maxDef.value = filters.value.defRange[1]
-})
+onMounted(() => setValues())
+
+watch(
+  [
+    () => filters.value.atkRange,
+    () => filters.value.defRange
+  ],
+  () => setValues()
+)
 </script>
 
 <template>
@@ -108,20 +102,20 @@ onMounted(() => {
       <div class="mt-3">
         <span>Filter by ATK range</span>
         <div class="flex justify-between mb-3">
-          <span>Min: <strong>{{ minAtk }}</strong></span>
-          <span>Max: <strong>{{ maxAtk }}</strong></span>
+          <span>Min: <strong>{{ atkRange[0] }}</strong></span>
+          <span>Max: <strong>{{ atkRange[1] }}</strong></span>
         </div>
-        <SliderComponent :default-value="filters.atkRange" :max="5000" :step="50" label-val="Attack value"
-          @update:model-value="[updateDisplayedRange($event, 'atk'), handleRangeFilter($event, 'atk')]" />
+        <SliderComponent v-model="atkRange" :max="5000" :step="50" label-val="Attack value"
+          @update:model-value="handleRangeFilter('atk')" />
       </div>
       <div class="mt-3">
         <span>Filter by DEF range</span>
         <div class="flex justify-between mb-3">
-          <span>Min: <strong>{{ minDef }}</strong></span>
-          <span>Max: <strong>{{ maxDef }}</strong></span>
+          <span>Min: <strong>{{ defRange[0] }}</strong></span>
+          <span>Max: <strong>{{ defRange[1] }}</strong></span>
         </div>
-        <SliderComponent :default-value="filters.defRange" :max="5000" :step="50" label-val="Defense value"
-          @update:model-value="[updateDisplayedRange($event, 'def'), handleRangeFilter($event, 'def')]" />
+        <SliderComponent v-model="defRange" :max="5000" :step="50" label-val="Defense value"
+          @update:model-value="handleRangeFilter('def')" />
       </div>
     </template>
     <template v-else-if="filters.category === 'spell'">

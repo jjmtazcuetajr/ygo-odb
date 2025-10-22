@@ -148,6 +148,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       filters.value.linkArrows = []
       filters.value.atk = undefined
       filters.value.def = undefined
+      filters.value.atkRange = [0, MAX_ATK_DEF]
+      filters.value.defRange = [0, MAX_ATK_DEF]
       if (category === 'spell') filters.value.trapType = ''
       else if (category === 'trap') filters.value.spellType = ''
     }
@@ -187,11 +189,14 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     filters.value.def = undefined
     filters.value.spellType = ''
     filters.value.trapType = ''
+    filters.value.banStatus = ''
+    filters.value.atkRange = [0, MAX_ATK_DEF]
+    filters.value.defRange = [0, MAX_ATK_DEF]
+
+    resetGenesysFilters()
     
     const { toFirst } = usePaginationStore()
     toFirst()
-
-    resetGenesysFilters()
   }
 
   return { cards, filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards, fetchCards, resetCardCategory, resetFilters }
