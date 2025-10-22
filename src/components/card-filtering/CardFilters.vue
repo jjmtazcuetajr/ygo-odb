@@ -17,16 +17,16 @@ import { MAX_ATK_DEF } from '@/utils/constants'
 const { filters, format } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
 
-const atkRange = ref([0, MAX_ATK_DEF])
-const defRange = ref([0, MAX_ATK_DEF])
+const atkRange = ref<[number, number]>([0, MAX_ATK_DEF])
+const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
 
 /**
  * Debounced function for filtering monsters based on the minimum and maximum ATK or DEF
  * @param usage Whether to use this function for ATK or DEF
  */
 const handleRangeFilter = debounce((usage: 'atk' | 'def') => {
-  if (usage === 'atk') filters.value.atkRange = [atkRange.value[0], atkRange.value[1]]
-  else filters.value.defRange = [defRange.value[0], defRange.value[1]]
+  if (usage === 'atk') filters.value.atkRange = atkRange.value
+  else filters.value.defRange = defRange.value
   toFirst()
 }, 500)
 
@@ -34,10 +34,8 @@ const handleRangeFilter = debounce((usage: 'atk' | 'def') => {
  * Set the values of local refs from the related store
  */
 function setValues() {
-  atkRange.value[0] = filters.value.atkRange[0]
-  atkRange.value[1] = filters.value.atkRange[1]
-  defRange.value[0] = filters.value.defRange[0]
-  defRange.value[1] = filters.value.defRange[1]
+  atkRange.value = filters.value.atkRange
+  defRange.value = filters.value.defRange
 }
 
 onMounted(() => setValues())

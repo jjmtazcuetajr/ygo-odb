@@ -14,32 +14,27 @@ const { toFirst } = usePaginationStore()
 
 const isGreaterThanZeroGenesysPoints = ref(false)
 const isZeroGenesysPoints = ref(false)
-const minGenesysPoint = ref(0)
-const maxGenesysPoint = ref(GENESYS_STANDARD_POINT_LIMIT)
-const genesysPointRange = ref([0, 100])
+const genesysPointRange = ref<[number, number]>([0, GENESYS_STANDARD_POINT_LIMIT])
 const exactGenesysPoint = ref<number | undefined>(undefined)
 
 /**
  * Debounced function for filtering cards if they have greater than zero Genesys points
- * @param isGreaterThanZero If a card has greater than zero Genesys points
  */
-const handleIsGreaterThanZeroGenesysPoints = debounce((isGreaterThanZero: boolean) => {
-  filters.value.isGreaterThanZeroGenesysPoints = isGreaterThanZero
+const handleIsGreaterThanZeroGenesysPoints = debounce(() => {
+  filters.value.isGreaterThanZeroGenesysPoints = isGreaterThanZeroGenesysPoints.value
   toFirst()
 }, 300)
 
 /**
  * Debounced function for filtering cards if they have zero Genesys points
- * @param isZeroPoints If a card has zero Genesys points
  */
-const handleIsZeroGenesysPointsFilter = debounce((isZeroPoints: boolean) => {
-  filters.value.isZeroGenesysPoints = isZeroPoints
+const handleIsZeroGenesysPointsFilter = debounce(() => {
+  filters.value.isZeroGenesysPoints = isZeroGenesysPoints.value
   toFirst()
 }, 300)
 
 /**
  * Debounced function for filtering cards based on exact Genesys points
- * @param gp Genesys point value
  */
 const handleExactGenesysPointFilter = debounce(() => {
   filters.value.exactGenesysPoint = exactGenesysPoint.value
@@ -47,22 +42,10 @@ const handleExactGenesysPointFilter = debounce(() => {
 }, 300)
 
 /**
- * Update the displayed minimum and maximum Genesys points
- * @param range Minimum and maximum Genesys points
- */
-function updateDisplayedGenesysPointRange(range: number[] | undefined) {
-  if (range === undefined) return
-  minGenesysPoint.value = range[0]
-  maxGenesysPoint.value = range[1]
-}
-
-/**
  * Debounced function for filtering cards based on the minimum and maximum Genesys points
- * @param range Minimum and maximum Genesys points
  */
-const handleGenesysPointRangeFilter = debounce((range: number[] | undefined) => {
-  if (range === undefined) return
-  filters.value.genesysPointRange = [range[0], range[1]]
+const handleGenesysPointRangeFilter = debounce(() => {
+  filters.value.genesysPointRange = genesysPointRange.value
   toFirst()
 }, 300)
 
@@ -73,8 +56,6 @@ function setValues() {
   isGreaterThanZeroGenesysPoints.value = filters.value.isGreaterThanZeroGenesysPoints
   isZeroGenesysPoints.value = filters.value.isZeroGenesysPoints
   exactGenesysPoint.value = filters.value.exactGenesysPoint
-  minGenesysPoint.value = filters.value.genesysPointRange[0]
-  maxGenesysPoint.value = filters.value.genesysPointRange[1]
   genesysPointRange.value = filters.value.genesysPointRange
 }
 
@@ -102,11 +83,11 @@ watch(
     <div class="flex flex-col">
       <span>Filter by Genesys point range</span>
       <div class="flex justify-between mb-3">
-        <span>Min: <strong>{{ minGenesysPoint }}</strong></span>
-        <span>Max: <strong>{{ maxGenesysPoint }}</strong></span>
+        <span>Min: <strong>{{ genesysPointRange[0] }}</strong></span>
+        <span>Max: <strong>{{ genesysPointRange[1] }}</strong></span>
       </div>
       <SliderComponent v-model="genesysPointRange" :max="GENESYS_STANDARD_POINT_LIMIT" label-val="Genesys points"
-        @update:model-value="[updateDisplayedGenesysPointRange($event), handleGenesysPointRangeFilter($event)]" />
+        @update:model-value="handleGenesysPointRangeFilter" />
     </div>
   </div>
 </template>
