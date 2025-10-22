@@ -125,7 +125,7 @@ watch(
         <span>Min: <strong>{{ minGenesysPoint }}</strong></span>
         <span>Max: <strong>{{ maxGenesysPoint }}</strong></span>
       </div>
-      <SliderComponent v-model="genesysPointRange" :max="GENESYS_STANDARD_POINT_LIMIT"
+      <SliderComponent v-model="genesysPointRange" :max="GENESYS_STANDARD_POINT_LIMIT" label-val="Genesys points"
         @update:model-value="[updateDisplayedGenesysPointRange($event), handleGenesysPointRangeFilter($event)]" />
     </div>
   </div>

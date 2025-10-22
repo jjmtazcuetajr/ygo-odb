@@ -111,7 +111,7 @@ onMounted(() => {
           <span>Min: <strong>{{ minAtk }}</strong></span>
           <span>Max: <strong>{{ maxAtk }}</strong></span>
         </div>
-        <SliderComponent :default-value="filters.atkRange" :max="5000" :step="50"
+        <SliderComponent :default-value="filters.atkRange" :max="5000" :step="50" label-val="Attack value"
           @update:model-value="[updateDisplayedRange($event, 'atk'), handleRangeFilter($event, 'atk')]" />
       </div>
       <div class="mt-3">
@@ -120,7 +120,7 @@ onMounted(() => {
           <span>Min: <strong>{{ minDef }}</strong></span>
           <span>Max: <strong>{{ maxDef }}</strong></span>
         </div>
-        <SliderComponent :default-value="filters.defRange" :max="5000" :step="50"
+        <SliderComponent :default-value="filters.defRange" :max="5000" :step="50" label-val="Defense value"
           @update:model-value="[updateDisplayedRange($event, 'def'), handleRangeFilter($event, 'def')]" />
       </div>
     </template>

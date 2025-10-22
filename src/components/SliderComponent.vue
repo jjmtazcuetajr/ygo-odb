@@ -5,6 +5,7 @@ defineProps<{
   min?: number
   max: number
   step?: number
+  labelVal: string
 }>()
 </script>
 <template>
@@ -15,9 +16,9 @@ defineProps<{
     </SliderTrack>
     <SliderThumb
       class="block size-6 rounded-full shadow-md bg-neutral-500 dark:bg-white hover:bg-neutral-600 dark:hover:bg-neutral-200 focus:outline-2 focus:outline-emerald-500 dark:focus:outline-emerald-400 transition-[background-color] duration-300"
-      aria-label="Minimum Genesys point" />
+      :aria-label="`Minimum ${labelVal}`" />
     <SliderThumb
       class="block size-6 rounded-full shadow-md bg-neutral-500 dark:bg-white hover:bg-neutral-600 dark:hover:bg-neutral-200 focus:outline-2 focus:outline-emerald-500 dark:focus:outline-emerald-400 transition-[background-color] duration-300"
-      aria-label="Maximum Genesys point" />
+      :aria-label="`Maximum ${labelVal}`" />
   </SliderRoot>
 </template>
