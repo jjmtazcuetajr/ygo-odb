@@ -6,19 +6,31 @@ import LinkArrows from './LinkArrows.vue'
 import PopOver from './PopOver.vue'
 import GenesysFilters from './GenesysFilters.vue'
 import SliderComponent from '../SliderComponent.vue'
+import SwitchWithLabel from '../SwitchWithLabel.vue'
 import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tuners, pendulums, attributes, banStatus } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onBeforeMount, watch } from 'vue'
 import { debounce } from '@/utils/helpers'
 import { MAX_ATK_DEF } from '@/utils/constants'
 
 const { filters, format } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
 
+const isUnknownAtk = ref(false)
+const isUnknownDef = ref(false)
 const atkRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
+
+/**
+ * Debounced function for filtering monsters that have "`?`" ATK or DEF
+ * @param usage Whether to use this function for ATK or DEF
+ */
+const handleUnknownAtkDef = debounce((usage: 'atk' | 'def') => {
+  if (usage === 'atk') filters.value.isUnknownAtk = isUnknownAtk.value
+  else filters.value.isUnknownDef = isUnknownDef.value
+}, 300)
 
 /**
  * Debounced function for filtering monsters based on the minimum and maximum ATK or DEF
@@ -28,20 +40,24 @@ const handleRangeFilter = debounce((usage: 'atk' | 'def') => {
   if (usage === 'atk') filters.value.atkRange = atkRange.value
   else filters.value.defRange = defRange.value
   toFirst()
-}, 500)
+}, 300)
 
 /**
  * Set the values of local refs from the related store
  */
 function setValues() {
+  isUnknownAtk.value = filters.value.isUnknownAtk
+  isUnknownDef.value = filters.value.isUnknownDef
   atkRange.value = filters.value.atkRange
   defRange.value = filters.value.defRange
 }
 
-onMounted(() => setValues())
+onBeforeMount(() => setValues())
 
 watch(
   [
+    () => filters.value.isUnknownAtk,
+    () => filters.value.isUnknownDef,
     () => filters.value.atkRange,
     () => filters.value.defRange
   ],
@@ -84,9 +100,9 @@ watch(
           <NumberField id="scale" :max="13" label-val="Scale" v-model="filters.scale" @update:model-value="toFirst" />
           <NumberField id="link" :min="1" :max="6" label-val="Link Rating" v-model="filters.linkRating"
             @update:model-value="toFirst" />
-          <NumberField id="atk" :min="-1" :max="5000" :step="50" label-val="ATK" :is-atk-or-def="true"
-            v-model="filters.atk" @update:model-value="toFirst" />
-          <NumberField id="def" :min="-1" :max="5000" :step="50" label-val="DEF" v-model="filters.def"
+          <NumberField id="atk" :max="5000" :step="50" label-val="ATK" v-model="filters.atk"
+            @update:model-value="toFirst" />
+          <NumberField id="def" :max="5000" :step="50" label-val="DEF" v-model="filters.def"
             @update:model-value="toFirst" />
         </div>
         <div>
@@ -96,6 +112,12 @@ watch(
           </div>
           <LinkArrows class="mt-1" v-model="filters.linkArrows" @update:model-value="toFirst" />
         </div>
+      </div>
+      <div class="flex flex-col gap-2 mt-3">
+        <SwitchWithLabel id="unknown-atk" label-val="Show monsters that have ? ATK" v-model="isUnknownAtk"
+          @update-value="handleUnknownAtkDef('atk')" />
+        <SwitchWithLabel id="unknown-def" label-val="Show monsters that have ? DEF" v-model="isUnknownDef"
+          @update-value="handleUnknownAtkDef('def')" />
       </div>
       <div class="mt-3">
         <span>Filter by ATK range</span>

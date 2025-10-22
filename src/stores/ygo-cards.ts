@@ -35,7 +35,9 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     exactGenesysPoint: undefined,
     genesysPointRange: [0, GENESYS_STANDARD_POINT_LIMIT],
     atkRange: [0, MAX_ATK_DEF],
-    defRange: [0, MAX_ATK_DEF]
+    defRange: [0, MAX_ATK_DEF],
+    isUnknownAtk: false,
+    isUnknownDef: false
   })
   const sortBy = ref<SortByMonsterStat | 'name' | 'genesys-point'>('name')
   const sortDir = ref<SortDirection>('asc')
@@ -75,11 +77,13 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         && card.misc_info[0].genesys_points <= filters.value.genesysPointRange[1]
       const matchesAtkRange = matchAtkRange(card, filters.value.atkRange)
       const matchesDefRange = matchDefRange(card, filters.value.defRange)
+      const matchesUnknownAtk = filters.value.isUnknownAtk ? card.atk === -1 : true
+      const matchesUnknownDef = filters.value.isUnknownDef ? card.def === -1 : true
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
         && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk && matchesDef && matchesLinkArrows
         && matchesBanStatus && matchesGreaterThanZeroGenesysPoints && matchesZeroGenesysPoints && matchesExactGenesysPoint && matchesGenesysPointRange && matchesAtkRange
-        && matchesDefRange
+        && matchesDefRange && matchesUnknownAtk && matchesUnknownDef
     }).sort((a, b) => {
       if (sortBy.value === 'name') {
         const collator = new Intl.Collator('en', { sensitivity: 'base' })
@@ -145,6 +149,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     filters.value.def = undefined
     filters.value.atkRange = [0, MAX_ATK_DEF]
     filters.value.defRange = [0, MAX_ATK_DEF]
+    filters.value.isUnknownAtk = false
+    filters.value.isUnknownDef = false
     filters.value.spellType = ''
     filters.value.trapType = ''
   }

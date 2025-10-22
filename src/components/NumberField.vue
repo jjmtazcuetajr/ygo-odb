@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput, NumberFieldRoot } from 'reka-ui'
 import { Plus, Minus } from 'lucide-vue-next'
-import PopOver from './card-filtering/PopOver.vue'
 
 defineProps<{
-  id: string,
-  min?: number,
-  max: number,
-  step?: number,
-  labelVal: string,
-  isAtkOrDef?: boolean
+  id: string
+  min?: number
+  max: number
+  step?: number
+  labelVal: string
 }>()
 </script>
 
@@ -18,7 +16,6 @@ defineProps<{
     class="flex flex-col gap-0.5">
     <div class="flex items-center gap-1">
       <label :for="id">{{ labelVal }}</label>
-      <PopOver v-if="isAtkOrDef" usage="atk/def" />
     </div>
     <div
       class="flex items-center focus-within:ring rounded-md border border-neutral-500 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-950 transition-[background-color] duration-300">

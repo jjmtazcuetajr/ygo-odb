@@ -99,6 +99,8 @@ export interface FilterOptions {
   genesysPointRange: [number, number]
   atkRange: [number, number]
   defRange: [number, number]
+  isUnknownAtk: boolean
+  isUnknownDef: boolean
 }
 
 export interface LoadingImage {

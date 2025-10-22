@@ -3,7 +3,7 @@ import { PopoverArrow, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigge
 import { CircleHelp } from 'lucide-vue-next'
 
 defineProps<{
-  usage: 'category' | 'link-arrows' | 'atk/def'
+  usage: 'category' | 'link-arrows'
 }>()
 </script>
 <template>
@@ -17,8 +17,7 @@ defineProps<{
       <PopoverContent side="bottom" :side-offset="5"
         class="rounded-lg p-2 z-[150] w-[250px] text-sm dark:text-neutral-300 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-600 shadow-lg will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade">
         <span v-if="usage === 'category'">You can only select one card category at a time.</span>
-        <span v-else-if="usage === 'link-arrows'">You may select multiple link arrows.</span>
-        <span v-else>For monsters that have "?" ATK/DEF, please enter -1.</span>
+        <span v-else>You may select multiple link arrows.</span>
         <PopoverArrow class="fill-white dark:fill-neutral-900 stroke-neutral-300 dark:stroke-neutral-600" />
       </PopoverContent>
     </PopoverPortal>
