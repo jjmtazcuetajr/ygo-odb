@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onBeforeMount, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { SwitchRoot, SwitchThumb } from 'reka-ui'
 import { GENESYS_STANDARD_POINT_LIMIT } from '@/utils/constants'
@@ -12,8 +12,11 @@ import SliderComponent from '../SliderComponent.vue'
 const { filters } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
 
+const isGreaterThanZeroGenesysPoints = ref(false)
+const isZeroGenesysPoints = ref(false)
 const minGenesysPoint = ref(0)
 const maxGenesysPoint = ref(GENESYS_STANDARD_POINT_LIMIT)
+const genesysPointRange = ref([0, 100])
 const exactGenesysPoint = ref<number | undefined>(undefined)
 
 /**
@@ -41,7 +44,7 @@ const handleIsZeroGenesysPointsFilter = debounce((isZeroPoints: boolean) => {
 const handleExactGenesysPointFilter = debounce(() => {
   filters.value.exactGenesysPoint = exactGenesysPoint.value
   toFirst()
-}, 500)
+}, 300)
 
 /**
  * Update the displayed minimum and maximum Genesys points
@@ -61,18 +64,36 @@ const handleGenesysPointRangeFilter = debounce((range: number[] | undefined) => 
   if (range === undefined) return
   filters.value.genesysPointRange = [range[0], range[1]]
   toFirst()
-}, 500)
+}, 300)
 
-onMounted(() => {
+/**
+ * Set the values of local refs from the related store
+ */
+function setValues() {
+  isGreaterThanZeroGenesysPoints.value = filters.value.isGreaterThanZeroGenesysPoints
+  isZeroGenesysPoints.value = filters.value.isZeroGenesysPoints
+  exactGenesysPoint.value = filters.value.exactGenesysPoint
   minGenesysPoint.value = filters.value.genesysPointRange[0]
   maxGenesysPoint.value = filters.value.genesysPointRange[1]
-  exactGenesysPoint.value = filters.value.exactGenesysPoint
-})
+  genesysPointRange.value = filters.value.genesysPointRange
+}
+
+onBeforeMount(() => setValues())
+
+watch(
+  [
+    () => filters.value.isGreaterThanZeroGenesysPoints,
+    () => filters.value.isZeroGenesysPoints,
+    () => filters.value.exactGenesysPoint,
+    () => filters.value.genesysPointRange
+  ],
+  () => setValues()
+)
 </script>
 <template>
   <div class="flex flex-col gap-2 mb-5">
     <div class="flex items-center gap-1.5">
-      <SwitchRoot id="gt-zero-genesys-pts" :default-value="filters.isGreaterThanZeroGenesysPoints"
+      <SwitchRoot id="gt-zero-genesys-pts" v-model="isGreaterThanZeroGenesysPoints"
         @update:model-value="handleIsGreaterThanZeroGenesysPoints"
         class="w-[42px] h-[22px] shadow-sm rounded-full cursor-pointer shrink-0 border border-neutral-400 dark:border-neutral-500 bg-neutral-300 dark:bg-neutral-500 data-[state=checked]:bg-emerald-700 transition-[background-color] duration-300">
         <SwitchThumb
@@ -84,7 +105,7 @@ onMounted(() => {
       </label>
     </div>
     <div class="flex items-center gap-1.5">
-      <SwitchRoot id="is-zero-genesys-pts" :default-value="filters.isZeroGenesysPoints"
+      <SwitchRoot id="is-zero-genesys-pts" v-model="isZeroGenesysPoints"
         @update:model-value="handleIsZeroGenesysPointsFilter"
         class="w-[42px] h-[22px] shadow-sm rounded-full cursor-pointer shrink-0 border border-neutral-400 dark:border-neutral-500 bg-neutral-300 dark:bg-neutral-500 data-[state=checked]:bg-emerald-700 transition-[background-color] duration-300">
         <SwitchThumb
@@ -104,7 +125,7 @@ onMounted(() => {
         <span>Min: <strong>{{ minGenesysPoint }}</strong></span>
         <span>Max: <strong>{{ maxGenesysPoint }}</strong></span>
       </div>
-      <SliderComponent :default-value="filters.genesysPointRange" :max="GENESYS_STANDARD_POINT_LIMIT"
+      <SliderComponent v-model="genesysPointRange" :max="GENESYS_STANDARD_POINT_LIMIT"
         @update:model-value="[updateDisplayedGenesysPointRange($event), handleGenesysPointRangeFilter($event)]" />
     </div>
   </div>
