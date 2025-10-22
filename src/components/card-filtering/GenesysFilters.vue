@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { SwitchRoot, SwitchThumb } from 'reka-ui'
 import { GENESYS_STANDARD_POINT_LIMIT } from '@/utils/constants'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { debounce } from '@/utils/helpers'
 import NumberField from '../NumberField.vue'
 import SliderComponent from '../SliderComponent.vue'
+import SwitchWithLabel from '../SwitchWithLabel.vue'
 
 const { filters } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
@@ -92,30 +92,10 @@ watch(
 </script>
 <template>
   <div class="flex flex-col gap-2 mb-5">
-    <div class="flex items-center gap-1.5">
-      <SwitchRoot id="gt-zero-genesys-pts" v-model="isGreaterThanZeroGenesysPoints"
-        @update:model-value="handleIsGreaterThanZeroGenesysPoints"
-        class="w-[42px] h-[22px] shadow-sm rounded-full cursor-pointer shrink-0 border border-neutral-400 dark:border-neutral-500 bg-neutral-300 dark:bg-neutral-500 data-[state=checked]:bg-emerald-700 transition-[background-color] duration-300">
-        <SwitchThumb
-          class="flex justify-center items-center size-[16px] bg-white rounded-full translate-x-[2px] will-change-transform data-[state=checked]:translate-x-[21px] transition-transform duration-300">
-        </SwitchThumb>
-      </SwitchRoot>
-      <label for="gt-zero-genesys-pts" class="text-xs sm:text-sm">
-        Show cards that have greater than zero Genesys points
-      </label>
-    </div>
-    <div class="flex items-center gap-1.5">
-      <SwitchRoot id="is-zero-genesys-pts" v-model="isZeroGenesysPoints"
-        @update:model-value="handleIsZeroGenesysPointsFilter"
-        class="w-[42px] h-[22px] shadow-sm rounded-full cursor-pointer shrink-0 border border-neutral-400 dark:border-neutral-500 bg-neutral-300 dark:bg-neutral-500 data-[state=checked]:bg-emerald-700 transition-[background-color] duration-300">
-        <SwitchThumb
-          class="flex justify-center items-center size-[16px] bg-white rounded-full translate-x-[2px] will-change-transform data-[state=checked]:translate-x-[21px] transition-transform duration-300">
-        </SwitchThumb>
-      </SwitchRoot>
-      <label for="is-zero-genesys-pts" class="text-xs sm:text-sm">
-        Show cards that have zero Genesys points
-      </label>
-    </div>
+    <SwitchWithLabel id="gt-zero-genesys-pts" label-val="Show cards that have greater than zero Genesys points"
+      v-model="isGreaterThanZeroGenesysPoints" @update-value="handleIsGreaterThanZeroGenesysPoints" />
+    <SwitchWithLabel id="is-zero-genesys-pts" label-val="Show cards that have zero Genesys points"
+      v-model="isZeroGenesysPoints" @update-value="handleIsZeroGenesysPointsFilter" />
     <NumberField id="genesys-pts-filter" label-val="Filter by exact Genesys points" class="!flex-row !gap-2" :min="1"
       :max="GENESYS_STANDARD_POINT_LIMIT" v-model="exactGenesysPoint"
       @update:model-value="handleExactGenesysPointFilter" />
