@@ -14,12 +14,13 @@ import { storeToRefs } from 'pinia'
 import { ref, onBeforeMount, watch } from 'vue'
 import { debounce } from '@/utils/helpers'
 import { MAX_ATK_DEF } from '@/utils/constants'
-import type { CardCategory } from '@/utils/interfaces'
+import type { CardCategory, BanStatus } from '@/utils/interfaces'
 
 const { filters, format } = storeToRefs(useYgoCardsStore())
 const { resetCardCategoryFilters } = useYgoCardsStore()
 const { toFirst } = usePaginationStore()
 
+const formatStatus = ref<BanStatus | 'Unrestricted' | ''>('')
 const category = ref<CardCategory | undefined>(undefined)
 const monsterCardType = ref('')
 const monsterAbility = ref('')
@@ -40,6 +41,14 @@ const atkRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const spellType = ref('')
 const trapType = ref('')
+
+/**
+ * Debounced function for card filtering based on its status in the OCG & TCG formats
+ */
+const handleFormatStatus = debounce(() => {
+  filters.value.banStatus = formatStatus.value
+  toFirst()
+}, 300)
 
 /**
  * Debounced function for card filtering based on category (`monster`, `spell`, or `trap`)
@@ -120,6 +129,7 @@ const handleSpellTrapType = debounce((usage: 'spell' | 'trap') => {
  * Set the values of local refs from the related store
  */
 function setValues() {
+  formatStatus.value = filters.value.banStatus
   category.value = filters.value.category
   monsterCardType.value = filters.value.monsterCardType
   monsterAbility.value = filters.value.monsterAbility
@@ -146,6 +156,7 @@ onBeforeMount(() => setValues())
 
 watch(
   [
+    () => filters.value.banStatus,
     () => filters.value.category,
     () => filters.value.monsterCardType,
     () => filters.value.monsterAbility,
@@ -175,7 +186,7 @@ watch(
   <div class="flex flex-col mt-3 dark:text-neutral-300 text-xs sm:text-base">
     <SelectOption v-if="format === 'ocg' || format === 'tcg'" id="ban-status"
       :label-text="`${format.toUpperCase()} Status`" parent-class="flex items-center gap-1 mb-2" :options="banStatus"
-      v-model="filters.banStatus" @change="toFirst" />
+      v-model="formatStatus" @update:model-value="handleFormatStatus" />
     <GenesysFilters v-else-if="format === 'genesys'" />
     <div class="flex items-center flex-wrap gap-2">
       <div class="flex items-start sm:items-end gap-1">
