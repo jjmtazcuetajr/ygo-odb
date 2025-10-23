@@ -18,11 +18,31 @@ import { MAX_ATK_DEF } from '@/utils/constants'
 const { filters, format } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
 
+const level = ref<number | undefined>(undefined)
+const rank = ref<number | undefined>(undefined)
+const scale = ref<number | undefined>(undefined)
+const linkRating = ref<number | undefined>(undefined)
+const atk = ref<number | undefined>(undefined)
+const def = ref<number | undefined>(undefined)
 const linkArrows = ref<string[]>([])
 const isUnknownAtk = ref(false)
 const isUnknownDef = ref(false)
 const atkRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
+
+/**
+ * Debounced function for filtering monsters based on a numerical criteria
+ * @param usage The numerical criteria to use
+ */
+const handleNumericFilters = debounce((usage: 'level' | 'rank' | 'scale' | 'link-rating' | 'atk' | 'def') => {
+  if (usage === 'level') filters.value.level = level.value
+  else if (usage === 'rank') filters.value.rank = rank.value
+  else if (usage === 'scale') filters.value.scale = scale.value
+  else if (usage === 'link-rating') filters.value.linkRating = linkRating.value
+  else if (usage === 'atk') filters.value.atk = atk.value
+  else filters.value.def = def.value
+  toFirst()
+}, 300)
 
 /**
  * Debounced function for link arrow filtering
@@ -56,6 +76,12 @@ const handleRangeFilter = debounce((usage: 'atk' | 'def') => {
  * Set the values of local refs from the related store
  */
 function setValues() {
+  level.value = filters.value.level
+  rank.value = filters.value.rank
+  scale.value = filters.value.scale
+  linkRating.value = filters.value.linkRating
+  atk.value = filters.value.atk
+  def.value = filters.value.def
   linkArrows.value = filters.value.linkArrows
   isUnknownAtk.value = filters.value.isUnknownAtk
   isUnknownDef.value = filters.value.isUnknownDef
@@ -67,6 +93,12 @@ onBeforeMount(() => setValues())
 
 watch(
   [
+    () => filters.value.level,
+    () => filters.value.rank,
+    () => filters.value.scale,
+    () => filters.value.linkRating,
+    () => filters.value.atk,
+    () => filters.value.def,
     () => filters.value.linkArrows,
     () => filters.value.isUnknownAtk,
     () => filters.value.isUnknownDef,
@@ -107,15 +139,18 @@ watch(
             v-model="filters.attribute" @change="toFirst" />
         </div>
         <div class="flex flex-col gap-1">
-          <NumberField id="level" :max="12" label-val="Level" v-model="filters.level" @update:model-value="toFirst" />
-          <NumberField id="rank" :max="13" label-val="Rank" v-model="filters.rank" @update:model-value="toFirst" />
-          <NumberField id="scale" :max="13" label-val="Scale" v-model="filters.scale" @update:model-value="toFirst" />
-          <NumberField id="link" :min="1" :max="6" label-val="Link Rating" v-model="filters.linkRating"
-            @update:model-value="toFirst" />
-          <NumberField id="atk" :max="5000" :step="50" label-val="ATK" v-model="filters.atk"
-            @update:model-value="toFirst" />
-          <NumberField id="def" :max="5000" :step="50" label-val="DEF" v-model="filters.def"
-            @update:model-value="toFirst" />
+          <NumberField id="level" :max="12" label-val="Level" v-model="level"
+            @update:model-value="handleNumericFilters('level')" />
+          <NumberField id="rank" :max="13" label-val="Rank" v-model="rank"
+            @update:model-value="handleNumericFilters('rank')" />
+          <NumberField id="scale" :max="13" label-val="Scale" v-model="scale"
+            @update:model-value="handleNumericFilters('scale')" />
+          <NumberField id="link" :min="1" :max="6" label-val="Link Rating" v-model="linkRating"
+            @update:model-value="handleNumericFilters('link-rating')" />
+          <NumberField id="atk" :max="5000" :step="50" label-val="ATK" v-model="atk"
+            @update:model-value="handleNumericFilters('atk')" />
+          <NumberField id="def" :max="5000" :step="50" label-val="DEF" v-model="def"
+            @update:model-value="handleNumericFilters('def')" />
         </div>
         <div>
           <div class="flex items-start sm:items-end gap-1">
