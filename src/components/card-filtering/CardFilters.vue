@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CardCategory from './CardCategory.vue'
+import CardCategories from './CardCategories.vue'
 import SelectOption from '../SelectOption.vue'
 import NumberField from '../NumberField.vue'
 import LinkArrows from './LinkArrows.vue'
@@ -14,10 +14,13 @@ import { storeToRefs } from 'pinia'
 import { ref, onBeforeMount, watch } from 'vue'
 import { debounce } from '@/utils/helpers'
 import { MAX_ATK_DEF } from '@/utils/constants'
+import type { CardCategory } from '@/utils/interfaces'
 
 const { filters, format } = storeToRefs(useYgoCardsStore())
+const { resetCardCategoryFilters } = useYgoCardsStore()
 const { toFirst } = usePaginationStore()
 
+const category = ref<CardCategory | undefined>(undefined)
 const monsterCardType = ref('')
 const monsterAbility = ref('')
 const tunerType = ref('')
@@ -35,6 +38,15 @@ const isUnknownAtk = ref(false)
 const isUnknownDef = ref(false)
 const atkRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
+
+/**
+ * Debounced function for card filtering based on category (`monster`, `spell`, or `trap`)
+ */
+const handleCardCategory = debounce(() => {
+  filters.value.category = category.value
+  resetCardCategoryFilters()
+  toFirst()
+}, 300)
 
 /**
  * Debounced function for filtering monsters from the select dropdowns
@@ -96,6 +108,7 @@ const handleRangeFilter = debounce((usage: 'atk' | 'def') => {
  * Set the values of local refs from the related store
  */
 function setValues() {
+  category.value = filters.value.category
   monsterCardType.value = filters.value.monsterCardType
   monsterAbility.value = filters.value.monsterAbility
   tunerType.value = filters.value.tunerType
@@ -119,6 +132,7 @@ onBeforeMount(() => setValues())
 
 watch(
   [
+    () => filters.value.category,
     () => filters.value.monsterCardType,
     () => filters.value.monsterAbility,
     () => filters.value.tunerType,
@@ -152,7 +166,7 @@ watch(
         Card Category
         <PopOver usage="category" />
       </div>
-      <CardCategory v-model="filters.category" />
+      <CardCategories v-model="category" @update:model-value="handleCardCategory" />
     </div>
     <template v-if="filters.category === 'monster'">
       <div class="flex flex-wrap justify-between gap-3 mt-3">
