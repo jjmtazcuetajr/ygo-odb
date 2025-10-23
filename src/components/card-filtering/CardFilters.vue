@@ -38,6 +38,8 @@ const isUnknownAtk = ref(false)
 const isUnknownDef = ref(false)
 const atkRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
+const spellType = ref('')
+const trapType = ref('')
 
 /**
  * Debounced function for card filtering based on category (`monster`, `spell`, or `trap`)
@@ -105,6 +107,16 @@ const handleRangeFilter = debounce((usage: 'atk' | 'def') => {
 }, 300)
 
 /**
+ * Debounced function for filtering spell and trap types
+ * @param usage Whether to use this function for filtering Spells or Traps
+ */
+const handleSpellTrapType = debounce((usage: 'spell' | 'trap') => {
+  if (usage === 'spell') filters.value.spellType = spellType.value
+  else filters.value.trapType = trapType.value
+  toFirst()
+}, 300)
+
+/**
  * Set the values of local refs from the related store
  */
 function setValues() {
@@ -126,6 +138,8 @@ function setValues() {
   isUnknownDef.value = filters.value.isUnknownDef
   atkRange.value = filters.value.atkRange
   defRange.value = filters.value.defRange
+  spellType.value = filters.value.spellType
+  trapType.value = filters.value.trapType
 }
 
 onBeforeMount(() => setValues())
@@ -149,7 +163,9 @@ watch(
     () => filters.value.isUnknownAtk,
     () => filters.value.isUnknownDef,
     () => filters.value.atkRange,
-    () => filters.value.defRange
+    () => filters.value.defRange,
+    () => filters.value.spellType,
+    () => filters.value.trapType
   ],
   () => setValues()
 )
@@ -234,11 +250,11 @@ watch(
     </template>
     <template v-else-if="filters.category === 'spell'">
       <SelectOption id="spell" label-text="Spell Type" label-class="mr-3" parent-class="mt-3" :options="spellTypes"
-        v-model="filters.spellType" @change="toFirst" />
+        v-model="spellType" @update:model-value="handleSpellTrapType('spell')" />
     </template>
     <template v-else-if="filters.category === 'trap'">
       <SelectOption id="trap" label-text="Trap Type" label-class="mr-3" parent-class="mt-3" :options="trapTypes"
-        v-model="filters.trapType" @change="toFirst" />
+        v-model="trapType" @update:model-value="handleSpellTrapType('trap')" />
     </template>
   </div>
 </template>
