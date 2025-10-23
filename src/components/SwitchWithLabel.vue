@@ -6,7 +6,7 @@ defineProps<{
   labelVal: string
 }>()
 
-const model = defineModel<boolean>()
+const model = defineModel<boolean>({ required: true })
 
 const emit = defineEmits<{ 'update-value': [val: boolean] }>()
 
@@ -20,7 +20,7 @@ function updateValue(val: boolean) {
 </script>
 <template>
   <div class="flex items-center gap-1.5">
-    <SwitchRoot :id="id" v-model="model!" @update:model-value="updateValue"
+    <SwitchRoot :id="id" v-model="model" @update:model-value="updateValue"
       class="w-[42px] h-[22px] shadow-sm rounded-full cursor-pointer shrink-0 border border-neutral-400 dark:border-neutral-500 bg-neutral-300 dark:bg-neutral-500 data-[state=checked]:bg-emerald-700 transition-[background-color] duration-300">
       <SwitchThumb
         class="flex justify-center items-center size-[16px] bg-white rounded-full translate-x-[2px] will-change-transform data-[state=checked]:translate-x-[21px] transition-transform duration-300" />
