@@ -18,6 +18,12 @@ import { MAX_ATK_DEF } from '@/utils/constants'
 const { filters, format } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
 
+const monsterCardType = ref('')
+const monsterAbility = ref('')
+const tunerType = ref('')
+const pendulumType = ref('')
+const monsterType = ref('')
+const attribute = ref('')
 const level = ref<number | undefined>(undefined)
 const rank = ref<number | undefined>(undefined)
 const scale = ref<number | undefined>(undefined)
@@ -29,6 +35,20 @@ const isUnknownAtk = ref(false)
 const isUnknownDef = ref(false)
 const atkRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
+
+/**
+ * Debounced function for filtering monsters from the select dropdowns
+ * @param usage The usage type to use
+ */
+const handleDropdownFilters = debounce((usage: 'frame' | 'ability' | 'tuner' | 'pendulum' | 'monster-type' | 'attribute') => {
+  if (usage === 'frame') filters.value.monsterCardType = monsterCardType.value
+  else if (usage === 'ability') filters.value.monsterAbility = monsterAbility.value
+  else if (usage === 'tuner') filters.value.tunerType = tunerType.value
+  else if (usage === 'pendulum') filters.value.pendulumType = pendulumType.value
+  else if (usage === 'monster-type') filters.value.monsterType = monsterType.value
+  else filters.value.attribute = attribute.value
+  toFirst()
+}, 300)
 
 /**
  * Debounced function for filtering monsters based on a numerical criteria
@@ -76,6 +96,12 @@ const handleRangeFilter = debounce((usage: 'atk' | 'def') => {
  * Set the values of local refs from the related store
  */
 function setValues() {
+  monsterCardType.value = filters.value.monsterCardType
+  monsterAbility.value = filters.value.monsterAbility
+  tunerType.value = filters.value.tunerType
+  pendulumType.value = filters.value.pendulumType
+  monsterType.value = filters.value.monsterType
+  attribute.value = filters.value.attribute
   level.value = filters.value.level
   rank.value = filters.value.rank
   scale.value = filters.value.scale
@@ -93,6 +119,12 @@ onBeforeMount(() => setValues())
 
 watch(
   [
+    () => filters.value.monsterCardType,
+    () => filters.value.monsterAbility,
+    () => filters.value.tunerType,
+    () => filters.value.pendulumType,
+    () => filters.value.monsterType,
+    () => filters.value.attribute,
     () => filters.value.level,
     () => filters.value.rank,
     () => filters.value.scale,
@@ -125,18 +157,19 @@ watch(
     <template v-if="filters.category === 'monster'">
       <div class="flex flex-wrap justify-between gap-3 mt-3">
         <div class="flex flex-col gap-1">
-          <SelectOption id="monster-card" label-text="Monster card" parent-class="flex flex-col gap-0.5"
-            :options="monsterCards" v-model="filters.monsterCardType" @change="toFirst" />
+          <SelectOption id="monster-card" label-text="Card Frame" parent-class="flex flex-col gap-0.5"
+            :options="monsterCards" v-model="monsterCardType" @update:model-value="handleDropdownFilters('frame')" />
           <SelectOption id="ability" label-text="Ability" parent-class="flex flex-col gap-0.5"
-            :options="monsterAbilities" v-model="filters.monsterAbility" @change="toFirst" />
+            :options="monsterAbilities" v-model="monsterAbility"
+            @update:model-value="handleDropdownFilters('ability')" />
           <SelectOption id="tuner" label-text="Tuner" parent-class="flex flex-col gap-0.5" :options="tuners"
-            v-model="filters.tunerType" @change="toFirst" />
+            v-model="tunerType" @update:model-value="handleDropdownFilters('tuner')" />
           <SelectOption id="pendulum" label-text="Pendulum" parent-class="flex flex-col gap-0.5" :options="pendulums"
-            v-model="filters.pendulumType" @change="toFirst" />
+            v-model="pendulumType" @update:model-value="handleDropdownFilters('pendulum')" />
           <SelectOption id="monster-type" label-text="Monster Type" parent-class="flex flex-col gap-0.5"
-            :options="monsterTypes" v-model="filters.monsterType" @change="toFirst" />
+            :options="monsterTypes" v-model="monsterType" @update:model-value="handleDropdownFilters('monster-type')" />
           <SelectOption id="attribute" label-text="Attribute" parent-class="flex flex-col gap-0.5" :options="attributes"
-            v-model="filters.attribute" @change="toFirst" />
+            v-model="attribute" @update:model-value="handleDropdownFilters('attribute')" />
         </div>
         <div class="flex flex-col gap-1">
           <NumberField id="level" :max="12" label-val="Level" v-model="level"
