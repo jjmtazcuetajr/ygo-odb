@@ -62,7 +62,7 @@ export const useImageLoadingStore = defineStore('imageLoading', () => {
   /**
    * Start loading the image URLs in the queue.
    * 
-   *  - Image loading is sequential in nature to avoid server rate limits.
+   *  - Image loading is sequential in nature to avoid hitting server rate limits.
    * 
    *  - This is a recursive function.
    */
