@@ -16,8 +16,9 @@ import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useDetectHover } from '@/composables/detectHover'
+import { debounce } from '@/utils/helpers'
 
 const cardStore = useYgoCardsStore()
 const { filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards } = storeToRefs(cardStore)
@@ -35,14 +36,13 @@ const toastMessage = ref('')
 const isSuccessToast = ref(false)
 const timer = ref(0)
 const searchValue = ref('')
-const displayValue = computed(() => searchValue.value)
 
 /**
- * Handles the input element's input event
- * @param ev The event object
+ * Debounced function for filtering cards based on the search term
+ * @param e The event object
  */
-function handleSearch(ev: Event) {
-  const target = ev.target as HTMLInputElement
+const debounceSearch = debounce((e: Event) => {
+  const target = e.target as HTMLInputElement
   let value = target.value
 
   // white space rules
@@ -52,16 +52,12 @@ function handleSearch(ev: Event) {
 
   searchValue.value = value
 
-  // filter cards if the search term character length is at least 3. If the search term is cleared then show all cards
   const length = searchValue.value.length
-  if (length > 2 || length === 0) {
-    if (currentPage.value > 1) toFirst()
+  if (length >= 3 || length === 0) {
     filters.value.search = searchValue.value
+    if (currentPage.value > 1) toFirst()
   }
-
-  // update the input value if it's different from the current value that went through the white space rules
-  if (target.value !== value) target.value = value
-}
+}, 300)
 
 /**
  * Show a toast with an appropriate message when adding cards
@@ -85,6 +81,9 @@ watch([currentPage, getFilteredCards], () => {
   processImageQueue()
 })
 
+// watch for changes in the store's search filter ref, then update the corresponding local ref
+watch(() => filters.value.search, () => { searchValue.value = filters.value.search })
+
 onMounted(() => {
   // for mobile view only
   if (window.innerWidth < 1024) {
@@ -107,7 +106,7 @@ onMounted(() => {
         </button>
       </div>
       <div class="relative">
-        <input id="search-input" type="text" :value="displayValue" @input="handleSearch"
+        <input id="search-input" type="text" v-model="searchValue" @input="debounceSearch"
           placeholder="Enter a card name or effect..." aria-label="Enter a card name or effect"
           class="w-full text-sm sm:text-base rounded-md pl-7 pr-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
         <Search class="absolute top-[50%] transform-[translateY(-50%)] left-2 pointer-events-none" :size="16" />
