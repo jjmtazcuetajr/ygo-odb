@@ -85,12 +85,9 @@ watch([currentPage, getFilteredCards], () => {
 watch(() => filters.value.search, () => { searchValue.value = filters.value.search })
 
 onMounted(() => {
-  // for mobile view only
-  if (window.innerWidth < 1024) {
-    searchValue.value = filters.value.search // retain the search input of the user
-    queueImagesForCurrentPage()
-    processImageQueue()
-  }
+  searchValue.value = filters.value.search // retain the search input of the user
+  queueImagesForCurrentPage()
+  processImageQueue()
 })
 </script>
 <template>
