@@ -89,7 +89,7 @@ function handleClearDecks() {
               </li>
               <li class="mb-2">
                 Additionally, it will show controls for viewing card information and various operations like adding,
-                removing, and cross-deck transferring of cards.
+                removing, and cross-deck transferring of cards either individually or in bulk.
               </li>
               <li class="mb-2">
                 When dragging cards, the dragged card or your cursor will show an appropriate feedback depending on
@@ -100,7 +100,7 @@ function handleClearDecks() {
                 signify that the dragged card can be placed on the highlighted card's position.
               </li>
               <li class="mb-2">
-                When a card is inside the main, extra, or side deck, you can remove it either by right-clicking it
+                A card inside the main, extra, or side deck can be removed either by right-clicking it
                 (for desktop users) or dragging outside its current place.
               </li>
               <li class="mb-2">
