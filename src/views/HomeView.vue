@@ -50,6 +50,13 @@ function setGenesysLimit() {
   isEditingGenesysLimit.value = false
 }
 
+/**
+ * Handle changes to the selected format
+ */
+function handleFormatChange() {
+  if (format.value !== 'genesys') isEditingGenesysLimit.value = false
+}
+
 onMounted(() => {
   showSideDrawerOnLargeScreens()
   window.addEventListener('resize', showSideDrawerOnLargeScreens)
@@ -99,7 +106,7 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
       <div class="flex flex-col gap-3 grow shrink basis-0">
         <div class="flex flex-wrap gap-3 justify-between items-center text-xs sm:text-base">
           <SelectOption id="ban-list" label-text="Format" parent-class="flex items-center gap-1" :options="formats"
-            v-model="format" />
+            v-model="format" @update:model-value="handleFormatChange" />
           <template v-if="format === 'genesys'">
             <div v-if="!isEditingGenesysLimit" class="flex gap-3 items-center">
               <span>Genesys Points:
