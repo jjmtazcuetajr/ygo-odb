@@ -92,7 +92,7 @@ onMounted(() => {
 </script>
 <template>
   <div id="overlay" @click="$emit('handleOverlayClick', $event)"
-    class="fixed lg:static z-11 lg:z-[unset] inset-0 lg:w-[35%] xl:w-[30%] bg-neutral-700/70 dark:bg-neutral-950/70 lg:bg-[unset] dark:lg:bg-[unset] 2xl:max-h-[784px]">
+    class="fixed lg:static z-11 lg:z-[unset] inset-0 lg:w-[35%] xl:w-[30%] bg-neutral-700/70 dark:bg-neutral-950/70 lg:bg-[unset] dark:lg:bg-[unset] lg:max-h-[800px]">
     <div
       class="inner flex flex-col gap-2 p-3 bg-neutral-100 dark:bg-neutral-800 border-r lg:border-r-0 border-y lg:border-y-0 rounded-r-lg lg:rounded-l-lg border-neutral-400 dark:border-neutral-500 shadow-[5px_15px_15px_5px_#555] dark:shadow-[5px_15px_15px_5px_#000] lg:shadow-[unset] dark:lg:shadow-[unset] w-full sm:w-[70%] md:w-[50%] lg:w-full h-full transition-[background-color] duration-400">
       <div class="flex lg:hidden items-center">
