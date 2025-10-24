@@ -18,6 +18,8 @@ import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useDetectHover } from '@/composables/detectHover'
+import { debounce } from '@/utils/helpers'
+import type { SortByMonsterStat } from '@/utils/interfaces'
 
 const cardStore = useYgoCardsStore()
 const { filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards } = storeToRefs(cardStore)
@@ -36,6 +38,7 @@ const isSuccessToast = ref(false)
 const timer = ref(0)
 const searchValue = ref('')
 const displayValue = computed(() => searchValue.value)
+const sortType = ref<SortByMonsterStat | 'name' | 'genesys-point'>('name')
 
 /**
  * Handles the input element's input event
@@ -79,6 +82,11 @@ function handleToast(msg: string, feedback: boolean) {
   toastRef.value?.handleShow()
 }
 
+/**
+ * Debounced function for sorting cards based on a criteria
+ */
+const handleSortType = debounce(() => { sortBy.value = sortType.value }, 300)
+
 // watch for changes in the current page and the filtered cards, then queue and process the corresponding card images accordingly
 watch([currentPage, getFilteredCards], () => {
   queueImagesForCurrentPage()
@@ -114,7 +122,8 @@ onMounted(() => {
       </div>
       <div class="flex flex-wrap items-end gap-2">
         <SelectOption id="sort-type" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Sort by"
-          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortTypes" v-model="sortBy" />
+          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortTypes" v-model="sortType"
+          @update:model-value="handleSortType" />
         <SelectOption id="sort-dir" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Direction"
           label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortDirections"
           v-model="sortDir" />
