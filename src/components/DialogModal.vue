@@ -2,7 +2,7 @@
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger } from 'reka-ui'
 import { X } from 'lucide-vue-next'
 import CardFilters from './card-filtering/CardFilters.vue'
-import NumberField from './NumberField.vue'
+import NumberField from './general-purpose/NumberField.vue'
 import ButtonComponent from './general-purpose/ButtonComponent.vue'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
