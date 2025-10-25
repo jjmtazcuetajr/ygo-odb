@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CardCategories from './CardCategories.vue'
-import SelectOption from '../SelectOption.vue'
+import SelectOption from '../general-purpose/SelectOption.vue'
 import NumberField from '../NumberField.vue'
 import LinkArrows from './LinkArrows.vue'
 import FilterHints from './FilterHints.vue'
