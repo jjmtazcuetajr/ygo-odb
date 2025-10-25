@@ -6,7 +6,7 @@ import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { debounce } from '@/utils/helpers'
 import NumberField from '../general-purpose/NumberField.vue'
-import SliderComponent from '../SliderComponent.vue'
+import SliderComponent from '../general-purpose/SliderComponent.vue'
 import SwitchWithLabel from '../general-purpose/SwitchWithLabel.vue'
 
 const { filters } = storeToRefs(useYgoCardsStore())
