@@ -3,7 +3,7 @@ import DeckType from '@/components/DeckType.vue'
 import DropdownMenu from '@/components/DropdownMenu.vue'
 import SearchResults from '@/components/SearchResults.vue'
 import DialogModal from '@/components/DialogModal.vue'
-import ButtonCTA from '@/components/ButtonCTA.vue'
+import ButtonComponent from '@/components/general-purpose/ButtonComponent.vue'
 import SelectOption from '@/components/SelectOption.vue'
 import NumberField from '@/components/NumberField.vue'
 import { Trash2, CircleHelp, Search, Pen, Check, X } from 'lucide-vue-next'
@@ -78,27 +78,27 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
         <div class="flex gap-2">
           <DialogModal usage="clear-all">
             <template #trigger>
-              <ButtonCTA variant="neutral" has-icon>
+              <ButtonComponent variant="neutral" has-icon>
                 <template #textWithIcon>
                   <Trash2 :size="16" /> Clear
                 </template>
-              </ButtonCTA>
+              </ButtonComponent>
             </template>
           </DialogModal>
           <DialogModal usage="help">
             <template #trigger>
-              <ButtonCTA variant="neutral" has-icon>
+              <ButtonComponent variant="neutral" has-icon>
                 <template #textWithIcon>
                   <CircleHelp :size="16" /> Help
                 </template>
-              </ButtonCTA>
+              </ButtonComponent>
             </template>
           </DialogModal>
-          <ButtonCTA variant="neutral" has-icon only-in-mobile @click="isSideDrawerShown = true">
+          <ButtonComponent variant="neutral" has-icon only-in-mobile @click="isSideDrawerShown = true">
             <template #textWithIcon>
               <Search :size="16" /> Search
             </template>
-          </ButtonCTA>
+          </ButtonComponent>
         </div>
       </div>
     </div>
@@ -112,28 +112,28 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
               <span>Genesys Points:
                 <strong>{{ `${getSumOfGenesysPoints.toLocaleString()}/${genesysLimit.toLocaleString()}` }}</strong>
               </span>
-              <ButtonCTA variant="neutral" has-icon class="!rounded-full !p-1.5" aria-label="Change Genesys point limit"
-                title="Change Genesys point limit" @click="editGenesysLimit">
+              <ButtonComponent variant="neutral" has-icon class="!rounded-full !p-1.5"
+                aria-label="Change Genesys point limit" title="Change Genesys point limit" @click="editGenesysLimit">
                 <template #textWithIcon>
                   <Pen :size="16" aria-hidden="true" />
                 </template>
-              </ButtonCTA>
+              </ButtonComponent>
             </div>
             <div v-else class="flex gap-3 items-center">
               <NumberField id="genesys-limit" label-val="Edit Genesys Limit" class="!flex-row !gap-2" :max="10000"
                 v-model="newGenesysPointLimit" @keydown.enter="setGenesysLimit" />
-              <ButtonCTA variant="emerald" has-icon class="!rounded-full !p-1.5"
+              <ButtonComponent variant="emerald" has-icon class="!rounded-full !p-1.5"
                 aria-label="Confirm Genesys point limit change" title="Confirm" @click="setGenesysLimit">
                 <template #textWithIcon>
                   <Check :size="16" aria-hidden="true" />
                 </template>
-              </ButtonCTA>
-              <ButtonCTA variant="red" has-icon class="!rounded-full !p-1.5"
+              </ButtonComponent>
+              <ButtonComponent variant="red" has-icon class="!rounded-full !p-1.5"
                 aria-label="Cancel Genesys point limit change" title="Cancel" @click="isEditingGenesysLimit = false">
                 <template #textWithIcon>
                   <X :size="16" aria-hidden="true" />
                 </template>
-              </ButtonCTA>
+              </ButtonComponent>
             </div>
           </template>
         </div>

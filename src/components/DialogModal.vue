@@ -3,7 +3,7 @@ import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, Di
 import { X } from 'lucide-vue-next'
 import CardFilters from './card-filtering/CardFilters.vue'
 import NumberField from './NumberField.vue'
-import ButtonCTA from './ButtonCTA.vue'
+import ButtonComponent from './general-purpose/ButtonComponent.vue'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { useDeckStore } from '@/stores/deck'
@@ -116,24 +116,24 @@ function handleClearDecks() {
               @keydown.enter="handleKeyDown" />
           </div>
           <div class="mt-5 mr-1 flex justify-end gap-2">
-            <ButtonCTA variant="neutral" text-content="Reset filters" v-if="usage === 'filters'"
+            <ButtonComponent variant="neutral" text-content="Reset filters" v-if="usage === 'filters'"
               @click="resetFilters" />
             <template v-else-if="usage === 'clear-all'">
-              <ButtonCTA variant="red" text-content="Clear" @click="handleClearDecks" />
+              <ButtonComponent variant="red" text-content="Clear" @click="handleClearDecks" />
               <DialogClose as-child>
-                <ButtonCTA variant="neutral" text-content="Cancel" />
+                <ButtonComponent variant="neutral" text-content="Cancel" />
               </DialogClose>
             </template>
             <template v-else-if="usage === 'pagination'">
               <DialogClose as-child>
-                <ButtonCTA variant="emerald" text-content="Jump" @click="toPage(pageInputValue)" />
+                <ButtonComponent variant="emerald" text-content="Jump" @click="toPage(pageInputValue)" />
               </DialogClose>
               <DialogClose as-child>
-                <ButtonCTA variant="neutral" text-content="Cancel" />
+                <ButtonComponent variant="neutral" text-content="Cancel" />
               </DialogClose>
             </template>
             <DialogClose as-child v-else>
-              <ButtonCTA variant="neutral" text-content="Close" />
+              <ButtonComponent variant="neutral" text-content="Close" />
             </DialogClose>
           </div>
           <DialogClose aria-label="Close"

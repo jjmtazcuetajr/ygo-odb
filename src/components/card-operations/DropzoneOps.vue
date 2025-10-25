@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ButtonCTA from '../ButtonCTA.vue'
+import ButtonComponent from '../general-purpose/ButtonComponent.vue'
 import type { YGOCardData, Dropzone, Format } from '@/utils/interfaces'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
@@ -95,9 +95,9 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
     class="dark:text-neutral-300">
     <span>Add more:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="emerald" text-content="&#xd7; 1" class="w-full" aria-label="Add 1 Copy"
+      <ButtonComponent variant="emerald" text-content="&#xd7; 1" class="w-full" aria-label="Add 1 Copy"
         :disabled="handleDisabledState(source, 1)" @click="addCardToDeck([card], handleLastIndex(source), source)" />
-      <ButtonCTA
+      <ButtonComponent
         v-if="(format === 'ocg' && !card.banlist_info?.ban_ocg) || (format === 'tcg' && !card.banlist_info?.ban_tcg) || format === 'none' || format === 'genesys'"
         variant="emerald" text-content="&#xd7; 2" class="w-full" aria-label="Add 2 Copies"
         :disabled="handleDisabledState(source, 2)"
@@ -111,22 +111,22 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
       <span v-else-if="isExtraDeckCard(card.frameType)">Move to Extra Deck:</span>
     </template>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="neutral" text-content="&#xd7; 1" class="w-full" aria-label="Move 1 Copy"
+      <ButtonComponent variant="neutral" text-content="&#xd7; 1" class="w-full" aria-label="Move 1 Copy"
         @click="crossdeckCardTransfer(source, 1)" />
-      <ButtonCTA v-if="getCardFrequency(card, source) >= 2" variant="neutral" text-content="&#xd7; 2" class="w-full"
-        aria-label="Move 2 Copies" @click="crossdeckCardTransfer(source, 2)" />
-      <ButtonCTA v-if="getCardFrequency(card, source) === 3" variant="neutral" text-content="&#xd7; 3" class="w-full"
-        aria-label="Move 3 Copies" @click="crossdeckCardTransfer(source, 3)" />
+      <ButtonComponent v-if="getCardFrequency(card, source) >= 2" variant="neutral" text-content="&#xd7; 2"
+        class="w-full" aria-label="Move 2 Copies" @click="crossdeckCardTransfer(source, 2)" />
+      <ButtonComponent v-if="getCardFrequency(card, source) === 3" variant="neutral" text-content="&#xd7; 3"
+        class="w-full" aria-label="Move 3 Copies" @click="crossdeckCardTransfer(source, 3)" />
     </div>
   </div>
   <div class="dark:text-neutral-300">
     <span>Remove:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="red" text-content="&#xd7; 1" class="w-full" aria-label="Remove 1 Copy"
+      <ButtonComponent variant="red" text-content="&#xd7; 1" class="w-full" aria-label="Remove 1 Copy"
         @click="[removeCardFromDeck(fromIndex, source), popoverClose()]" />
-      <ButtonCTA v-if="getCardFrequency(card, source) >= 2" variant="red" text-content="&#xd7; 2" class="w-full"
+      <ButtonComponent v-if="getCardFrequency(card, source) >= 2" variant="red" text-content="&#xd7; 2" class="w-full"
         aria-label="Remove 2 Copies" @click="[removeCardFromDeck(fromIndex, source, 2), popoverClose()]" />
-      <ButtonCTA v-if="getCardFrequency(card, source) === 3" variant="red" text-content="&#xd7; 3" class="w-full"
+      <ButtonComponent v-if="getCardFrequency(card, source) === 3" variant="red" text-content="&#xd7; 3" class="w-full"
         aria-label="Remove 3 Copies" @click="[removeCardFromDeck(fromIndex, source, 3), popoverClose()]" />
     </div>
   </div>

@@ -3,7 +3,7 @@ import { X, Filter, Search, LoaderCircle } from 'lucide-vue-next'
 import DialogModal from './DialogModal.vue'
 import SelectOption from './SelectOption.vue'
 import Pagination from './Pagination.vue'
-import ButtonCTA from './ButtonCTA.vue'
+import ButtonComponent from './general-purpose/ButtonComponent.vue'
 import CardTooltip from './CardTooltip.vue'
 import CardDialog from './CardDialog.vue'
 import BanStatus from './BanStatus.vue'
@@ -116,11 +116,11 @@ onMounted(() => {
           v-model="sortDir" />
         <DialogModal usage="filters">
           <template #trigger>
-            <ButtonCTA variant="neutral" has-icon>
+            <ButtonComponent variant="neutral" has-icon>
               <template #textWithIcon>
                 <Filter :size="16" /> Filters
               </template>
-            </ButtonCTA>
+            </ButtonComponent>
           </template>
         </DialogModal>
       </div>

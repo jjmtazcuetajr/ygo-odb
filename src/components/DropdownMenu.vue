@@ -5,7 +5,7 @@ import {
   DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger,
   DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger
 } from 'reka-ui'
-import ButtonCTA from './ButtonCTA.vue'
+import ButtonComponent from './general-purpose/ButtonComponent.vue'
 import { useYdkFile } from '@/composables/ydkFile'
 import { useYdkeUrl } from '@/composables/ydkeURL'
 import { storeToRefs } from 'pinia'
@@ -316,10 +316,10 @@ function persistDialog(event: PointerDownOutsideEvent) {
               class="invisible text-xs sm:text-sm text-emerald-700 dark:text-emerald-500">
               <strong>Copied!</strong>
             </span>
-            <ButtonCTA variant="emerald" @click="clickHandler"
+            <ButtonComponent variant="emerald" @click="clickHandler"
               :text-content="usage === 'ydk-file-export' ? 'Download YDK file' : usage === 'ydke-url-export' ? 'Copy to clipboard' : 'Import'" />
             <DialogClose as-child>
-              <ButtonCTA variant="neutral" text-content="Cancel" />
+              <ButtonComponent variant="neutral" text-content="Cancel" />
             </DialogClose>
           </div>
           <DialogClose aria-label="Close"

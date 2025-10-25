@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ButtonCTA from '../ButtonCTA.vue'
+import ButtonComponent from '../general-purpose/ButtonComponent.vue'
 import type { YGOCardData, Dropzone, Format } from '@/utils/interfaces'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
@@ -80,33 +80,33 @@ function isButtonVisible(card: YGOCardData, format: Format, num: 2 | 3): boolean
   <div v-if="isMainDeckCard(card.frameType)" class="dark:text-neutral-300">
     <span>To Main Deck:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
+      <ButtonComponent variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
         :disabled="handleDisabledState('main', 1)" @click="addCardToDeck([card], mainDeck.length, 'main')" />
-      <ButtonCTA v-if="isButtonVisible(card, format, 2)" variant="emerald" class="w-full" text-content="&#xd7; 2"
+      <ButtonComponent v-if="isButtonVisible(card, format, 2)" variant="emerald" class="w-full" text-content="&#xd7; 2"
         aria-label="Add 2 copies" :disabled="handleDisabledState('main', 2)" @click="handleAdd('main', 2)" />
-      <ButtonCTA v-if="isButtonVisible(card, format, 3)" variant="emerald" class="w-full" text-content="&#xd7; 3"
+      <ButtonComponent v-if="isButtonVisible(card, format, 3)" variant="emerald" class="w-full" text-content="&#xd7; 3"
         aria-label="Add 3 copies" :disabled="handleDisabledState('main', 3)" @click="handleAdd('main', 3)" />
     </div>
   </div>
   <div v-else-if="isExtraDeckCard(card.frameType)" class="dark:text-neutral-300">
     <span>To Extra Deck:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
+      <ButtonComponent variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
         :disabled="handleDisabledState('extra', 1)" @click="addCardToDeck([card], extraDeck.length, 'extra')" />
-      <ButtonCTA v-if="isButtonVisible(card, format, 2)" variant="emerald" class="w-full" text-content="&#xd7; 2"
+      <ButtonComponent v-if="isButtonVisible(card, format, 2)" variant="emerald" class="w-full" text-content="&#xd7; 2"
         aria-label="Add 2 copies" :disabled="handleDisabledState('extra', 2)" @click="handleAdd('extra', 2)" />
-      <ButtonCTA v-if="isButtonVisible(card, format, 3)" variant="emerald" class="w-full" text-content="&#xd7; 3"
+      <ButtonComponent v-if="isButtonVisible(card, format, 3)" variant="emerald" class="w-full" text-content="&#xd7; 3"
         aria-label="Add 3 copies" :disabled="handleDisabledState('extra', 3)" @click="handleAdd('extra', 3)" />
     </div>
   </div>
   <div class="dark:text-neutral-300">
     <span>To Side Deck:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonCTA variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
+      <ButtonComponent variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
         :disabled="handleDisabledState('side', 1)" @click="addCardToDeck([card], sideDeck.length, 'side')" />
-      <ButtonCTA v-if="isButtonVisible(card, format, 2)" variant="emerald" class="w-full" text-content="&#xd7; 2"
+      <ButtonComponent v-if="isButtonVisible(card, format, 2)" variant="emerald" class="w-full" text-content="&#xd7; 2"
         aria-label="Add 2 copies" :disabled="handleDisabledState('side', 2)" @click="handleAdd('side', 2)" />
-      <ButtonCTA v-if="isButtonVisible(card, format, 3)" variant="emerald" class="w-full" text-content="&#xd7; 3"
+      <ButtonComponent v-if="isButtonVisible(card, format, 3)" variant="emerald" class="w-full" text-content="&#xd7; 3"
         aria-label="Add 3 copies" :disabled="handleDisabledState('side', 3)" @click="handleAdd('side', 3)" />
     </div>
   </div>

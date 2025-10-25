@@ -2,7 +2,7 @@
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger, VisuallyHidden } from 'reka-ui'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { X } from 'lucide-vue-next'
-import ButtonCTA from './ButtonCTA.vue'
+import ButtonComponent from './general-purpose/ButtonComponent.vue'
 import CardInfo from './CardInfo.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
 import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
@@ -57,7 +57,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
     <div class="flex flex-col grow justify-around">
       <DialogRoot v-model:open="isDialogOpen">
         <DialogTrigger as-child>
-          <ButtonCTA variant="neutral" text-content="More Info" class="self-start" />
+          <ButtonComponent variant="neutral" text-content="More Info" class="self-start" />
         </DialogTrigger>
         <DialogPortal>
           <DialogOverlay
@@ -83,11 +83,11 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
         </DialogPortal>
       </DialogRoot>
       <div class="flex gap-4">
-        <ButtonCTA v-if="isMainDeckCard(card.frameType)" variant="emerald" text-content="Add to Main"
+        <ButtonComponent v-if="isMainDeckCard(card.frameType)" variant="emerald" text-content="Add to Main"
           @click="handleClick('main', mainDeck.length)" />
-        <ButtonCTA v-else-if="isExtraDeckCard(card.frameType)" variant="emerald" text-content="Add to Extra"
+        <ButtonComponent v-else-if="isExtraDeckCard(card.frameType)" variant="emerald" text-content="Add to Extra"
           @click="handleClick('extra', extraDeck.length)" />
-        <ButtonCTA variant="emerald" text-content="Add to Side" @click="handleClick('side', sideDeck.length)" />
+        <ButtonComponent variant="emerald" text-content="Add to Side" @click="handleClick('side', sideDeck.length)" />
       </div>
     </div>
   </div>
