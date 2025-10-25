@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { X, Filter, Search, LoaderCircle } from 'lucide-vue-next'
-import DialogModal from './DialogModal.vue'
+import DialogModal from './general-purpose/DialogModal.vue'
 import SelectOption from './general-purpose/SelectOption.vue'
 import Pagination from './Pagination.vue'
 import ButtonComponent from './general-purpose/ButtonComponent.vue'

@@ -2,7 +2,7 @@
 import { ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'lucide-vue-next'
 import { usePaginationStore } from "@/stores/pagination"
 import { storeToRefs } from "pinia"
-import DialogModal from './DialogModal.vue'
+import DialogModal from './general-purpose/DialogModal.vue'
 
 const store = usePaginationStore()
 const { currentPage, totalPages } = storeToRefs(store)
