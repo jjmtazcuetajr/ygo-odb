@@ -3,7 +3,7 @@ import CardCategories from './CardCategories.vue'
 import SelectOption from '../SelectOption.vue'
 import NumberField from '../NumberField.vue'
 import LinkArrows from './LinkArrows.vue'
-import PopOver from './PopOver.vue'
+import FilterHints from './FilterHints.vue'
 import GenesysFilters from './GenesysFilters.vue'
 import SliderComponent from '../SliderComponent.vue'
 import SwitchWithLabel from '../SwitchWithLabel.vue'
@@ -191,7 +191,7 @@ watch(
     <div class="flex items-center flex-wrap gap-2">
       <div class="flex items-start sm:items-end gap-1">
         Card Category
-        <PopOver usage="category" />
+        <FilterHints usage="category" />
       </div>
       <CardCategories v-model="category" @update:model-value="handleCardCategory" />
     </div>
@@ -229,7 +229,7 @@ watch(
         <div>
           <div class="flex items-start sm:items-end gap-1">
             Link Arrows
-            <PopOver usage="link-arrows" />
+            <FilterHints usage="link-arrows" />
           </div>
           <LinkArrows class="mt-1" v-model="linkArrows" @update:model-value="handleLinkArrows" />
         </div>
