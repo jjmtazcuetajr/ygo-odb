@@ -5,9 +5,8 @@ import SearchResults from '@/components/SearchResults.vue'
 import DialogModal from '@/components/general-purpose/DialogModal.vue'
 import ButtonComponent from '@/components/general-purpose/ButtonComponent.vue'
 import SelectOption from '@/components/general-purpose/SelectOption.vue'
-import NumberField from '@/components/general-purpose/NumberField.vue'
 import { Trash2, CircleHelp, Search, Pen, Check, X } from 'lucide-vue-next'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, defineAsyncComponent } from 'vue'
 import { formats } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { useDeckStore } from '@/stores/deck'
@@ -25,6 +24,8 @@ const {
 const isSideDrawerShown = ref(false)
 const isEditingGenesysLimit = ref(false)
 const newGenesysPointLimit = ref(0)
+
+const NumberField = defineAsyncComponent(() => import('@/components/general-purpose/NumberField.vue'))
 
 function closeSideDrawer(ev: MouseEvent) {
   if (ev && (ev.target as HTMLElement).id === 'overlay' && isSideDrawerShown.value) isSideDrawerShown.value = false

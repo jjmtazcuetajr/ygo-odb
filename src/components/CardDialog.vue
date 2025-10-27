@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, VisuallyHidden } from 'reka-ui'
 import { X } from 'lucide-vue-next'
-import { onMounted, onUnmounted } from 'vue'
-import CardInfo from './CardInfo.vue'
-import BanStatus from './BanStatus.vue'
+import { onMounted, onUnmounted, defineAsyncComponent } from 'vue'
 import CardPlaceholder from './CardPlaceholder.vue'
-import GenesysPoint from './GenesysPoint.vue'
 import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
 import { useMobileDragAndDrop } from '@/composables/mobileDragAndDrop'
 import { useImageLoadingStore } from '@/stores/imageLoading'
@@ -20,6 +17,10 @@ defineProps<{
 const { handleTouchStart, isDialogOpen } = useMobileDragAndDrop()
 
 const { hasFinishedLoadingImage } = useImageLoadingStore()
+
+const CardInfo = defineAsyncComponent(() => import('./CardInfo.vue'))
+const BanStatus = defineAsyncComponent(() => import('./BanStatus.vue'))
+const GenesysPoint = defineAsyncComponent(() => import('./GenesysPoint.vue'))
 
 function hideDialog() {
   if (window.innerWidth >= 1024 && isDialogOpen.value) isDialogOpen.value = false

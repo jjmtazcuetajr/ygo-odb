@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import CardTooltip from './CardTooltip.vue'
-import CardDialog from './CardDialog.vue'
 import type { YGOCardData } from '@/utils/interfaces'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { storeToRefs } from 'pinia'
 import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
 import { useDetectHover } from '@/composables/detectHover'
+import { defineAsyncComponent } from 'vue'
 
 defineProps<{
   type: 'main' | 'extra' | 'side'
@@ -42,6 +41,9 @@ const deckTypeMap: Record<string, DeckProps> = {
 }
 
 const { isHoverDetected } = useDetectHover()
+
+const CardTooltip = defineAsyncComponent(() => import('./CardTooltip.vue'))
+const CardDialog = defineAsyncComponent(() => import('./CardDialog.vue'))
 </script>
 <template>
   <div>

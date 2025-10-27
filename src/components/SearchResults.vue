@@ -2,21 +2,14 @@
 import { X, Filter, Search, LoaderCircle } from 'lucide-vue-next'
 import DialogModal from './general-purpose/DialogModal.vue'
 import SelectOption from './general-purpose/SelectOption.vue'
-import Pagination from './Pagination.vue'
 import ButtonComponent from './general-purpose/ButtonComponent.vue'
-import CardTooltip from './CardTooltip.vue'
-import CardDialog from './CardDialog.vue'
-import BanStatus from './BanStatus.vue'
-import CardDetailsMobile from './CardDetailsMobile.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
-import ToastComponent from './ToastComponent.vue'
-import GenesysPoint from './GenesysPoint.vue'
 import { sortTypes, sortDirections } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, defineAsyncComponent } from 'vue'
 import { useDetectHover } from '@/composables/detectHover'
 import { debounce } from '@/utils/helpers'
 
@@ -36,6 +29,14 @@ const toastMessage = ref('')
 const isSuccessToast = ref(false)
 const timer = ref(0)
 const searchValue = ref('')
+
+const Pagination = defineAsyncComponent(() => import('./Pagination.vue'))
+const CardTooltip = defineAsyncComponent(() => import('./CardTooltip.vue'))
+const CardDialog = defineAsyncComponent(() => import('./CardDialog.vue'))
+const CardDetailsMobile = defineAsyncComponent(() => import('./CardDetailsMobile.vue'))
+const BanStatus = defineAsyncComponent(() => import('./BanStatus.vue'))
+const ToastComponent = defineAsyncComponent(() => import('./ToastComponent.vue'))
+const GenesysPoint = defineAsyncComponent(() => import('./GenesysPoint.vue'))
 
 /**
  * Debounced function for filtering cards based on the search term

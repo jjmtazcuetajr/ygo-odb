@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger, VisuallyHidden } from 'reka-ui'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, defineAsyncComponent } from 'vue'
 import { X } from 'lucide-vue-next'
 import ButtonComponent from './general-purpose/ButtonComponent.vue'
-import CardInfo from './CardInfo.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
 import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
 import { useDeckStore } from '@/stores/deck'
@@ -25,6 +24,8 @@ const { addCardToDeck } = useDeckStore()
 const { hasFinishedLoadingImage } = useImageLoadingStore()
 
 const { toastMessage, isSuccessToast, createToastMessage } = useToast()
+
+const CardInfo = defineAsyncComponent(() => import('./CardInfo.vue'))
 
 /**
  * Add a card to a type of deck and show a toast

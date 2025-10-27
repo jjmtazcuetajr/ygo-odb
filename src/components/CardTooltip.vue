@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import {
-  TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRoot, TooltipTrigger,
-  PopoverArrow, PopoverClose, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger
+  TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRoot, TooltipTrigger, PopoverArrow, PopoverClose, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger
 } from 'reka-ui'
-import CardInfo from './CardInfo.vue'
-import BanStatus from './BanStatus.vue'
-import GridToDeck from './card-operations/GridToDeck.vue'
-import DropzoneOps from './card-operations/DropzoneOps.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
-import GenesysPoint from './GenesysPoint.vue'
 import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
-import { ref } from 'vue'
+import { ref, defineAsyncComponent } from 'vue'
 import { Info, Settings2, X } from 'lucide-vue-next'
 import { useDeckStore } from '@/stores/deck'
 import { useImageLoadingStore } from '@/stores/imageLoading'
@@ -32,6 +26,12 @@ const { hasFinishedLoadingImage } = useImageLoadingStore()
 
 const isHovered = ref(false)
 const isPopoverOpen = ref(false)
+
+const CardInfo = defineAsyncComponent(() => import('./CardInfo.vue'))
+const BanStatus = defineAsyncComponent(() => import('./BanStatus.vue'))
+const GridToDeck = defineAsyncComponent(() => import('./card-operations/GridToDeck.vue'))
+const DropzoneOps = defineAsyncComponent(() => import('./card-operations/DropzoneOps.vue'))
+const GenesysPoint = defineAsyncComponent(() => import('./GenesysPoint.vue'))
 </script>
 <template>
   <div @mouseenter="isHovered = true" @mouseleave="isHovered = false"

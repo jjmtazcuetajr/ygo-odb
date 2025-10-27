@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import CardCategories from './CardCategories.vue'
 import SelectOption from '../general-purpose/SelectOption.vue'
-import NumberField from '../general-purpose/NumberField.vue'
-import LinkArrows from './LinkArrows.vue'
-import FilterHints from './FilterHints.vue'
-import GenesysFilters from './GenesysFilters.vue'
-import SliderComponent from '../general-purpose/SliderComponent.vue'
-import SwitchWithLabel from '../general-purpose/SwitchWithLabel.vue'
 import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tuners, pendulums, attributes, banStatus } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { storeToRefs } from 'pinia'
-import { ref, onBeforeMount, watch } from 'vue'
+import { ref, onBeforeMount, watch, defineAsyncComponent } from 'vue'
 import { debounce } from '@/utils/helpers'
 import { MAX_ATK_DEF } from '@/utils/constants'
 import type { CardCategory, BanStatus } from '@/utils/interfaces'
@@ -19,6 +12,14 @@ import type { CardCategory, BanStatus } from '@/utils/interfaces'
 const { filters, format } = storeToRefs(useYgoCardsStore())
 const { resetCardCategoryFilters } = useYgoCardsStore()
 const { toFirst } = usePaginationStore()
+
+const CardCategories = defineAsyncComponent(() => import('./CardCategories.vue'))
+const LinkArrows = defineAsyncComponent(() => import('./LinkArrows.vue'))
+const FilterHints = defineAsyncComponent(() => import('./FilterHints.vue'))
+const GenesysFilters = defineAsyncComponent(() => import('./GenesysFilters.vue'))
+const NumberField = defineAsyncComponent(() => import('../general-purpose/NumberField.vue'))
+const SliderComponent = defineAsyncComponent(() => import('../general-purpose/SliderComponent.vue'))
+const SwitchWithLabel = defineAsyncComponent(() => import('../general-purpose/SwitchWithLabel.vue'))
 
 const formatStatus = ref<BanStatus | 'Unrestricted' | ''>('')
 const category = ref<CardCategory | undefined>(undefined)

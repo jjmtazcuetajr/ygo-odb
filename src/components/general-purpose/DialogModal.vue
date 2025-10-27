@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger } from 'reka-ui'
 import { X } from 'lucide-vue-next'
-import CardFilters from '../card-filtering/CardFilters.vue'
-import NumberField from './NumberField.vue'
 import ButtonComponent from './ButtonComponent.vue'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { useDeckStore } from '@/stores/deck'
-import { ref } from 'vue'
+import { ref, defineAsyncComponent } from 'vue'
 import { storeToRefs } from 'pinia'
 
 const props = defineProps<{
@@ -31,6 +29,9 @@ const dialogTitle: Record<string, string> = {
 
 const pageInputValue = ref(1)
 const isDialogOpen = ref(false)
+
+const CardFilters = defineAsyncComponent(() => import('../card-filtering/CardFilters.vue'))
+const NumberField = defineAsyncComponent(() => import('./NumberField.vue'))
 
 /**
  * Set the title of this dialog component
