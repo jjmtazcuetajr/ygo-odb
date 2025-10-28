@@ -69,7 +69,7 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
   <main class="flex flex-col h-full p-5 dark:text-neutral-300 transition-[color] duration-400">
     <div class="flex justify-between flex-wrap gap-3">
       <div class="flex flex-col">
-        <span class="text-3xl font-medium">YGO ODB</span>
+        <h1 class="text-3xl font-medium">YGO ODB</h1>
         <span class="text-sm">An online, fan-made Yu-Gi-Oh! deck builder</span>
       </div>
       <div class="flex gap-2 place-items-center flex-wrap">
