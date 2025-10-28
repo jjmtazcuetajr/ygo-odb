@@ -4,13 +4,13 @@ import { SwitchRoot, SwitchThumb } from 'reka-ui'
 import { ref, onBeforeMount } from 'vue'
 import { Sun, Moon } from 'lucide-vue-next'
 
-const switchState = ref(false)
+const isDarkTheme = ref(false)
 
 /**
  * Toggles between light and dark theme
  */
 function switchTheme() {
-  if (switchState.value) {
+  if (isDarkTheme.value) {
     document.documentElement.dataset.theme = 'dark'
     localStorage.setItem('theme', 'dark')
   } else {
@@ -21,11 +21,8 @@ function switchTheme() {
 
 onBeforeMount(() => {
   const theme = localStorage.getItem('theme')
-  if (theme === 'dark') {
-    switchState.value = true
-  } else if (theme === 'light') {
-    switchState.value = false
-  }
+  if (theme === 'dark') isDarkTheme.value = true
+  else if (theme === 'light') isDarkTheme.value = false
 })
 </script>
 <template>
@@ -44,11 +41,11 @@ onBeforeMount(() => {
             activeClass="text-emerald-700 dark:text-emerald-600" to="/about">About
           </RouterLink>
         </div>
-        <SwitchRoot aria-label="Change theme" v-model:modelValue="switchState" @update:model-value="switchTheme"
+        <SwitchRoot aria-label="Change theme" v-model="isDarkTheme" @update:model-value="switchTheme"
           class="w-[42px] h-[22px] ml-4 shadow-sm rounded-full relative cursor-pointer border border-neutral-400 dark:border-neutral-500 hover:border-emerald-600 transition-[border-color,background-color] duration-400 bg-neutral-200 data-[state=checked]:bg-neutral-700">
           <SwitchThumb
             class="flex justify-center items-center size-[18px] my-auto bg-white shadow-sm rounded-full transition-transform duration-300 translate-x-[1px] will-change-transform data-[state=checked]:translate-x-[21px] data-[state=checked]:bg-neutral-950">
-            <Sun v-if="!switchState" color="gray" :size="14" />
+            <Sun v-if="!isDarkTheme" color="gray" :size="14" />
             <Moon v-else color="white" :size="14" />
           </SwitchThumb>
         </SwitchRoot>
