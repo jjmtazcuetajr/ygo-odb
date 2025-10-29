@@ -66,7 +66,7 @@ onMounted(() => {
 onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeScreens) })
 </script>
 <template>
-  <main class="flex flex-col h-full p-5 dark:text-neutral-300 transition-[color] duration-400">
+  <main class="flex flex-col h-full p-5 text-neutral-800 dark:text-neutral-300 transition-[color] duration-400">
     <div class="flex justify-between flex-wrap gap-3">
       <div class="flex flex-col">
         <h1 class="text-3xl font-medium">YGO ODB</h1>

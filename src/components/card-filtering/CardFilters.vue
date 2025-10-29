@@ -184,7 +184,7 @@ watch(
 </script>
 
 <template>
-  <div class="flex flex-col mt-3 dark:text-neutral-300 text-xs sm:text-base">
+  <div class="flex flex-col mt-3 text-xs sm:text-base">
     <SelectOption v-if="format === 'ocg' || format === 'tcg'" id="ban-status"
       :label-text="`${format.toUpperCase()} Status`" parent-class="flex items-center gap-1 mb-2" :options="banStatus"
       v-model="formatStatus" @update:model-value="handleFormatStatus" />

@@ -12,7 +12,7 @@ const { prev, next, toFirst, toLast } = store
 <template>
   <div class="flex justify-center mt-2">
     <nav class="flex overflow-x-auto">
-      <div class="flex items-center gap-1 p-1 dark:text-white">
+      <div class="flex items-center gap-1 p-1">
         <button type="button" aria-label="First Page" @click="toFirst" :disabled="currentPage === 1"
           class="p-2 cursor-pointer rounded-lg flex items-center justify-center bg-transparent hover:bg-neutral-300 active:bg-neutral-400 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color,color] duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent">
           <ChevronsLeft :size="16" />

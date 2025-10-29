@@ -77,7 +77,7 @@ function isButtonVisible(card: YGOCardData, format: Format, num: 2 | 3): boolean
 }
 </script>
 <template>
-  <div v-if="isMainDeckCard(card.frameType)" class="dark:text-neutral-300">
+  <div v-if="isMainDeckCard(card.frameType)">
     <span>To Main Deck:</span>
     <div class="flex gap-2 mt-1">
       <ButtonComponent variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
@@ -88,7 +88,7 @@ function isButtonVisible(card: YGOCardData, format: Format, num: 2 | 3): boolean
         aria-label="Add 3 copies" :disabled="handleDisabledState('main', 3)" @click="handleAdd('main', 3)" />
     </div>
   </div>
-  <div v-else-if="isExtraDeckCard(card.frameType)" class="dark:text-neutral-300">
+  <div v-else-if="isExtraDeckCard(card.frameType)">
     <span>To Extra Deck:</span>
     <div class="flex gap-2 mt-1">
       <ButtonComponent variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"
@@ -99,7 +99,7 @@ function isButtonVisible(card: YGOCardData, format: Format, num: 2 | 3): boolean
         aria-label="Add 3 copies" :disabled="handleDisabledState('extra', 3)" @click="handleAdd('extra', 3)" />
     </div>
   </div>
-  <div class="dark:text-neutral-300">
+  <div>
     <span>To Side Deck:</span>
     <div class="flex gap-2 mt-1">
       <ButtonComponent variant="emerald" class="w-full" text-content="&#xd7; 1" aria-label="Add 1 copy"

@@ -99,7 +99,7 @@ onMounted(() => {
       <div class="flex lg:hidden items-center">
         <span class="text-base sm:text-lg leading-none font-medium grow">Search & filter</span>
         <button type="button" aria-label="Hide search results" @click="$emit('handleCloseSideDrawer')"
-          class="self-start p-1 size-[24px] rounded-full cursor-pointer dark:text-white bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-600 dark:active:bg-neutral-500 transition-[background-color] duration-200">
+          class="self-start p-1 size-[24px] rounded-full cursor-pointer bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-600 dark:active:bg-neutral-500 transition-[background-color] duration-200">
           <X :size="16" />
         </button>
       </div>

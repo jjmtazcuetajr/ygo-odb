@@ -91,8 +91,7 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
 </script>
 <template>
   <div
-    v-if="!((format === 'ocg' && card.banlist_info?.ban_ocg === 'Limited') || (format === 'tcg' && card.banlist_info?.ban_tcg === 'Limited'))"
-    class="dark:text-neutral-300">
+    v-if="!((format === 'ocg' && card.banlist_info?.ban_ocg === 'Limited') || (format === 'tcg' && card.banlist_info?.ban_tcg === 'Limited'))">
     <span>Add more:</span>
     <div class="flex gap-2 mt-1">
       <ButtonComponent variant="emerald" text-content="&#xd7; 1" class="w-full" aria-label="Add 1 Copy"
@@ -104,7 +103,7 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
         @click="addCardToDeck([card, card], handleLastIndex(source), source)" />
     </div>
   </div>
-  <div class="dark:text-neutral-300">
+  <div>
     <span v-if="source === 'main' || source === 'extra'">Move to Side Deck:</span>
     <template v-else>
       <span v-if="isMainDeckCard(card.frameType)">Move to Main Deck:</span>
@@ -119,7 +118,7 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
         class="w-full" aria-label="Move 3 Copies" @click="crossdeckCardTransfer(source, 3)" />
     </div>
   </div>
-  <div class="dark:text-neutral-300">
+  <div>
     <span>Remove:</span>
     <div class="flex gap-2 mt-1">
       <ButtonComponent variant="red" text-content="&#xd7; 1" class="w-full" aria-label="Remove 1 Copy"

@@ -10,7 +10,7 @@ const toggleGroupItemClasses = toggleButtonStyles + lightThemeColors + darkTheme
 </script>
 
 <template>
-  <ToggleGroupRoot type="multiple" class="flex flex-col justify-between size-[100px] dark:text-neutral-200">
+  <ToggleGroupRoot type="multiple" class="flex flex-col justify-between size-[100px]">
     <div class="flex justify-between">
       <ToggleGroupItem value="Top-Left" aria-label="Top-Left Link Arrow" :class="toggleGroupItemClasses">
         <ArrowUpLeft :size="16" />

@@ -260,11 +260,11 @@ function persistDialog(event: PointerDownOutsideEvent) {
       <DialogOverlay
         class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto dark:[color-scheme:dark]">
         <DialogContent :aria-describedby="undefined" @pointer-down-outside="persistDialog"
-          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto mt-[50%] sm:mt-[10%] mb-[10%] w-[90vw] max-w-[500px] p-6 z-100 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
-          <DialogTitle class="text-lg font-semibold dark:text-neutral-300">
+          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto mt-[50%] sm:mt-[10%] mb-[10%] w-[90vw] max-w-[500px] p-6 z-100 text-neutral-800 dark:text-neutral-300 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
+          <DialogTitle class="text-lg font-semibold">
             {{ type }} {{ usage && usage.includes('ydk-file') ? 'YDK file' : 'YDKe URL' }}
           </DialogTitle>
-          <div class="flex flex-col gap-2 mt-3 dark:text-neutral-300">
+          <div class="flex flex-col gap-2 mt-3">
             <template v-if="usage === 'ydk-file-import'">
               <label for="file-import" class="text-sm sm:text-base">Please upload a YDK file:</label>
               <input ref="file-input" id="file-import" type="file" accept=".ydk" @change="handleFileUpload"
@@ -323,7 +323,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
             </DialogClose>
           </div>
           <DialogClose aria-label="Close"
-            class="absolute top-[10px] right-[10px] self-start p-1 size-[24px] rounded-full cursor-pointer dark:text-white hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
+            class="absolute top-[10px] right-[10px] self-start p-1 size-[24px] rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
             <X :size="16" />
           </DialogClose>
         </DialogContent>

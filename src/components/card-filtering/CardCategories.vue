@@ -8,7 +8,7 @@ const toggleGroupItemClasses = toggleButtonStyles + lightThemeColors + darkTheme
 </script>
 
 <template>
-  <ToggleGroupRoot type="single" class="flex flex-wrap gap-2 dark:text-neutral-200">
+  <ToggleGroupRoot type="single" class="flex flex-wrap gap-2">
     <ToggleGroupItem value="monster" :class="toggleGroupItemClasses">Monster</ToggleGroupItem>
     <ToggleGroupItem value="spell" :class="toggleGroupItemClasses">Spell</ToggleGroupItem>
     <ToggleGroupItem value="trap" :class="toggleGroupItemClasses">Trap</ToggleGroupItem>
