@@ -99,7 +99,7 @@ onMounted(() => {
       <div class="flex lg:hidden items-center">
         <span class="text-base sm:text-lg leading-none font-medium grow">Search & filter</span>
         <button type="button" aria-label="Hide search results" @click="$emit('handleCloseSideDrawer')"
-          class="self-start p-1 size-[24px] rounded-full cursor-pointer bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-600 dark:active:bg-neutral-500 transition-[background-color] duration-200">
+          class="self-start p-1 size-6 rounded-full cursor-pointer bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-600 dark:active:bg-neutral-500 transition-[background-color] duration-200">
           <X :size="16" />
         </button>
       </div>
@@ -141,7 +141,7 @@ onMounted(() => {
       </div>
       <div class="flex flex-col h-full" v-else>
         <div
-          class="hidden lg:grid grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-9 px-2 mt-3 content-start dark:[color-scheme:dark]">
+          class="hidden lg:grid grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-9 px-2 mt-3 content-start scheme-light dark:scheme-dark">
           <template v-for="(card, index) in paginatedResults" :key="card.id">
             <CardTooltip v-if="isHoverDetected" :card="card" :format="format" from="grid" :index="index" />
             <CardDialog v-else :card="card" :format="format" from="grid" :index="index" />
@@ -149,12 +149,12 @@ onMounted(() => {
         </div>
         <div class="flex lg:hidden flex-col gap-3 overflow-y-auto grow shrink basis-0 pb-2 px-2 mt-3">
           <div v-for="card in paginatedResults" :key="card.id" class="flex gap-2">
-            <div class="relative w-[70px] sm:w-[80px] flex-none">
+            <div class="relative w-[70px] sm:w-20 flex-none">
               <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)" />
               <img v-else
                 :src="hasFinishedLoadingImage(card.card_images[0].image_url_small) ? card.card_images[0].image_url_small : ''"
                 :alt="card.name" draggable="false"
-                class="rounded-sm aspect-[268/391] text-xs overflow-hidden bg-neutral-400/70 dark:bg-neutral-600">
+                class="rounded-sm aspect-268/391 text-xs overflow-hidden bg-neutral-400/70 dark:bg-neutral-600">
               <BanStatus v-if="format === 'ocg'" :status="card.banlist_info?.ban_ocg" />
               <BanStatus v-else-if="format === 'tcg'" :status="card.banlist_info?.ban_tcg" />
               <GenesysPoint v-else-if="format === 'genesys'" :point-value="card.misc_info[0].genesys_points"

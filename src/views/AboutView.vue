@@ -65,7 +65,7 @@
       Supported formats are OCG, TCG, and Genesys. Currently, there is no intent to include other formats like Speed
       Duels, GOAT, etc.
     </p>
-    <div class="flex gap-4 flex-wrap divide-x-1 divide-neutral-300 dark:divide-neutral-700 mb-4">
+    <div class="flex gap-4 flex-wrap divide-x divide-neutral-300 dark:divide-neutral-700 mb-4">
       <span class="pr-4">
         Project source code
         <strong>

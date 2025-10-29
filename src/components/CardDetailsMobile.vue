@@ -62,7 +62,7 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
         </DialogTrigger>
         <DialogPortal>
           <DialogOverlay
-            class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto dark:[color-scheme:dark]">
+            class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto">
             <DialogContent :aria-describedby="undefined"
               class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] w-[90vw] max-w-[450px] px-3 sm:px-6 py-6 z-100 text-sm text-neutral-800 dark:text-neutral-300 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
               <VisuallyHidden>
@@ -72,11 +72,11 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
                 <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)"
                   class="w-[170px]" />
                 <img v-else :src="card.card_images[0].image_url_small" :alt="card.name" width="170" draggable="false"
-                  class="rounded-sm aspect-[268/391] text-xs bg-neutral-400/70 dark:bg-neutral-600">
+                  class="rounded-sm aspect-268/391 text-xs bg-neutral-400/70 dark:bg-neutral-600">
               </div>
               <CardInfo :card="card" />
               <DialogClose aria-label="Close"
-                class="absolute top-[10px] right-[10px] self-start p-1 size-[24px] rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
+                class="absolute top-2.5 right-2.5 self-start p-1 size-6 rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
                 <X :size="16" />
               </DialogClose>
             </DialogContent>

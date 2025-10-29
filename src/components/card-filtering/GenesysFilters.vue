@@ -78,7 +78,7 @@ watch(
       v-model="isGreaterThanZeroGenesysPoints" @update-value="handleIsGreaterThanZeroGenesysPoints" />
     <SwitchWithLabel id="is-zero-genesys-pts" label-val="Show cards that have zero Genesys points"
       v-model="isZeroGenesysPoints" @update-value="handleIsZeroGenesysPointsFilter" />
-    <NumberField id="genesys-pts-filter" label-val="Filter by exact Genesys points" class="!flex-row !gap-2" :min="1"
+    <NumberField id="genesys-pts-filter" label-val="Filter by exact Genesys points" class="flex-row! gap-2!" :min="1"
       :max="GENESYS_STANDARD_POINT_LIMIT" v-model="exactGenesysPoint"
       @update:model-value="handleExactGenesysPointFilter" />
     <div class="flex flex-col">

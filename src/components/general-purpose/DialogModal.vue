@@ -73,7 +73,7 @@ function handleClearDecks() {
     </DialogTrigger>
     <DialogPortal>
       <DialogOverlay
-        class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto dark:[color-scheme:dark]">
+        class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto scheme-light-dark">
         <DialogContent :aria-describedby="undefined"
           class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] xl:my-[5%] w-[90vw] max-w-[450px] px-3 sm:px-6 py-6 z-100 rounded-md border text-neutral-800 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-900">
           <DialogTitle class="text-lg font-semibold">
@@ -137,7 +137,7 @@ function handleClearDecks() {
             </DialogClose>
           </div>
           <DialogClose aria-label="Close"
-            class="absolute top-[10px] right-[10px] self-start p-1 size-[24px] rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
+            class="absolute top-2.5 right-2.5 self-start p-1 size-6 rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
             <X :size="16" />
           </DialogClose>
         </DialogContent>

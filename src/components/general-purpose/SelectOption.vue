@@ -19,7 +19,7 @@ const model = defineModel<string>({ required: true })
   <div :class="parentClass">
     <label :for="id" :class="labelClass">{{ labelText }}</label>
     <select :id="id" v-model="model"
-      class="text-xs sm:text-base rounded-md pl-1.5 pr-6 py-0.5 appearance-none bg-no-repeat bg-[right_.2rem_center] bg-[auto_1.1rem] border border-neutral-500 transition-[background-color,background-image] duration-400"
+      class="text-xs sm:text-base rounded-md pl-1.5 pr-6 py-0.5 appearance-none bg-no-repeat bg-position-[right_.2rem_center] bg-size-[auto_1.1rem] border border-neutral-500 transition-[background-color,background-image] duration-400"
       :class="bgColorClass || 'bg-neutral-100 dark:bg-neutral-800'">
       <option v-for="option in options" :key="option.val" :value="option.val">
         {{ option.textContent }}

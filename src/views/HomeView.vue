@@ -113,7 +113,7 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
               <span>Genesys Points:
                 <strong>{{ `${getSumOfGenesysPoints.toLocaleString()}/${genesysLimit.toLocaleString()}` }}</strong>
               </span>
-              <ButtonComponent variant="neutral" has-icon class="!rounded-full !p-1.5"
+              <ButtonComponent variant="neutral" has-icon class="rounded-full! p-1.5!"
                 aria-label="Change Genesys point limit" title="Change Genesys point limit" @click="editGenesysLimit">
                 <template #textWithIcon>
                   <Pen :size="16" aria-hidden="true" />
@@ -121,15 +121,15 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
               </ButtonComponent>
             </div>
             <div v-else class="flex gap-3 items-center">
-              <NumberField id="genesys-limit" label-val="Edit Genesys Limit" class="!flex-row !gap-2" :max="10000"
+              <NumberField id="genesys-limit" label-val="Edit Genesys Limit" class="flex-row! gap-2!" :max="10000"
                 v-model="newGenesysPointLimit" @keydown.enter="setGenesysLimit" />
-              <ButtonComponent variant="emerald" has-icon class="!rounded-full !p-1.5"
+              <ButtonComponent variant="emerald" has-icon class="rounded-full! p-1.5!"
                 aria-label="Confirm Genesys point limit change" title="Confirm" @click="setGenesysLimit">
                 <template #textWithIcon>
                   <Check :size="16" aria-hidden="true" />
                 </template>
               </ButtonComponent>
-              <ButtonComponent variant="red" has-icon class="!rounded-full !p-1.5"
+              <ButtonComponent variant="red" has-icon class="rounded-full! p-1.5!"
                 aria-label="Cancel Genesys point limit change" title="Cancel" @click="isEditingGenesysLimit = false">
                 <template #textWithIcon>
                   <X :size="16" aria-hidden="true" />
