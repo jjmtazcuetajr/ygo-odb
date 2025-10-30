@@ -1,8 +1,21 @@
 {
   "name": "ygo-odb",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
+  "description": "An online, fan-made Yu-Gi-Oh! deck builder.",
+  "author": {
+    "name": "Jose Jenn Michael Azcueta"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jjmtazcuetajr/ygo-odb.git"
+  },
+  "homepage": "https://github.com/jjmtazcuetajr/ygo-odb#readme",
+  "bugs": {
+    "url": "https://github.com/jjmtazcuetajr/ygo-odb/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
