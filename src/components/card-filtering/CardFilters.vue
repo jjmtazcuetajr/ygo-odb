@@ -9,8 +9,8 @@ import { debounce } from '@/utils/helpers'
 import { MAX_ATK_DEF } from '@/utils/constants'
 import type { CardCategory, BanStatus } from '@/utils/interfaces'
 
-const { filters, format } = storeToRefs(useYgoCardsStore())
-const { resetCardCategoryFilters } = useYgoCardsStore()
+const { filters, format, isAltArtShown } = storeToRefs(useYgoCardsStore())
+const { resetCardCategoryFilters, toggleCardsWithAltArts } = useYgoCardsStore()
 const { toFirst } = usePaginationStore()
 
 const CardCategories = defineAsyncComponent(() => import('./CardCategories.vue'))
@@ -42,6 +42,7 @@ const atkRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const spellType = ref('')
 const trapType = ref('')
+const showCardsWithAltArts = ref(false)
 
 /**
  * Debounced function for card filtering based on its status in the OCG & TCG formats
@@ -127,6 +128,15 @@ const handleSpellTrapType = debounce((usage: 'spell' | 'trap') => {
 }, 300)
 
 /**
+ * Debounced function to either show or hide the alternative artworks of cards
+ */
+const handleToggleAltArts = debounce(() => {
+  isAltArtShown.value = showCardsWithAltArts.value
+  toggleCardsWithAltArts()
+  toFirst()
+}, 300)
+
+/**
  * Set the values of local refs from the related store
  */
 function setValues() {
@@ -151,6 +161,7 @@ function setValues() {
   defRange.value = filters.value.defRange
   spellType.value = filters.value.spellType
   trapType.value = filters.value.trapType
+  showCardsWithAltArts.value = isAltArtShown.value
 }
 
 onBeforeMount(() => setValues())
@@ -185,6 +196,8 @@ watch(
 
 <template>
   <div class="flex flex-col mt-3 text-xs sm:text-base">
+    <SwitchWithLabel id="alt-arts" label-val="Show cards with alternative artworks" class="mb-2"
+      v-model="showCardsWithAltArts" @update-value="handleToggleAltArts" />
     <SelectOption v-if="format === 'ocg' || format === 'tcg'" id="ban-status"
       :label-text="`${format.toUpperCase()} Status`" parent-class="flex items-center gap-1 mb-2" :options="banStatus"
       v-model="formatStatus" @update:model-value="handleFormatStatus" />
