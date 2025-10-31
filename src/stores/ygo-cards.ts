@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, Format } from '@/utils/interfaces'
 import {
   matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
-  sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint, matchAtkRange, matchDefRange
+  sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint, matchAtkRange, matchDefRange, extractAltArts
 } from '@/utils/helpers'
 import { usePaginationStore } from './pagination'
 import { GENESYS_STANDARD_POINT_LIMIT, MAX_ATK_DEF } from '@/utils/constants'
@@ -11,6 +11,7 @@ import { GENESYS_STANDARD_POINT_LIMIT, MAX_ATK_DEF } from '@/utils/constants'
 export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // states
   const cards = ref<YGOCardData[]>([])
+  const altArts = ref<YGOCardData[]>([])
   const filters = ref<FilterOptions>({
     search: '',
     category: undefined,
@@ -44,6 +45,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   const isLoading = ref(false)
   const isError = ref(false)
   const format = ref<Format>('ocg')
+  const isAltArtShown = ref(false)
 
   // getters
   const getFilteredCards = computed(() => {
@@ -122,6 +124,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const rawData: YGOCards = await response.json()
       const filteredData = rawData.data.filter((card: YGOCardData) => !['skill', 'token'].includes(card.frameType) && !card.desc.toLowerCase().includes('you win the match'))
       cards.value = filteredData
+      altArts.value = extractAltArts(filteredData)
     } catch (error) {
       isError.value = true
       if (error instanceof Error) console.error(error)
@@ -180,5 +183,16 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     toFirst()
   }
 
-  return { cards, filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards, fetchCards, resetCardCategoryFilters, resetFilters }
+  /**
+   * Show or hide the alternative artworks of cards (if any)
+   */
+  function toggleCardsWithAltArts() {
+    if (isAltArtShown.value) cards.value.push(...altArts.value)
+    else cards.value = cards.value.filter(card => card.isAltArt === undefined)
+  }
+
+  return {
+    cards, altArts, filters, sortBy, sortDir, isLoading, isError, format, isAltArtShown, getFilteredCards,
+    fetchCards, resetCardCategoryFilters, resetFilters, toggleCardsWithAltArts
+  }
 })

@@ -559,3 +559,33 @@ export function debounce<T extends (...args: any[]) => any>(
     }, wait)
   }
 }
+
+/**
+ * Extract the alternative artworks of cards (if there are any) and make them into new card data objects
+ * @param cards An array of card data objects
+ * @returns An array of new card data objects where each of their corresponding artwork are alternatives of the original
+ */
+export function extractAltArts(cards: YGOCardData[]): YGOCardData[] {
+  const cardsWithAltArts: YGOCardData[] = []
+
+  for (const card of cards) {
+    const { id, card_images, isAltArt, ...otherProps } = card
+
+    // if the length of the card_images array property is greater than one, it means that particular card has at least one alternative artwork
+    if (card_images.length > 1) {
+      for (const [index, altCard] of card_images.entries()) {
+        // index 0 is the original artwork. Succeeding indices are what we want to extract
+        if (index > 0) {
+          cardsWithAltArts.push({
+            id: altCard.id,
+            card_images: [card_images[index]],
+            isAltArt: true,
+            ...otherProps
+          })
+        }
+      }
+    }
+  }
+
+  return cardsWithAltArts
+}
