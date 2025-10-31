@@ -56,6 +56,7 @@ export interface YGOCardData {
   frameType: string
   humanReadableCardType: string
   id: number
+  isAltArt?: boolean
   level?: number
   linkmarkers?: string[]
   linkval?: number
