@@ -37,11 +37,11 @@ function handleShow() {
       <ToastDescription class="text-sm">
         {{ description }}
       </ToastDescription>
-      <ToastClose aria-label="Close" class="p-1 size-[24px]">
+      <ToastClose aria-label="Close" class="p-1 size-6">
         <X :size="16" />
       </ToastClose>
     </ToastRoot>
-    <ToastViewport class="fixed right-0 bottom-0 flex flex-col p-4 w-80 z-[99999]" />
+    <ToastViewport class="fixed right-0 bottom-0 flex flex-col p-4 w-80 z-99999" />
   </ToastProvider>
 </template>
 
