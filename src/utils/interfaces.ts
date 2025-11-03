@@ -4,7 +4,7 @@ interface BanlistInfo {
   ban_goat?: BanStatus
 }
 
-interface CardImages {
+export interface CardImages {
   id: number
   image_url: string
   image_url_cropped: string

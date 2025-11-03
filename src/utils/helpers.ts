@@ -1,4 +1,4 @@
-import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory, Format, BanStatus } from '@/utils/interfaces'
+import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory, Format, BanStatus, CardImages } from '@/utils/interfaces'
 import { MAX_ATK_DEF } from './constants'
 
 /**
@@ -568,17 +568,34 @@ export function debounce<T extends (...args: any[]) => any>(
 export function extractAltArts(cards: YGOCardData[]): YGOCardData[] {
   const cardsWithAltArts: YGOCardData[] = []
 
+  /**
+   * Remove duplicates from the `card_images` array property
+   * @param arr An array of card image objects
+   * @returns Card image object array with duplicates removed
+   */
+  function removeDuplicates(arr: CardImages[]): CardImages[] {
+    const seen = new Set<number>()
+
+    return arr.filter(obj => {
+      if (seen.has(obj.id)) return false
+
+      seen.add(obj.id)
+      return true
+    })
+  }
+
   for (const card of cards) {
     const { id, card_images, isAltArt, ...otherProps } = card
 
-    // if the length of the card_images array property is greater than one, it means that particular card has at least one alternative artwork
-    if (card_images.length > 1) {
-      for (const [index, altCard] of card_images.entries()) {
+    // if the length of the image object array is greater than one, it means that particular card has at least one alternative artwork
+    const cardImages = removeDuplicates(card_images)
+    if (cardImages.length > 1) {
+      for (const [index, altCard] of cardImages.entries()) {
         // index 0 is the original artwork. Succeeding indices are what we want to extract
         if (index > 0) {
           cardsWithAltArts.push({
             id: altCard.id,
-            card_images: [card_images[index]],
+            card_images: [cardImages[index]],
             isAltArt: true,
             ...otherProps
           })
