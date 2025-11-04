@@ -269,6 +269,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <label for="file-import" class="text-sm sm:text-base">Please upload a YDK file:</label>
               <input ref="file-input" id="file-import" type="file" accept=".ydk" @change="handleFileUpload"
                 aria-errormessage="ydk-file-import-error"
+                :class="{ 'border-solid border-red-600 dark:border-red-400 hover:border-red-600 dark:hover:border-red-400 focus:outline-red-600 focus:dark:outline-red-400': isErrorYDKFileImport }"
                 class="w-full py-10 px-2 text-xs sm:text-base focus:outline-2 focus:-outline-offset-2 dark:focus:outline-white rounded-lg border-2 border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200" />
               <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                 <strong>Note:</strong> Importing will remove your current progress in deck-building.
@@ -282,6 +283,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <label for="ydke-import">Please enter a YDKe URL:</label>
               <textarea ref="ydke-input" id="ydke-import" placeholder="ydke://xxx...!xxx...!xxx...!" rows="7"
                 v-model="ydkeUrlImport" @input="handleInputYDKeURL" aria-errormessage="ydke-url-import-error"
+                :class="{ 'border-red-600 dark:border-red-400 focus-within:outline focus-within:outline-red-600 dark:focus-within:outline-red-400': isErrorYDKeUrlImport }"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
               <span id="ydke-url-import-error" class="invisible text-xs sm:text-sm text-red-600 dark:text-red-400"
                 :class="{ 'visible': isErrorYDKeUrlImport }">
