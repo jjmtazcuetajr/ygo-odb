@@ -163,9 +163,7 @@ export function useDragAndDrop() {
     if (!draggedCard.value) return
 
     // remove card from deck dropzone source
-    if (toIndex.value !== -1) {
-      if (source.value !== 'grid') removeCardFromDeck(cardIndex.value, source.value)
-    }
+    if (source.value !== 'grid' && currentDropTarget.value != null) removeCardFromDeck(cardIndex.value, source.value)
 
     // add card to new deck dropzone
     if (currentDropTarget.value) addCardToDeck([draggedCard.value], toIndex.value, currentDropTarget.value)
