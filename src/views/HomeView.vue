@@ -5,6 +5,7 @@ import SearchResults from '@/components/SearchResults.vue'
 import DialogModal from '@/components/general-purpose/DialogModal.vue'
 import ButtonComponent from '@/components/general-purpose/ButtonComponent.vue'
 import SelectOption from '@/components/general-purpose/SelectOption.vue'
+import LoadingComponent from '@/components/LoadingComponent.vue'
 import { Trash2, CircleHelp, Search, Pen, Check, X } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted, defineAsyncComponent } from 'vue'
 import { formats } from '@/utils/select-options'
@@ -13,7 +14,7 @@ import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 
 const cardsStore = useYgoCardsStore()
-const { format } = storeToRefs(cardsStore)
+const { format, isLoading } = storeToRefs(cardsStore)
 
 const deckStore = useDeckStore()
 const {
@@ -67,6 +68,9 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
 </script>
 <template>
   <main class="flex flex-col h-full p-5 text-neutral-800 dark:text-neutral-300 transition-[color] duration-400">
+    <transition name="fade">
+      <LoadingComponent v-if="isLoading" />
+    </transition>
     <div class="flex justify-between flex-wrap gap-3">
       <div class="flex flex-col">
         <h1 class="text-3xl font-medium">YGO ODB</h1>
@@ -153,6 +157,16 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
   </main>
 </template>
 <style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 @media screen and (max-width: 1023px) {
 
   .nested-enter-active,
