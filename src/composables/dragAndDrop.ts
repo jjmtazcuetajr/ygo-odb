@@ -111,19 +111,19 @@ export function useDragAndDrop() {
           // card dragged from the paginated results to the already full deck dropzones
           source.value === 'grid' && 
           (
-            mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT ||
-            extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT ||
-            sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT
+            mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT ||
+            extraDeckDropzone && extraDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT ||
+            sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT
           )
         ) ||
         // card dragged from the main deck to the already full side deck
-        (source.value === 'main' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
+        (source.value === 'main' && sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
         // card dragged from the extra deck to the already full side deck
-        (source.value === 'extra' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
+        (source.value === 'extra' && sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
         (
           // card dragged from the side deck to the already full main or extra deck
           source.value === 'side' &&
-          ((mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT))
+          ((mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT))
         )
       ) {
         ghostElement.value.style.cursor = 'not-allowed'
