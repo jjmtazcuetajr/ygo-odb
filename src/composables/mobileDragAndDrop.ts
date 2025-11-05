@@ -197,19 +197,19 @@ export function useMobileDragAndDrop() {
           // card dragged from the paginated results to the already full deck dropzones
           source === 'grid' && 
           (
-            mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT ||
-            extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT ||
-            sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT
+            mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT ||
+            extraDeckDropzone && extraDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT ||
+            sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT
           )
         ) ||
         // card dragged from the main deck to the already full side deck
-        (source === 'main' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
+        (source === 'main' && sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
         // card dragged from the extra deck to the already full side deck
-        (source === 'extra' && sideDeckDropzone && sideDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT) ||
+        (source === 'extra' && sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
         (
           // card dragged from the side deck to the already full main or extra deck
           source === 'side' &&
-          ((mainDeckDropzone && mainDeck.value.length === MAIN_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length === EXTRA_AND_SIDE_DECK_LIMIT))
+          ((mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT))
         )
       ) {
         // add a red outline to the ghost element when hovering an invalid drop zone
