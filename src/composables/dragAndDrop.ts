@@ -7,7 +7,7 @@ import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
 
 export function useDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
-  const { addCardToDeck, removeCardFromDeck } = useDeckStore()
+  const { addCardToDeck, isCardWithinLimit, removeCardFromDeck } = useDeckStore()
 
   const offset = reactive({x: 0, y: 0})
   const isDragging = ref(false)
@@ -108,6 +108,10 @@ export function useDragAndDrop() {
       if (
         (extraDeckDropzone && isMainDeckCard(cardFrame)) ||
         (mainDeckDropzone && isExtraDeckCard(cardFrame)) ||
+        (
+          source.value === 'grid' &&
+          (!isCardWithinLimit(draggedCard.value, 'main') || !isCardWithinLimit(draggedCard.value, 'extra') || !isCardWithinLimit(draggedCard.value, 'side'))
+        ) ||
         (
           source.value === 'grid' && 
           (

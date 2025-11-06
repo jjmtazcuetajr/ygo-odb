@@ -7,7 +7,7 @@ import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
 
 export function useMobileDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
-  const { addCardToDeck, removeCardFromDeck } = useDeckStore()
+  const { addCardToDeck, isCardWithinLimit, removeCardFromDeck } = useDeckStore()
 
   // variables related to dragging
   const offset = {x: 0, y: 0}
@@ -194,6 +194,10 @@ export function useMobileDragAndDrop() {
       if (
         (extraDeckDropzone && isMainDeckCard(cardFrame)) ||
         (mainDeckDropzone && isExtraDeckCard(cardFrame)) ||
+        (
+          source === 'grid' &&
+          (!isCardWithinLimit(draggedCard, 'main') || !isCardWithinLimit(draggedCard, 'extra') || !isCardWithinLimit(draggedCard, 'side'))
+        ) ||
         (
           source === 'grid' && 
           (
