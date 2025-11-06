@@ -52,7 +52,7 @@
       <strong>
         <a href="https://lucide.dev/" target="_blank" rel="noopener noreferrer"
           class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400">Lucide</a>
-      </strong> was used for icons. Finally, Yu-Gi-Oh! card images and information were provided by the free API of
+      </strong> was used for the icons. Finally, Yu-Gi-Oh! card images and information were provided by the free API of
       <strong>
         <a href="https://ygoprodeck.com/api-guide/" target="_blank" rel="noopener noreferrer"
           class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400">YGOPRODeck</a>
@@ -61,9 +61,9 @@
     <p class="mb-4">
       This Yu-Gi-Oh! web application isn't meant to be a full-fledged deck builder, but something that's good enough to
       get the job done. It has drag-and-drop functionality to add, transfer, and remove cards. Decks can be imported and
-      exported with YDK files and YDKe URLs. There are no plans to support other importing and exporting methods.
-      Supported formats are OCG, TCG, and Genesys. Currently, there is no intent to include other formats like Speed
-      Duels, GOAT, etc.
+      exported with YDK files and YDKe URLs. Supported formats are OCG, TCG, and Genesys. There are no plans to support
+      other importing and exporting methods. Currently, there is no intent to include other formats like Speed Duels,
+      GOAT, etc.
     </p>
     <div class="flex gap-4 flex-wrap divide-x divide-neutral-300 dark:divide-neutral-700 mb-4">
       <span class="pr-4">
