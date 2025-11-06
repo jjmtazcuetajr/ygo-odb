@@ -7,7 +7,7 @@ import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
 
 export function useMobileDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
-  const { addCardToDeck, isCardWithinLimit, removeCardFromDeck } = useDeckStore()
+  const { addCardToDeck, removeCardFromDeck } = useDeckStore()
 
   // variables related to dragging
   const offset = {x: 0, y: 0}
@@ -185,16 +185,16 @@ export function useMobileDragAndDrop() {
       const sideDeckDropzone = elementBelow.closest('#side-deck')
       const cardFrame = draggedCard.frameType
 
+      // set drop targets
+      if (mainDeckDropzone) setDropTarget('main')
+      else if (extraDeckDropzone) setDropTarget('extra')
+      else if (sideDeckDropzone) setDropTarget('side')
+      else setDropTarget()
+
       if (
-        (extraDeckDropzone && isMainDeckCard(cardFrame)) || // main deck card dragged into the extra deck
-        (mainDeckDropzone && isExtraDeckCard(cardFrame)) || // extra deck card dragged into the main deck
+        (extraDeckDropzone && isMainDeckCard(cardFrame)) ||
+        (mainDeckDropzone && isExtraDeckCard(cardFrame)) ||
         (
-          // card dragged from the paginated results to the deck dropzones has reached its limit
-          source === 'grid' &&
-          (!isCardWithinLimit(draggedCard, 'main') || !isCardWithinLimit(draggedCard, 'extra') || !isCardWithinLimit(draggedCard, 'side'))
-        ) ||
-        (
-          // card dragged from the paginated results to the already full deck dropzones
           source === 'grid' && 
           (
             mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT ||
@@ -202,14 +202,21 @@ export function useMobileDragAndDrop() {
             sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT
           )
         ) ||
-        // card dragged from the main deck to the already full side deck
-        (source === 'main' && sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
-        // card dragged from the extra deck to the already full side deck
-        (source === 'extra' && sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
         (
-          // card dragged from the side deck to the already full main or extra deck
+          source === 'main' &&
+          ((sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) || (mainDeckDropzone && mainDeck.value.length > MAIN_DECK_LIMIT))
+        ) ||
+        (
+          source === 'extra' &&
+          ((sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length > EXTRA_AND_SIDE_DECK_LIMIT))
+        ) ||
+        (
           source === 'side' &&
-          ((mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT))
+          (
+            (mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT) ||
+            (extraDeckDropzone && extraDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
+            (sideDeckDropzone && sideDeck.value.length > EXTRA_AND_SIDE_DECK_LIMIT)
+          )
         )
       ) {
         // add a red outline to the ghost element when hovering an invalid drop zone
@@ -234,17 +241,12 @@ export function useMobileDragAndDrop() {
         }
         
         if (mainDeckDropzone) {
-          setDropTarget('main')
           setIndexInsertion(mainDeckDropzone, x, y)
         } else if (extraDeckDropzone) {
-          setDropTarget('extra')
           setIndexInsertion(extraDeckDropzone, x, y)
         } else if (sideDeckDropzone) {
-          setDropTarget('side')
           setIndexInsertion(sideDeckDropzone, x, y)
         } else {
-          setDropTarget()
-
           // remove all highlights from cards when hovering away from deck dropzones
           const imageItems = document.querySelectorAll('.draggable')
           imageItems.forEach(item => {
@@ -262,13 +264,43 @@ export function useMobileDragAndDrop() {
   function handleDragEnd() {
     if (!draggedCard) return
 
-    // remove card from deck dropzone source
-    if (toIndex !== -1) {
-      if (source !== 'grid') removeCardFromDeck(cardIndex, source)
+    // remove card from deck drop zone source
+    if (
+      (
+        source === 'main' &&
+        (
+          (currentDropTarget === 'main' && mainDeck.value.length <= MAIN_DECK_LIMIT) ||
+          (currentDropTarget === 'side' && sideDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT)
+        )
+      ) ||
+      (
+        source === 'extra' &&
+        (
+          (currentDropTarget === 'extra' && extraDeck.value.length <= EXTRA_AND_SIDE_DECK_LIMIT) ||
+          (currentDropTarget === 'side' && sideDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT)
+        )
+      ) ||
+      (
+        source === 'side' &&
+        (
+          (currentDropTarget === 'main' && mainDeck.value.length < MAIN_DECK_LIMIT && isMainDeckCard(draggedCard.frameType)) ||
+          (currentDropTarget === 'extra' && extraDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT && isExtraDeckCard(draggedCard.frameType)) ||
+          (currentDropTarget === 'side' && sideDeck.value.length <= EXTRA_AND_SIDE_DECK_LIMIT)
+        )
+      ) ||
+      (source !== 'grid' && currentDropTarget === null)
+    ) {
+      removeCardFromDeck(cardIndex, source)
     }
 
-    // add card to new deck dropzone
-    if (currentDropTarget) addCardToDeck([draggedCard], toIndex, currentDropTarget)
+    // add card to new deck drop zone
+    if (
+      (currentDropTarget === 'main' && mainDeck.value.length < MAIN_DECK_LIMIT && isMainDeckCard(draggedCard.frameType)) ||
+      (currentDropTarget === 'extra' && extraDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT && isExtraDeckCard(draggedCard.frameType)) ||
+      (currentDropTarget === 'side' && sideDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT)
+    ) {
+      addCardToDeck([draggedCard], toIndex, currentDropTarget)
+    }
     
     removeGhostElement()
     draggedCard = null
