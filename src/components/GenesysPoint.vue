@@ -9,7 +9,7 @@ defineProps<{
 <template>
   <span v-if="frameType === 'link' || frameType.includes('pendulum')"
     title="Pendulum and Link monsters cannot be added."
-    class="absolute top-0 left-0 cursor-help rounded-full shadow-md shadow-neutral-900 text-red-500 bg-black">
+    class="absolute top-1 left-1 cursor-help rounded-full shadow-md shadow-neutral-900 text-red-500 bg-black">
     <Ban :size="20" />
   </span>
   <template v-else>

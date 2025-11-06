@@ -48,7 +48,7 @@ const GenesysPoint = defineAsyncComponent(() => import('./GenesysPoint.vue'))
     <TooltipProvider :delay-duration="100" :disable-hoverable-content="true" :ignore-non-keyboard-focus="true">
       <TooltipRoot>
         <TooltipTrigger aria-label="More Info" :class="{ 'opacity-100': isHovered }"
-          class="absolute top-0 right-0 rounded-full size-5 flex items-center justify-center cursor-pointer opacity-0 focus-visible:opacity-100 transition-opacity duration-200 text-neutral-300 bg-neutral-500 shadow-md shadow-neutral-900">
+          class="absolute top-1 right-1 rounded-full size-5 flex items-center justify-center cursor-pointer opacity-0 focus-visible:opacity-100 transition-opacity duration-200 text-neutral-300 bg-neutral-500 shadow-md shadow-neutral-900">
           <Info :size="20" />
         </TooltipTrigger>
         <TooltipPortal>
