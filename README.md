@@ -15,6 +15,7 @@ This Yu-Gi-Oh! web application is not meant to be a full-fledged deck builder, b
 - Deck import and export through YDK files and YDKe URLs.
 - Card filtering and sorting.
 - Light and dark modes. It also respects your device's system theme.
+- Display alternative artworks of cards (if there are any).
 
 ### Supported Formats
 
@@ -45,7 +46,7 @@ This Yu-Gi-Oh! web application is not meant to be a full-fledged deck builder, b
 ### Project Setup
 
 1. Clone the repository.
-2. Run `npm i` at the root of the clone directory to install dependencies.
+2. Run `npm i` at the root of the cloned directory to install dependencies.
 3. Execute `npm run dev` to start the development server.
 
 ### Optional
@@ -59,7 +60,7 @@ This Yu-Gi-Oh! web application is not meant to be a full-fledged deck builder, b
 
 ## Contact
 
-You may go to my GitHub profile and find my email there. You can also message me in Discord.
+You may go to my GitHub profile and find my email there.
 
 ## Credits
 
