@@ -20,12 +20,12 @@ export function useToast() {
    */
   function createToastMessage(to: Dropzone, card: YGOCardData, format: Format) {
     if (isCardWithinLimit(card, to)) {
-      if (to === 'main' && MAIN_DECK_LIMIT === mainDeck.value.length) {
+      if (to === 'main' && mainDeck.value.length >= MAIN_DECK_LIMIT) {
         toastMessage.value = `${MAIN_DECK_LIMIT} card limit for the ${to} deck reached!`
         isSuccessToast.value = false
       } else if (
-        (to === 'extra' && EXTRA_AND_SIDE_DECK_LIMIT === extraDeck.value.length) ||
-        (to === 'side' && EXTRA_AND_SIDE_DECK_LIMIT === sideDeck.value.length)
+        (to === 'extra' && extraDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
+        (to === 'side' && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT)
       ) {
         toastMessage.value = `${EXTRA_AND_SIDE_DECK_LIMIT} card limit for the ${to} deck reached!`
         isSuccessToast.value = false
