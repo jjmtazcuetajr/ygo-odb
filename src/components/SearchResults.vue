@@ -76,6 +76,15 @@ function handleToast(msg: string, feedback: boolean) {
   toastRef.value?.handleShow()
 }
 
+/**
+ * Clear the search input
+ */
+function clearSearchInput() {
+  searchValue.value = ''
+  filters.value.search = searchValue.value
+  if (currentPage.value > 1) toFirst()
+}
+
 // watch for changes in the current page and the filtered cards, then queue and process the corresponding card images accordingly
 watch([currentPage, getFilteredCards], () => {
   queueImagesForCurrentPage()
@@ -106,8 +115,12 @@ onMounted(() => {
       <div class="relative">
         <input id="search-input" type="text" v-model="searchValue" @input="debounceSearch"
           placeholder="Enter a card name or effect..." aria-label="Enter a card name or effect"
-          class="w-full text-sm sm:text-base rounded-md pl-7 pr-2 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
+          class="w-full text-sm sm:text-base rounded-md px-7 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
         <Search class="absolute top-[50%] transform-[translateY(-50%)] left-2 pointer-events-none" :size="16" />
+        <button type="button" aria-label="Clear search input" v-if="searchValue.length > 0" @click="clearSearchInput"
+          class="absolute top-1/2 right-1 -translate-y-1/2 cursor-pointer size-5 rounded-full flex justify-center items-center hover:bg-neutral-300 dark:hover:bg-neutral-500 active:bg-neutral-400 dark:active:bg-neutral-600 transition-[background-color] duration-200">
+          <X :size="14" />
+        </button>
       </div>
       <div class="flex flex-wrap items-end gap-2">
         <SelectOption id="sort-type" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Sort by"
