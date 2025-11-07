@@ -6,7 +6,7 @@ import type { YGOCardData, Dropzone, BanStatus, Format } from '@/utils/interface
 import { parseAlwaysTreatedAs } from '@/utils/helpers'
 
 export function useToast() {
-  const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
+  const { mainDeck, extraDeck, sideDeck, genesysLimit, getSumOfGenesysPoints } = storeToRefs(useDeckStore())
   const { isCardWithinLimit } = useDeckStore()
 
   const toastMessage = ref('')
@@ -34,12 +34,17 @@ export function useToast() {
         isSuccessToast.value = true
       }
     } else {
-      const playFormat = format === 'ocg' ? 'OCG' : format === 'tcg' ? 'TCG' : 'none'
+      const formatName: Record<Format, string> = {
+        'ocg': 'OCG',
+        'tcg': 'TCG',
+        'genesys': 'Genesys',
+        'none': 'none'
+      }
       const banStatus = format === 'ocg' ? card.banlist_info?.ban_ocg
         : format === 'tcg' ? card.banlist_info?.ban_tcg
         : undefined
 
-      if (banStatus && playFormat !== 'none') {
+      if (banStatus && ['ocg', 'tcg'].includes(format)) {
         const cardLimitMap: Record<BanStatus, number> = {
           'Forbidden': FORBIDDEN_CARD_LIMIT,
           'Limited': LIMITED_CARD_LIMIT,
@@ -47,7 +52,12 @@ export function useToast() {
         }
         const isSingular = cardLimitMap[banStatus] === LIMITED_CARD_LIMIT ? 'card' : 'cards'
         const limitText = cardLimitMap[banStatus] === FORBIDDEN_CARD_LIMIT ? 'You cannot add it' : `Limit is ${cardLimitMap[banStatus]} ${isSingular}`
-        toastMessage.value = `${card.name} is ${banStatus} in ${playFormat} format. ${limitText}!`
+        toastMessage.value = `${card.name} is ${banStatus} in ${formatName[format]} format. ${limitText}!`
+      } else if (format === 'genesys' && (card.frameType.includes('pendulum') || card.frameType === 'link')) {
+        toastMessage.value = 'Pendulum and Link monsters cannot be added in Genesys format.'
+      } else if (format === 'genesys' && card.misc_info[0].genesys_points > genesysLimit.value - getSumOfGenesysPoints.value) {
+        const genesysPointsUsed = `${getSumOfGenesysPoints.value.toLocaleString()}/${genesysLimit.value.toLocaleString()}`
+        toastMessage.value = `You will exceed the Genesys point limit. Currently ${genesysPointsUsed} points.`
       } else {
         const cardName = parseAlwaysTreatedAs(card.desc) || card.name
         toastMessage.value = `3 card limit for ${cardName} reached!`
