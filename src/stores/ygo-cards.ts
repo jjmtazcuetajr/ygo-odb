@@ -122,8 +122,11 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       }
 
       const rawData: YGOCards = await response.json()
-      const filteredData = rawData.data.filter((card: YGOCardData) => !['skill', 'token'].includes(card.frameType) && !card.desc.toLowerCase().includes('you win the match'))
+
+      // do not include skill cards, tokens, and match winners (except Victory Dragon)
+      const filteredData = rawData.data.filter((card: YGOCardData) => !['skill', 'token'].includes(card.frameType) && !card.desc.match(/wins? the match/i) || card.id === 44910027)
       cards.value = filteredData
+      
       altArts.value = extractAltArts(filteredData)
     } catch (error) {
       isError.value = true

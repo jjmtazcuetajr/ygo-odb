@@ -475,7 +475,7 @@ export function isExtraDeckCard(cardFrame: string): boolean {
 /**
  * Parse card effects and check if they have the "always treated as" keywords or some other variant
  * @param description Card effect (`desc` property from the API)
- * @returns The card name of which it is always treated as, or `undefined` if the aforementioned keywords doesn't exist
+ * @returns The card name of which it is always treated as, or `undefined` if the aforementioned keywords don't exist
  */
 export function parseAlwaysTreatedAs(description: string): string | undefined {
   if (!description) return undefined
