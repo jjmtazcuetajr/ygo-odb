@@ -9,7 +9,7 @@ import { debounce } from '@/utils/helpers'
 import { MAX_ATK_DEF } from '@/utils/constants'
 import type { CardCategory, BanStatus } from '@/utils/interfaces'
 
-const { filters, format, isAltArtShown } = storeToRefs(useYgoCardsStore())
+const { filters, format, isAltArtShown, selectedFormatForDateFilter } = storeToRefs(useYgoCardsStore())
 const { resetCardCategoryFilters, toggleCardsWithAltArts } = useYgoCardsStore()
 const { toFirst } = usePaginationStore()
 
@@ -20,6 +20,7 @@ const GenesysFilters = defineAsyncComponent(() => import('./GenesysFilters.vue')
 const NumberField = defineAsyncComponent(() => import('../general-purpose/NumberField.vue'))
 const SliderComponent = defineAsyncComponent(() => import('../general-purpose/SliderComponent.vue'))
 const SwitchWithLabel = defineAsyncComponent(() => import('../general-purpose/SwitchWithLabel.vue'))
+const DateInput = defineAsyncComponent(() => import('../general-purpose/DateInput.vue'))
 
 const formatStatus = ref<BanStatus | 'Unrestricted' | ''>('')
 const category = ref<CardCategory | undefined>(undefined)
@@ -202,6 +203,33 @@ watch(
       :label-text="`${format.toUpperCase()} Status`" parent-class="flex items-center gap-1 mb-2" :options="banStatus"
       v-model="formatStatus" @update:model-value="handleFormatStatus" />
     <GenesysFilters v-else-if="format === 'genesys'" />
+    <fieldset v-if="format === 'none'" class="flex gap-4 mb-2">
+      <legend>Select a format to filter dates:</legend>
+      <div class="flex items-center gap-1">
+        <input type="radio" id="date-ocg" name="date-selection" value="ocg" class="scheme-light dark:scheme-dark"
+          v-model="selectedFormatForDateFilter">
+        <label for="date-ocg">OCG</label>
+      </div>
+      <div class="flex items-center gap-1">
+        <input type="radio" id="date-tcg" name="date-selection" value="tcg" class="scheme-light dark:scheme-dark"
+          v-model="selectedFormatForDateFilter">
+        <label for="date-tcg">TCG</label>
+      </div>
+    </fieldset>
+    <div v-if="format === 'ocg' || (format === 'none' && selectedFormatForDateFilter === 'ocg')"
+      class="flex justify-between gap-2 mb-4">
+      <DateInput id="ocg-start-date" label-text="OCG date from" class="flex flex-col gap-1" />
+      <DateInput id="ocg-end-date" label-text="OCG date to" class="flex flex-col gap-1" />
+    </div>
+    <div
+      v-else-if="format === 'tcg' || format === 'genesys' || (format === 'none' && selectedFormatForDateFilter === 'tcg')"
+      class="flex justify-between gap-2 mb-4">
+      <DateInput id="tcg-start-date" label-text="TCG date from" class="flex flex-col gap-1" />
+      <DateInput id="tcg-end-date" label-text="TCG date to" class="flex flex-col gap-1" />
+    </div>
+    <span v-if="format === 'genesys'" class="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
+      <strong>Note</strong>: Genesys format is TCG-exclusive, so filtered dates use the TCG.
+    </span>
     <div class="flex items-center flex-wrap gap-2">
       <div class="flex items-start sm:items-end gap-1">
         Card Category

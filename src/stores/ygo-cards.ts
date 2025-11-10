@@ -46,6 +46,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   const isError = ref(false)
   const format = ref<Format>('ocg')
   const isAltArtShown = ref(false)
+  const selectedFormatForDateFilter = ref<'ocg' | 'tcg'>('ocg')
 
   // getters
   const getFilteredCards = computed(() => {
@@ -195,7 +196,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   }
 
   return {
-    cards, altArts, filters, sortBy, sortDir, isLoading, isError, format, isAltArtShown, getFilteredCards,
+    cards, altArts, filters, sortBy, sortDir, isLoading, isError, format, isAltArtShown, selectedFormatForDateFilter, getFilteredCards,
     fetchCards, resetCardCategoryFilters, resetFilters, toggleCardsWithAltArts
   }
 })
