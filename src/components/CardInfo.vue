@@ -4,6 +4,15 @@ import { printTypeline, handleBanStatusColor, removeSingleQuotes } from '@/utils
 import type { YGOCardData } from '@/utils/interfaces'
 
 defineProps<{ card: YGOCardData }>()
+
+/**
+ * Format a `yyyy-mm-dd` string date into a properly human-readable date (e.g.; January 1, 1970)
+ * @param dateString Date in the `yyyy-mm-dd` format
+ */
+function formatDate(dateString: string): string {
+  const date = new Date(dateString)
+  return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(date)
+}
 </script>
 <template>
   <div class="flex flex-col gap-1 w-full">
@@ -71,5 +80,16 @@ defineProps<{ card: YGOCardData }>()
       <span class="font-bold">Genesys Points: </span>
       <span class="text-emerald-700 dark:text-emerald-500">{{ card.misc_info[0].genesys_points }}</span>
     </span>
+    <div class="flex flex-col mt-auto">
+      <strong>Release Date/s:</strong>
+      <div class="flex flex-wrap gap-2">
+        <span v-if="card.misc_info[0].ocg_date">
+          {{ formatDate(card.misc_info[0].ocg_date) }} (OCG)
+        </span>
+        <span v-if="card.misc_info[0].tcg_date">
+          {{ formatDate(card.misc_info[0].tcg_date) }} (TCG)
+        </span>
+      </div>
+    </div>
   </div>
 </template>
