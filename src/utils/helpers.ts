@@ -306,7 +306,7 @@ export function matchBanStatus(card: YGOCardData, format: Format, status: BanSta
  * @param card Yu-Gi-Oh! card data object
  * @returns The release dates of a card
  */
-function getCorrectReleaseDates(card: YGOCardData): ReleasedDates {
+export function getCorrectReleaseDates(card: YGOCardData): ReleasedDates {
   const dateOverrides: Record<number, ReleasedDates> = {
     70781052: { tcgDate: '2001-12-01' }, // Summoned Skull
     20415050: { ocgDate: '2025-08-23' }, // Hecahands
