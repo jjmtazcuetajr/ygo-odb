@@ -6,7 +6,7 @@ import { usePaginationStore } from '@/stores/pagination'
 import { storeToRefs } from 'pinia'
 import { ref, onBeforeMount, watch, defineAsyncComponent } from 'vue'
 import { debounce } from '@/utils/helpers'
-import { MAX_ATK_DEF } from '@/utils/constants'
+import { MAX_ATK_DEF, MIN_OCG_DATE, MIN_TCG_DATE } from '@/utils/constants'
 import type { CardCategory, BanStatus } from '@/utils/interfaces'
 
 const { filters, format, isAltArtShown, selectedFormatForDateFilter } = storeToRefs(useYgoCardsStore())
@@ -44,6 +44,10 @@ const defRange = ref<[number, number]>([0, MAX_ATK_DEF])
 const spellType = ref('')
 const trapType = ref('')
 const showCardsWithAltArts = ref(false)
+const ocgStartDate = ref('')
+const ocgEndDate = ref('')
+const tcgStartDate = ref('')
+const tcgEndDate = ref('')
 
 /**
  * Debounced function for card filtering based on its status in the OCG & TCG formats
@@ -138,6 +142,21 @@ const handleToggleAltArts = debounce(() => {
 }, 300)
 
 /**
+ * Debounced function for filtering cards based on the minimum and maximum dates
+ * @param usage An option to filter dates either in the OCG or TCG
+ */
+const handleDateRange = debounce((usage: 'ocg' | 'tcg') => {
+  if (usage === 'ocg') {
+    filters.value.ocgStartDate = ocgStartDate.value
+    filters.value.ocgEndDate = ocgEndDate.value
+  } else {
+    filters.value.tcgStartDate = tcgStartDate.value
+    filters.value.tcgEndDate = tcgEndDate.value
+  }
+  toFirst()
+}, 300)
+
+/**
  * Set the values of local refs from the related store
  */
 function setValues() {
@@ -163,6 +182,10 @@ function setValues() {
   spellType.value = filters.value.spellType
   trapType.value = filters.value.trapType
   showCardsWithAltArts.value = isAltArtShown.value
+  ocgStartDate.value = filters.value.ocgStartDate
+  ocgEndDate.value = filters.value.ocgEndDate
+  tcgStartDate.value = filters.value.tcgStartDate
+  tcgEndDate.value = filters.value.tcgEndDate
 }
 
 onBeforeMount(() => setValues())
@@ -189,7 +212,11 @@ watch(
     () => filters.value.atkRange,
     () => filters.value.defRange,
     () => filters.value.spellType,
-    () => filters.value.trapType
+    () => filters.value.trapType,
+    () => filters.value.ocgStartDate,
+    () => filters.value.ocgEndDate,
+    () => filters.value.tcgStartDate,
+    () => filters.value.tcgEndDate
   ],
   () => setValues()
 )
@@ -218,14 +245,18 @@ watch(
     </fieldset>
     <div v-if="format === 'ocg' || (format === 'none' && selectedFormatForDateFilter === 'ocg')"
       class="flex justify-between gap-2 mb-4">
-      <DateInput id="ocg-start-date" label-text="OCG date from" class="flex flex-col gap-1" />
-      <DateInput id="ocg-end-date" label-text="OCG date to" class="flex flex-col gap-1" />
+      <DateInput id="ocg-start-date" label-text="OCG date from" :min="MIN_OCG_DATE" class="flex flex-col gap-1"
+        v-model="ocgStartDate" @update:model-value="handleDateRange('ocg')" />
+      <DateInput id="ocg-end-date" label-text="OCG date to" :min="MIN_OCG_DATE" class="flex flex-col gap-1"
+        v-model="ocgEndDate" @update:model-value="handleDateRange('ocg')" />
     </div>
     <div
       v-else-if="format === 'tcg' || format === 'genesys' || (format === 'none' && selectedFormatForDateFilter === 'tcg')"
       class="flex justify-between gap-2 mb-4">
-      <DateInput id="tcg-start-date" label-text="TCG date from" class="flex flex-col gap-1" />
-      <DateInput id="tcg-end-date" label-text="TCG date to" class="flex flex-col gap-1" />
+      <DateInput id="tcg-start-date" label-text="TCG date from" :min="MIN_TCG_DATE" class="flex flex-col gap-1"
+        v-model="tcgStartDate" @update:model-value="handleDateRange('tcg')" />
+      <DateInput id="tcg-end-date" label-text="TCG date to" :min="MIN_TCG_DATE" class="flex flex-col gap-1"
+        v-model="tcgEndDate" @update:model-value="handleDateRange('tcg')" />
     </div>
     <span v-if="format === 'genesys'" class="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
       <strong>Note</strong>: Genesys format is TCG-exclusive, so filtered dates use the TCG.
