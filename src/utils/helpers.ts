@@ -581,6 +581,49 @@ export function sortByGenesysPoint(cardA: YGOCardData, cardB: YGOCardData, dir: 
 }
 
 /**
+ * Sort cards by release date
+ * @param cardA Current/previous card
+ * @param cardB Next card
+ * @param format An option to sort dates either in the OCG or TCG
+ * @param dir Sort direction. Either ascending or descending
+ * @returns Number to determine the sorting order
+ */
+export function sortByReleaseDate(cardA: YGOCardData, cardB: YGOCardData, format: 'ocg' | 'tcg', dir: SortDirection): number {
+  const collator = new Intl.Collator('en', { sensitivity: 'base' })
+
+  if (format === 'ocg') {
+    const ocgReleaseDateA = getCorrectReleaseDates(cardA).ocgDate
+    const ocgReleaseDateB = getCorrectReleaseDates(cardB).ocgDate
+
+    if (ocgReleaseDateA !== undefined && ocgReleaseDateB === undefined) return -1
+    if (ocgReleaseDateA === undefined && ocgReleaseDateB !== undefined) return 1
+
+    if (ocgReleaseDateA !== undefined && ocgReleaseDateB !== undefined) {
+      const ocgTimeStampA = new Date(ocgReleaseDateA).getTime()
+      const ocgTimeStampB = new Date(ocgReleaseDateB).getTime()
+      const ocgTimeStampComparison = ocgTimeStampA - ocgTimeStampB
+      if (ocgTimeStampComparison !== 0) return dir === 'asc' ? ocgTimeStampComparison : -ocgTimeStampComparison
+    }
+  } else {
+    const tcgReleaseDateA = getCorrectReleaseDates(cardA).tcgDate
+    const tcgReleaseDateB = getCorrectReleaseDates(cardB).tcgDate
+
+    if (tcgReleaseDateA !== undefined && tcgReleaseDateB === undefined) return -1
+    if (tcgReleaseDateA === undefined && tcgReleaseDateB !== undefined) return 1
+
+    if (tcgReleaseDateA !== undefined && tcgReleaseDateB !== undefined) {
+      const tcgTimeStampA = new Date(tcgReleaseDateA).getTime()
+      const tcgTimeStampB = new Date(tcgReleaseDateB).getTime()
+      const tcgTimeStampComparison = tcgTimeStampA - tcgTimeStampB
+      if (tcgTimeStampComparison !== 0) return dir === 'asc' ? tcgTimeStampComparison : -tcgTimeStampComparison
+    }
+  }
+
+  // sort by name if two cards have the same release dates or don't have any release date at all
+  return collator.compare(cardA.name, cardB.name)
+}
+
+/**
  * Creates a debounced function that delays invoking `func` until after `wait` milliseconds
  * have elapsed since the last time the debounced function was invoked
  * @param func The function to debounce

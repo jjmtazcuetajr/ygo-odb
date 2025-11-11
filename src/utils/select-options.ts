@@ -35,7 +35,9 @@ export const sortTypes = [
   { val: 'rank', textContent: 'Rank' },
   { val: 'scale', textContent: 'Scale' },
   { val: 'link-rating', textContent: 'Link Rating' },
-  { val: 'genesys-point', textContent: 'Genesys Point' }
+  { val: 'genesys-point', textContent: 'Genesys Point' },
+  { val: 'ocg-date', textContent: 'OCG Date' },
+  { val: 'tcg-date', textContent: 'TCG Date' }
 ]
 
 export const sortDirections = [

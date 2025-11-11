@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, Format } from '@/utils/interfaces'
 import {
   matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
-  sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint, matchAtkRange, matchDefRange, extractAltArts, matchDateRange
+  sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint, matchAtkRange, matchDefRange, extractAltArts, matchDateRange, sortByReleaseDate
 } from '@/utils/helpers'
 import { usePaginationStore } from './pagination'
 import { GENESYS_STANDARD_POINT_LIMIT, MAX_ATK_DEF } from '@/utils/constants'
@@ -44,7 +44,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     tcgStartDate: '',
     tcgEndDate: ''
   })
-  const sortBy = ref<SortByMonsterStat | 'name' | 'genesys-point'>('name')
+  const sortBy = ref<SortByMonsterStat | 'name' | 'genesys-point' | 'ocg-date' | 'tcg-date'>('name')
   const sortDir = ref<SortDirection>('asc')
   const isLoading = ref(false)
   const isError = ref(false)
@@ -103,6 +103,10 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         return sortDir.value === 'asc' ? nameComparison : -nameComparison
       } else if (sortBy.value === 'genesys-point') {
         return sortByGenesysPoint(a, b, sortDir.value)
+      } else if (sortBy.value === 'ocg-date') {
+        return sortByReleaseDate(a, b, 'ocg', sortDir.value)
+      } else if (sortBy.value === 'tcg-date') {
+        return sortByReleaseDate(a, b, 'tcg', sortDir.value)
       } else {
         // Handle all numeric stats
         const statProperties = ['atk', 'def', 'level', 'rank', 'scale', 'link-rating']
