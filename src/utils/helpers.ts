@@ -1,5 +1,5 @@
-import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory, Format, BanStatus, CardImages } from '@/utils/interfaces'
-import { MAX_ATK_DEF } from './constants'
+import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory, Format, BanStatus, CardImages, ReleasedDates } from '@/utils/interfaces'
+import { MAX_ATK_DEF, MIN_OCG_DATE, MIN_TCG_DATE } from './constants'
 
 /**
  * Finds card matches based on card category
@@ -302,6 +302,48 @@ export function matchBanStatus(card: YGOCardData, format: Format, status: BanSta
 }
 
 /**
+ * Returns the correct release dates for certain cards that have wrong or missing OCG/TCG release date/s
+ * @param card Yu-Gi-Oh! card data object
+ * @returns The release dates of a card
+ */
+export function getCorrectReleaseDates(card: YGOCardData): ReleasedDates {
+  const dateOverrides: Record<number, ReleasedDates> = {
+    70781052: { tcgDate: '2001-12-01' }, // Summoned Skull
+    20415050: { ocgDate: '2025-08-23' }, // Hecahands
+    31786838: { ocgDate: '2025-01-25', tcgDate: '2025-05-01' }, // Regenesis
+    97227123: { ocgDate: '2025-04-26', tcgDate: '2025-07-03' }, // Return of the Duelist
+    212652: { ocgDate: '2025-09-12' } // Trap of the Poisonous Scorpion
+  }
+
+  const ocgReleaseDate = dateOverrides[card.id]?.ocgDate ?? card.misc_info[0].ocg_date
+  const tcgReleaseDate = dateOverrides[card.id]?.tcgDate ?? card.misc_info[0].tcg_date
+
+  return { ocgDate: ocgReleaseDate, tcgDate: tcgReleaseDate }
+}
+
+/**
+ * Finds card matches based from the release date range
+ * @param card Yu-Gi-Oh! card data object
+ * @param format The playing format to base the release date from
+ * @param startDate The starting date in the format `yyyy-mm-dd`
+ * @param endDate The ending date in the format `yyyy-mm-dd`
+ * @returns The matching cards within the given date range
+ */
+export function matchDateRange(card: YGOCardData, format: 'ocg' | 'tcg', startDate: string, endDate: string): boolean {
+  if (startDate === '' && endDate === '') return true
+
+  const startDateString = format === 'ocg' ? MIN_OCG_DATE : MIN_TCG_DATE
+  const start = new Date(startDate === '' ? startDateString : startDate).getTime()
+  const end = endDate === '' ? Date.now() : new Date(endDate).getTime()
+
+  const cardReleaseDate = format === 'ocg' ? getCorrectReleaseDates(card).ocgDate : getCorrectReleaseDates(card).tcgDate
+  if (cardReleaseDate === undefined) return false
+  
+  const timeStamp = new Date(cardReleaseDate).getTime()
+  return timeStamp >= start && timeStamp <= end
+}
+
+/**
  * Sort monster cards by a given stat
  * @param cardA Current/previous card used for comparison
  * @param cardB Next card used for comparison
@@ -535,6 +577,49 @@ export function sortByGenesysPoint(cardA: YGOCardData, cardB: YGOCardData, dir: 
   }
 
   // sort by name if two cards have the same Genesys points
+  return collator.compare(cardA.name, cardB.name)
+}
+
+/**
+ * Sort cards by release date
+ * @param cardA Current/previous card
+ * @param cardB Next card
+ * @param format An option to sort dates either in the OCG or TCG
+ * @param dir Sort direction. Either ascending or descending
+ * @returns Number to determine the sorting order
+ */
+export function sortByReleaseDate(cardA: YGOCardData, cardB: YGOCardData, format: 'ocg' | 'tcg', dir: SortDirection): number {
+  const collator = new Intl.Collator('en', { sensitivity: 'base' })
+
+  if (format === 'ocg') {
+    const ocgReleaseDateA = getCorrectReleaseDates(cardA).ocgDate
+    const ocgReleaseDateB = getCorrectReleaseDates(cardB).ocgDate
+
+    if (ocgReleaseDateA !== undefined && ocgReleaseDateB === undefined) return -1
+    if (ocgReleaseDateA === undefined && ocgReleaseDateB !== undefined) return 1
+
+    if (ocgReleaseDateA !== undefined && ocgReleaseDateB !== undefined) {
+      const ocgTimeStampA = new Date(ocgReleaseDateA).getTime()
+      const ocgTimeStampB = new Date(ocgReleaseDateB).getTime()
+      const ocgTimeStampComparison = ocgTimeStampA - ocgTimeStampB
+      if (ocgTimeStampComparison !== 0) return dir === 'asc' ? ocgTimeStampComparison : -ocgTimeStampComparison
+    }
+  } else {
+    const tcgReleaseDateA = getCorrectReleaseDates(cardA).tcgDate
+    const tcgReleaseDateB = getCorrectReleaseDates(cardB).tcgDate
+
+    if (tcgReleaseDateA !== undefined && tcgReleaseDateB === undefined) return -1
+    if (tcgReleaseDateA === undefined && tcgReleaseDateB !== undefined) return 1
+
+    if (tcgReleaseDateA !== undefined && tcgReleaseDateB !== undefined) {
+      const tcgTimeStampA = new Date(tcgReleaseDateA).getTime()
+      const tcgTimeStampB = new Date(tcgReleaseDateB).getTime()
+      const tcgTimeStampComparison = tcgTimeStampA - tcgTimeStampB
+      if (tcgTimeStampComparison !== 0) return dir === 'asc' ? tcgTimeStampComparison : -tcgTimeStampComparison
+    }
+  }
+
+  // sort by name if two cards have the same release dates or don't have any release date at all
   return collator.compare(cardA.name, cardB.name)
 }
 

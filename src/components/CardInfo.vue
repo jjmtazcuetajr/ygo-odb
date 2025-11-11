@@ -1,9 +1,21 @@
 <script setup lang="ts">
 import { Star, Diamond } from 'lucide-vue-next'
-import { printTypeline, handleBanStatusColor, removeSingleQuotes } from '@/utils/helpers'
+import { printTypeline, handleBanStatusColor, removeSingleQuotes, getCorrectReleaseDates } from '@/utils/helpers'
 import type { YGOCardData } from '@/utils/interfaces'
 
 defineProps<{ card: YGOCardData }>()
+
+/**
+ * Format a `yyyy-mm-dd` string date into a properly human-readable date (e.g.; January 1, 1970)
+ * @param dateString Date in the `yyyy-mm-dd` format
+ * @returns Formatted date
+ */
+function formatDate(dateString: string | undefined): string {
+  if (dateString === undefined) return ''
+
+  const date = new Date(dateString)
+  return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(date)
+}
 </script>
 <template>
   <div class="flex flex-col gap-1 w-full">
@@ -71,5 +83,16 @@ defineProps<{ card: YGOCardData }>()
       <span class="font-bold">Genesys Points: </span>
       <span class="text-emerald-700 dark:text-emerald-500">{{ card.misc_info[0].genesys_points }}</span>
     </span>
+    <div class="flex flex-col mt-auto">
+      <strong>Release Date/s:</strong>
+      <div class="flex flex-wrap gap-2">
+        <span v-if="getCorrectReleaseDates(card).ocgDate !== undefined">
+          {{ formatDate(getCorrectReleaseDates(card).ocgDate) }} (OCG)
+        </span>
+        <span v-if="getCorrectReleaseDates(card).tcgDate !== undefined">
+          {{ formatDate(getCorrectReleaseDates(card).tcgDate) }} (TCG)
+        </span>
+      </div>
+    </div>
   </div>
 </template>

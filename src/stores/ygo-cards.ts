@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, Format } from '@/utils/interfaces'
 import {
   matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
-  sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint, matchAtkRange, matchDefRange, extractAltArts
+  sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint, matchAtkRange, matchDefRange, extractAltArts, matchDateRange, sortByReleaseDate
 } from '@/utils/helpers'
 import { usePaginationStore } from './pagination'
 import { GENESYS_STANDARD_POINT_LIMIT, MAX_ATK_DEF } from '@/utils/constants'
@@ -38,14 +38,19 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     atkRange: [0, MAX_ATK_DEF],
     defRange: [0, MAX_ATK_DEF],
     isUnknownAtk: false,
-    isUnknownDef: false
+    isUnknownDef: false,
+    ocgStartDate: '',
+    ocgEndDate: '',
+    tcgStartDate: '',
+    tcgEndDate: ''
   })
-  const sortBy = ref<SortByMonsterStat | 'name' | 'genesys-point'>('name')
+  const sortBy = ref<SortByMonsterStat | 'name' | 'genesys-point' | 'ocg-date' | 'tcg-date'>('name')
   const sortDir = ref<SortDirection>('asc')
   const isLoading = ref(false)
   const isError = ref(false)
   const format = ref<Format>('ocg')
   const isAltArtShown = ref(false)
+  const selectedFormatForDateFilter = ref<'ocg' | 'tcg'>('ocg')
 
   // getters
   const getFilteredCards = computed(() => {
@@ -81,11 +86,16 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesDefRange = matchDefRange(card, filters.value.defRange)
       const matchesUnknownAtk = filters.value.isUnknownAtk ? card.atk === -1 : true
       const matchesUnknownDef = filters.value.isUnknownDef ? card.def === -1 : true
+      const matchesDateRange = format.value === 'ocg'  || (format.value === 'none' && selectedFormatForDateFilter.value === 'ocg')
+        ? matchDateRange(card, 'ocg', filters.value.ocgStartDate, filters.value.ocgEndDate)
+        : format.value === 'tcg' || format.value === 'genesys' || (format.value === 'none' && selectedFormatForDateFilter.value === 'tcg')
+        ? matchDateRange(card, 'tcg', filters.value.tcgStartDate, filters.value.tcgEndDate)
+        : true
 
       return matchesSearch && matchesCategory && matchesSpellType && matchesTrapType && matchesMonsterCardType && matchesMonsterAbility && matchesTunerType && matchesPendulumType
         && matchesMonsterType && matchesAttribute && matchesLevel && matchesRank && matchesPendulumScale && matchesLinkRating && matchesAtk && matchesDef && matchesLinkArrows
         && matchesBanStatus && matchesGreaterThanZeroGenesysPoints && matchesZeroGenesysPoints && matchesExactGenesysPoint && matchesGenesysPointRange && matchesAtkRange
-        && matchesDefRange && matchesUnknownAtk && matchesUnknownDef
+        && matchesDefRange && matchesUnknownAtk && matchesUnknownDef && matchesDateRange
     }).sort((a, b) => {
       if (sortBy.value === 'name') {
         const collator = new Intl.Collator('en', { sensitivity: 'base' })
@@ -93,6 +103,10 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
         return sortDir.value === 'asc' ? nameComparison : -nameComparison
       } else if (sortBy.value === 'genesys-point') {
         return sortByGenesysPoint(a, b, sortDir.value)
+      } else if (sortBy.value === 'ocg-date') {
+        return sortByReleaseDate(a, b, 'ocg', sortDir.value)
+      } else if (sortBy.value === 'tcg-date') {
+        return sortByReleaseDate(a, b, 'tcg', sortDir.value)
       } else {
         // Handle all numeric stats
         const statProperties = ['atk', 'def', 'level', 'rank', 'scale', 'link-rating']
@@ -195,7 +209,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   }
 
   return {
-    cards, altArts, filters, sortBy, sortDir, isLoading, isError, format, isAltArtShown, getFilteredCards,
+    cards, altArts, filters, sortBy, sortDir, isLoading, isError, format, isAltArtShown, selectedFormatForDateFilter, getFilteredCards,
     fetchCards, resetCardCategoryFilters, resetFilters, toggleCardsWithAltArts
   }
 })

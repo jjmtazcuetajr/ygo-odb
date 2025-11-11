@@ -34,9 +34,9 @@ interface MiscInfo {
   has_effect: number
   konami_id: number
   md_rarity: string
-  ocg_date: Date
+  ocg_date?: string
   staple?: string
-  tcg_date: Date
+  tcg_date?: string
   treated_as: string
   upvotes: number
   views: number
@@ -102,6 +102,10 @@ export interface FilterOptions {
   defRange: [number, number]
   isUnknownAtk: boolean
   isUnknownDef: boolean
+  ocgStartDate: string
+  ocgEndDate: string
+  tcgStartDate: string
+  tcgEndDate: string
 }
 
 export interface LoadingImage {
@@ -116,3 +120,7 @@ export type SortByMonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'li
 export type BanStatus = 'Forbidden' | 'Limited' | 'Semi-Limited'
 export type Format = 'ocg' | 'tcg' | 'none' | 'genesys'
 export type Dropzone = 'main' | 'extra' | 'side'
+export type ReleasedDates = {
+  ocgDate?: string | undefined
+  tcgDate?: string | undefined
+}
