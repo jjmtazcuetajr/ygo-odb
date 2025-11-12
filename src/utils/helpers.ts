@@ -129,6 +129,23 @@ export function matchPendulumType(card: YGOCardData, pendulum: string): boolean 
 }
 
 /**
+ * Finds monster card matches (excluding Xyz, Xyz Pendulum, and Link monsters) based on Level
+ * @see {@link https://yugipedia.com/wiki/Level}
+ * @param card Yu-Gi-Oh! card data object
+ * @param level Level of a monster from 0 - 12
+ * @returns Matching monster cards of the specified level
+ */
+export function matchLevel(card: YGOCardData, level: number | undefined): boolean {
+  if (level !== undefined) {
+    // this is a fix for Dracotail Shaurus that has level=null instead of 6
+    const overrideLevel: Record<number, number[]> = { 6: [42125140] }
+    const isOverrideLevel = overrideLevel[level]?.includes(card.id)
+    return (!['xyz', 'xyz_pendulum', 'link'].includes(card.frameType) && card.level === level) || isOverrideLevel
+  }
+  return true
+}
+
+/**
  * Finds Xyz Monster card matches based on Rank
  * @see {@link https://yugipedia.com/wiki/Rank}
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API

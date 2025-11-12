@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { YGOCardData, YGOCards, FilterOptions, SortDirection, MonsterStat, Format } from '@/utils/interfaces'
 import {
-  matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
+  matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchLevel, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
   sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint, matchAtkRange, matchDefRange, extractAltArts, matchDateRange, sortByReleaseDate
 } from '@/utils/helpers'
 import { usePaginationStore } from './pagination'
@@ -67,7 +67,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesPendulumType = matchPendulumType(card, filters.value.pendulumType)
       const matchesMonsterType = filters.value.monsterType ? !['spell', 'trap'].includes(card.frameType) && card.race.toLowerCase() === filters.value.monsterType : true
       const matchesAttribute = filters.value.attribute ? card.attribute?.toLowerCase() === filters.value.attribute : true
-      const matchesLevel = filters.value.level !== undefined ? !['xyz', 'xyz_pendulum', 'link'].includes(card.frameType) && card.level === filters.value.level : true
+      const matchesLevel = matchLevel(card, filters.value.level)
       const matchesRank = matchRank(card, filters.value.rank)
       const matchesPendulumScale = matchPendulumScale(card, filters.value.scale)
       const matchesLinkRating = filters.value.linkRating !== undefined ? card.linkval === filters.value.linkRating : true
