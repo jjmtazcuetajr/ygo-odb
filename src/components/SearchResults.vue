@@ -9,7 +9,7 @@ import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted, watch, defineAsyncComponent } from 'vue'
+import { ref, onMounted, watch, defineAsyncComponent, useTemplateRef } from 'vue'
 import { useDetectHover } from '@/composables/detectHover'
 import { debounce } from '@/utils/helpers'
 
@@ -29,6 +29,8 @@ const toastMessage = ref('')
 const isSuccessToast = ref(false)
 const timer = ref(0)
 const searchValue = ref('')
+
+const searchInput = useTemplateRef<HTMLInputElement>('search-input')
 
 const Pagination = defineAsyncComponent(() => import('./Pagination.vue'))
 const CardTooltip = defineAsyncComponent(() => import('./CardTooltip.vue'))
@@ -83,6 +85,7 @@ function clearSearchInput() {
   searchValue.value = ''
   filters.value.search = searchValue.value
   if (currentPage.value > 1) toFirst()
+  if (searchInput.value) searchInput.value.focus()
 }
 
 // watch for changes in the current page and the filtered cards, then queue and process the corresponding card images accordingly
@@ -113,7 +116,7 @@ onMounted(() => {
         </button>
       </div>
       <div class="relative">
-        <input id="search-input" type="text" v-model="searchValue" @input="debounceSearch"
+        <input id="search-input" type="text" ref="search-input" v-model="searchValue" @input="debounceSearch"
           placeholder="Enter a card name or effect..." aria-label="Enter a card name or effect"
           class="w-full text-sm sm:text-base rounded-md px-7 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
         <Search class="absolute top-[50%] transform-[translateY(-50%)] left-2 pointer-events-none" :size="16" />
