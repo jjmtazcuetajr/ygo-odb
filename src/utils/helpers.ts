@@ -312,7 +312,8 @@ export function getCorrectReleaseDates(card: YGOCardData): ReleasedDates {
     20415050: { ocgDate: '2025-08-23' }, // Hecahands
     31786838: { ocgDate: '2025-01-25', tcgDate: '2025-05-01' }, // Regenesis
     97227123: { ocgDate: '2025-04-26', tcgDate: '2025-07-03' }, // Return of the Duelist
-    212652: { ocgDate: '2025-09-12' } // Trap of the Poisonous Scorpion
+    212652: { ocgDate: '2025-09-12' }, // Trap of the Poisonous Scorpion
+    20240828: { ocgDate: '2025-06-24' } // Decoy
   }
 
   const ocgReleaseDate = dateOverrides[card.id]?.ocgDate ?? card.misc_info[0].ocg_date
