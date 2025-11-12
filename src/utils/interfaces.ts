@@ -116,7 +116,7 @@ export interface LoadingImage {
 
 export type CardCategory = 'monster' | 'spell' | 'trap'
 export type SortDirection = 'asc' | 'desc'
-export type SortByMonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'link-rating'
+export type MonsterStat = 'atk' | 'def' | 'level' | 'rank' | 'scale' | 'link-rating'
 export type BanStatus = 'Forbidden' | 'Limited' | 'Semi-Limited'
 export type Format = 'ocg' | 'tcg' | 'none' | 'genesys'
 export type Dropzone = 'main' | 'extra' | 'side'

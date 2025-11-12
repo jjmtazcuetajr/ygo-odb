@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia'
 import { ref, onBeforeMount, watch, defineAsyncComponent } from 'vue'
 import { debounce } from '@/utils/helpers'
 import { MAX_ATK_DEF, MIN_OCG_DATE, MIN_TCG_DATE } from '@/utils/constants'
-import type { CardCategory, BanStatus } from '@/utils/interfaces'
+import type { CardCategory, BanStatus, MonsterStat } from '@/utils/interfaces'
 
 const { filters, format, isAltArtShown, selectedFormatForDateFilter } = storeToRefs(useYgoCardsStore())
 const { resetCardCategoryFilters, toggleCardsWithAltArts } = useYgoCardsStore()
@@ -84,7 +84,7 @@ const handleDropdownFilters = debounce((usage: 'frame' | 'ability' | 'tuner' | '
  * Debounced function for filtering monsters based on a numerical criteria
  * @param usage The numerical criteria to use
  */
-const handleNumericFilters = debounce((usage: 'level' | 'rank' | 'scale' | 'link-rating' | 'atk' | 'def') => {
+const handleNumericFilters = debounce((usage: MonsterStat) => {
   if (usage === 'level') filters.value.level = level.value
   else if (usage === 'rank') filters.value.rank = rank.value
   else if (usage === 'scale') filters.value.scale = scale.value

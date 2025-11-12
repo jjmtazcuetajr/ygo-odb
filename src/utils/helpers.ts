@@ -1,4 +1,4 @@
-import type { YGOCardData, SortDirection, SortByMonsterStat, CardCategory, Format, BanStatus, CardImages, ReleasedDates } from '@/utils/interfaces'
+import type { YGOCardData, SortDirection, MonsterStat, CardCategory, Format, BanStatus, CardImages, ReleasedDates } from '@/utils/interfaces'
 import { MAX_ATK_DEF, MIN_OCG_DATE, MIN_TCG_DATE } from './constants'
 
 /**
@@ -351,7 +351,7 @@ export function matchDateRange(card: YGOCardData, format: 'ocg' | 'tcg', startDa
  * @param stat Monster stat to use for sorting. Either `atk`, `def`, `level`, `rank`, `scale`, or `link-rating`
  * @param dir Sort direction. Either ascending (`asc`) or descending (`desc`)
  */
-export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: SortByMonsterStat, dir: SortDirection): number {
+export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: MonsterStat, dir: SortDirection): number {
   const collator = new Intl.Collator('en', { sensitivity: 'base' })
 
   /**

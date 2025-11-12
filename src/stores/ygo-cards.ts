@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { YGOCardData, YGOCards, FilterOptions, SortDirection, SortByMonsterStat, Format } from '@/utils/interfaces'
+import type { YGOCardData, YGOCards, FilterOptions, SortDirection, MonsterStat, Format } from '@/utils/interfaces'
 import {
   matchCategory, matchMonsterCardType, matchMonsterAbility, matchTunerType, matchPendulumType, matchRank, matchPendulumScale, matchAtk, matchDef, matchLinkArrows,
   sortByMonsterStat, matchTrapType, matchBanStatus, sortByGenesysPoint, matchAtkRange, matchDefRange, extractAltArts, matchDateRange, sortByReleaseDate
@@ -44,7 +44,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     tcgStartDate: '',
     tcgEndDate: ''
   })
-  const sortBy = ref<SortByMonsterStat | 'name' | 'genesys-point' | 'ocg-date' | 'tcg-date'>('name')
+  const sortBy = ref<MonsterStat | 'name' | 'genesys-point' | 'ocg-date' | 'tcg-date'>('name')
   const sortDir = ref<SortDirection>('asc')
   const isLoading = ref(false)
   const isError = ref(false)
