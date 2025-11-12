@@ -127,10 +127,9 @@ onMounted(() => {
       </div>
       <div class="flex flex-wrap items-end gap-2">
         <SelectOption id="sort-type" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Sort by"
-          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortTypes" v-model="sortBy" />
+          label-class="text-xs sm:text-sm" class="flex flex-col gap-1" :options="sortTypes" v-model="sortBy" />
         <SelectOption id="sort-dir" bg-color-class="bg-neutral-50 dark:bg-neutral-900" label-text="Direction"
-          label-class="text-xs sm:text-sm" parent-class="flex flex-col gap-1" :options="sortDirections"
-          v-model="sortDir" />
+          label-class="text-xs sm:text-sm" class="flex flex-col gap-1" :options="sortDirections" v-model="sortDir" />
         <DialogModal usage="filters">
           <template #trigger>
             <ButtonComponent variant="neutral" has-icon>

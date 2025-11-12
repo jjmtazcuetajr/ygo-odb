@@ -227,7 +227,7 @@ watch(
     <SwitchWithLabel id="alt-arts" label-val="Show cards with alternative artworks" class="mb-2"
       v-model="showCardsWithAltArts" @update-value="handleToggleAltArts" />
     <SelectOption v-if="format === 'ocg' || format === 'tcg'" id="ban-status"
-      :label-text="`${format.toUpperCase()} Status`" parent-class="flex items-center gap-1 mb-2" :options="banStatus"
+      :label-text="`${format.toUpperCase()} Status`" class="flex items-center gap-1 mb-2" :options="banStatus"
       v-model="formatStatus" @update:model-value="handleFormatStatus" />
     <GenesysFilters v-else-if="format === 'genesys'" />
     <fieldset v-if="format === 'none'" class="flex gap-4 mb-2">
@@ -271,18 +271,17 @@ watch(
     <template v-if="filters.category === 'monster'">
       <div class="flex flex-wrap justify-between gap-3 mt-3">
         <div class="flex flex-col gap-1">
-          <SelectOption id="monster-card" label-text="Card Frame" parent-class="flex flex-col gap-0.5"
-            :options="monsterCards" v-model="monsterCardType" @update:model-value="handleDropdownFilters('frame')" />
-          <SelectOption id="ability" label-text="Ability" parent-class="flex flex-col gap-0.5"
-            :options="monsterAbilities" v-model="monsterAbility"
-            @update:model-value="handleDropdownFilters('ability')" />
-          <SelectOption id="tuner" label-text="Tuner" parent-class="flex flex-col gap-0.5" :options="tuners"
+          <SelectOption id="monster-card" label-text="Card Frame" class="flex flex-col gap-0.5" :options="monsterCards"
+            v-model="monsterCardType" @update:model-value="handleDropdownFilters('frame')" />
+          <SelectOption id="ability" label-text="Ability" class="flex flex-col gap-0.5" :options="monsterAbilities"
+            v-model="monsterAbility" @update:model-value="handleDropdownFilters('ability')" />
+          <SelectOption id="tuner" label-text="Tuner" class="flex flex-col gap-0.5" :options="tuners"
             v-model="tunerType" @update:model-value="handleDropdownFilters('tuner')" />
-          <SelectOption id="pendulum" label-text="Pendulum" parent-class="flex flex-col gap-0.5" :options="pendulums"
+          <SelectOption id="pendulum" label-text="Pendulum" class="flex flex-col gap-0.5" :options="pendulums"
             v-model="pendulumType" @update:model-value="handleDropdownFilters('pendulum')" />
-          <SelectOption id="monster-type" label-text="Monster Type" parent-class="flex flex-col gap-0.5"
+          <SelectOption id="monster-type" label-text="Monster Type" class="flex flex-col gap-0.5"
             :options="monsterTypes" v-model="monsterType" @update:model-value="handleDropdownFilters('monster-type')" />
-          <SelectOption id="attribute" label-text="Attribute" parent-class="flex flex-col gap-0.5" :options="attributes"
+          <SelectOption id="attribute" label-text="Attribute" class="flex flex-col gap-0.5" :options="attributes"
             v-model="attribute" @update:model-value="handleDropdownFilters('attribute')" />
         </div>
         <div class="flex flex-col gap-1">
@@ -333,11 +332,11 @@ watch(
       </div>
     </template>
     <template v-else-if="filters.category === 'spell'">
-      <SelectOption id="spell" label-text="Spell Type" label-class="mr-3" parent-class="mt-3" :options="spellTypes"
+      <SelectOption id="spell" label-text="Spell Type" label-class="mr-3" class="mt-3" :options="spellTypes"
         v-model="spellType" @update:model-value="handleSpellTrapType('spell')" />
     </template>
     <template v-else-if="filters.category === 'trap'">
-      <SelectOption id="trap" label-text="Trap Type" label-class="mr-3" parent-class="mt-3" :options="trapTypes"
+      <SelectOption id="trap" label-text="Trap Type" label-class="mr-3" class="mt-3" :options="trapTypes"
         v-model="trapType" @update:model-value="handleSpellTrapType('trap')" />
     </template>
   </div>

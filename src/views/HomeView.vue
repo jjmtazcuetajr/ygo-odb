@@ -110,7 +110,7 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
     <div class="flex gap-4 mt-3 h-full">
       <div class="flex flex-col gap-3 grow shrink basis-0">
         <div class="flex flex-wrap gap-3 justify-between items-center text-xs sm:text-base">
-          <SelectOption id="ban-list" label-text="Format" parent-class="flex items-center gap-1" :options="formats"
+          <SelectOption id="ban-list" label-text="Format" class="flex items-center gap-1" :options="formats"
             v-model="format" @update:model-value="handleFormatChange" />
           <template v-if="format === 'genesys'">
             <div v-if="!isEditingGenesysLimit" class="flex gap-3 items-center">

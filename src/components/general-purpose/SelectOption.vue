@@ -5,22 +5,21 @@ interface SelectOption {
 }
 
 defineProps<{
-  id: string,
-  bgColorClass?: string,
-  options: SelectOption[],
-  labelText: string,
-  labelClass?: string,
-  parentClass: string
+  id: string
+  bgColorClass?: string
+  options: SelectOption[]
+  labelText: string
+  labelClass?: string
 }>()
 
 const model = defineModel<string>({ required: true })
 </script>
 <template>
-  <div :class="parentClass">
+  <div>
     <label :for="id" :class="labelClass">{{ labelText }}</label>
     <select :id="id" v-model="model"
       class="text-xs sm:text-base rounded-md pl-1.5 pr-6 py-0.5 appearance-none bg-no-repeat bg-position-[right_.2rem_center] bg-size-[auto_1.1rem] border border-neutral-500 transition-[background-color,background-image] duration-400"
-      :class="bgColorClass || 'bg-neutral-100 dark:bg-neutral-800'">
+      :class="bgColorClass || 'bg-neutral-200 dark:bg-neutral-800'">
       <option v-for="option in options" :key="option.val" :value="option.val">
         {{ option.textContent }}
       </option>
