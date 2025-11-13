@@ -132,8 +132,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     isLoading.value = true
     isError.value = false
 
-    const url = 'http://localhost:5173/src/utils/response.json'
-    //const url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?format=genesys&misc=yes'
+    //const url = 'http://localhost:5173/src/utils/response.json'
+    const url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?format=genesys&misc=yes'
     try {
       const response = await fetch(url)
       if (!response.ok) {
