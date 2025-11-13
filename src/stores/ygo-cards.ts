@@ -30,7 +30,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     def: undefined,
     spellType: '',
     trapType: '',
-    banStatus: '',
+    ocgStatus: '',
+    tcgStatus: '',
     isGreaterThanZeroGenesysPoints: false,
     isZeroGenesysPoints: false,
     exactGenesysPoint: undefined,
@@ -74,7 +75,11 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
       const matchesAtk = matchAtk(card, filters.value.atk)
       const matchesDef = matchDef(card, filters.value.def)
       const matchesLinkArrows = matchLinkArrows(card, filters.value.linkArrows)
-      const matchesBanStatus = matchBanStatus(card, format.value, filters.value.banStatus)
+      const matchesBanStatus = format.value === 'ocg'
+        ? matchBanStatus(card, 'ocg', filters.value.ocgStatus)
+        : format.value === 'tcg'
+        ? matchBanStatus(card, 'tcg', filters.value.tcgStatus)
+        : true
       const matchesGreaterThanZeroGenesysPoints = filters.value.isGreaterThanZeroGenesysPoints ? card.misc_info[0].genesys_points > 0 : true
       const matchesZeroGenesysPoints = filters.value.isZeroGenesysPoints
         ? card.misc_info[0].genesys_points === 0 && card.frameType !== 'link' && !card.frameType.includes('pendulum')
@@ -193,7 +198,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   function resetFilters() {
     filters.value.search = ''
     filters.value.category = undefined
-    filters.value.banStatus = ''
+    filters.value.ocgStatus = ''
+    filters.value.tcgStatus = ''
 
     resetCardCategoryFilters()
     resetGenesysFilters()

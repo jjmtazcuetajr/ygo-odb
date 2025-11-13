@@ -93,7 +93,8 @@ export interface FilterOptions {
   def: number | undefined
   spellType: string
   trapType: string
-  banStatus: BanStatus | 'Unrestricted' | ''
+  ocgStatus: BanStatus | 'Unrestricted' | ''
+  tcgStatus: BanStatus | 'Unrestricted' | ''
   isGreaterThanZeroGenesysPoints: boolean
   isZeroGenesysPoints: boolean
   exactGenesysPoint: number | undefined

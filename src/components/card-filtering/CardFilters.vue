@@ -22,7 +22,8 @@ const SliderComponent = defineAsyncComponent(() => import('../general-purpose/Sl
 const SwitchWithLabel = defineAsyncComponent(() => import('../general-purpose/SwitchWithLabel.vue'))
 const DateInput = defineAsyncComponent(() => import('../general-purpose/DateInput.vue'))
 
-const formatStatus = ref<BanStatus | 'Unrestricted' | ''>('')
+const ocgStatus = ref<BanStatus | 'Unrestricted' | ''>('')
+const tcgStatus = ref<BanStatus | 'Unrestricted' | ''>('')
 const category = ref<CardCategory | undefined>(undefined)
 const monsterCardType = ref('')
 const monsterAbility = ref('')
@@ -51,9 +52,11 @@ const tcgEndDate = ref('')
 
 /**
  * Debounced function for card filtering based on its status in the OCG & TCG formats
+ * @param usage An option to filter a card's status either in the OCG or TCG
  */
-const handleFormatStatus = debounce(() => {
-  filters.value.banStatus = formatStatus.value
+const handleFormatStatus = debounce((usage: 'ocg' | 'tcg') => {
+  if (usage === 'ocg') filters.value.ocgStatus = ocgStatus.value
+  else filters.value.tcgStatus = tcgStatus.value
   toFirst()
 }, 300)
 
@@ -160,7 +163,8 @@ const handleDateRange = debounce((usage: 'ocg' | 'tcg') => {
  * Set the values of local refs from the related store
  */
 function setValues() {
-  formatStatus.value = filters.value.banStatus
+  ocgStatus.value = filters.value.ocgStatus
+  tcgStatus.value = filters.value.tcgStatus
   category.value = filters.value.category
   monsterCardType.value = filters.value.monsterCardType
   monsterAbility.value = filters.value.monsterAbility
@@ -192,7 +196,8 @@ onBeforeMount(() => setValues())
 
 watch(
   [
-    () => filters.value.banStatus,
+    () => filters.value.ocgStatus,
+    () => filters.value.tcgStatus,
     () => filters.value.category,
     () => filters.value.monsterCardType,
     () => filters.value.monsterAbility,
@@ -224,9 +229,10 @@ watch(
 
 <template>
   <div class="flex flex-col gap-3 mt-3 text-xs sm:text-base">
-    <SelectOption v-if="format === 'ocg' || format === 'tcg'" id="ban-status"
-      :label-text="`${format.toUpperCase()} Status`" class="flex items-center gap-1" :options="banStatus"
-      v-model="formatStatus" @update:model-value="handleFormatStatus" />
+    <SelectOption v-if="format === 'ocg'" id="ocg-status" label-text="OCG Status" class="flex items-center gap-1"
+      :options="banStatus" v-model="ocgStatus" @update:model-value="handleFormatStatus('ocg')" />
+    <SelectOption v-else-if="format === 'tcg'" id="tcg-status" label-text="TCG Status" class="flex items-center gap-1"
+      :options="banStatus" v-model="tcgStatus" @update:model-value="handleFormatStatus('tcg')" />
     <GenesysFilters v-else-if="format === 'genesys'" />
     <div v-if="format !== 'none'" class="border-t border-t-neutral-300 dark:border-t-neutral-700"></div>
     <div class="flex items-center flex-wrap gap-2">

@@ -1,4 +1,4 @@
-import type { YGOCardData, SortDirection, MonsterStat, CardCategory, Format, BanStatus, CardImages, ReleasedDates } from '@/utils/interfaces'
+import type { YGOCardData, SortDirection, MonsterStat, CardCategory, BanStatus, CardImages, ReleasedDates } from '@/utils/interfaces'
 import { MAX_ATK_DEF, MIN_OCG_DATE, MIN_TCG_DATE } from './constants'
 
 /**
@@ -304,10 +304,10 @@ export function matchLinkArrows(card: YGOCardData, linkArrows: string[]): boolea
 /**
  * Filter cards based on format and limit
  * @param card Yu-Gi-Oh! card data from the YGOPRODeck API
- * @param format Either OCG, TCG, or none
+ * @param format Format of either OCG or TCG
  * @param status Either Forbidden, Limited, or Semi-Limited
  */
-export function matchBanStatus(card: YGOCardData, format: Format, status: BanStatus | 'Unrestricted' | ''): boolean {
+export function matchBanStatus(card: YGOCardData, format: 'ocg' | 'tcg', status: BanStatus | 'Unrestricted' | ''): boolean {
   if (format === 'ocg') {
     if (status !== '' && status !== 'Unrestricted') return card.banlist_info?.ban_ocg === status
     else if (status === 'Unrestricted') return card.banlist_info?.ban_ocg === undefined
