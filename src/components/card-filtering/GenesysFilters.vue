@@ -73,7 +73,7 @@ watch(
 )
 </script>
 <template>
-  <div class="flex flex-col gap-2 mb-5">
+  <div class="flex flex-col gap-2 mb-3">
     <SwitchWithLabel id="gt-zero-genesys-pts" label-val="Show cards that have greater than zero Genesys points"
       v-model="isGreaterThanZeroGenesysPoints" @update-value="handleIsGreaterThanZeroGenesysPoints" />
     <SwitchWithLabel id="is-zero-genesys-pts" label-val="Show cards that have zero Genesys points"

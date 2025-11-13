@@ -223,44 +223,12 @@ watch(
 </script>
 
 <template>
-  <div class="flex flex-col mt-3 text-xs sm:text-base">
-    <SwitchWithLabel id="alt-arts" label-val="Show cards with alternative artworks" class="mb-2"
-      v-model="showCardsWithAltArts" @update-value="handleToggleAltArts" />
+  <div class="flex flex-col gap-3 mt-3 text-xs sm:text-base">
     <SelectOption v-if="format === 'ocg' || format === 'tcg'" id="ban-status"
-      :label-text="`${format.toUpperCase()} Status`" class="flex items-center gap-1 mb-2" :options="banStatus"
+      :label-text="`${format.toUpperCase()} Status`" class="flex items-center gap-1" :options="banStatus"
       v-model="formatStatus" @update:model-value="handleFormatStatus" />
     <GenesysFilters v-else-if="format === 'genesys'" />
-    <fieldset v-if="format === 'none'" class="flex gap-4 mb-2">
-      <legend>Select a format to filter dates:</legend>
-      <div class="flex items-center gap-1">
-        <input type="radio" id="date-ocg" name="date-selection" value="ocg" class="scheme-light dark:scheme-dark"
-          v-model="selectedFormatForDateFilter">
-        <label for="date-ocg">OCG</label>
-      </div>
-      <div class="flex items-center gap-1">
-        <input type="radio" id="date-tcg" name="date-selection" value="tcg" class="scheme-light dark:scheme-dark"
-          v-model="selectedFormatForDateFilter">
-        <label for="date-tcg">TCG</label>
-      </div>
-    </fieldset>
-    <div v-if="format === 'ocg' || (format === 'none' && selectedFormatForDateFilter === 'ocg')"
-      class="flex justify-between gap-2 mb-4">
-      <DateInput id="ocg-start-date" label-text="OCG date from" :min="MIN_OCG_DATE" class="flex flex-col gap-1"
-        v-model="ocgStartDate" @update:model-value="handleDateRange('ocg')" />
-      <DateInput id="ocg-end-date" label-text="OCG date to" :min="MIN_OCG_DATE" class="flex flex-col gap-1"
-        v-model="ocgEndDate" @update:model-value="handleDateRange('ocg')" />
-    </div>
-    <div
-      v-else-if="format === 'tcg' || format === 'genesys' || (format === 'none' && selectedFormatForDateFilter === 'tcg')"
-      class="flex justify-between gap-2 mb-4">
-      <DateInput id="tcg-start-date" label-text="TCG date from" :min="MIN_TCG_DATE" class="flex flex-col gap-1"
-        v-model="tcgStartDate" @update:model-value="handleDateRange('tcg')" />
-      <DateInput id="tcg-end-date" label-text="TCG date to" :min="MIN_TCG_DATE" class="flex flex-col gap-1"
-        v-model="tcgEndDate" @update:model-value="handleDateRange('tcg')" />
-    </div>
-    <span v-if="format === 'genesys'" class="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
-      <strong>Note</strong>: Genesys format is TCG-exclusive, so filtered dates use the TCG.
-    </span>
+    <div v-if="format !== 'none'" class="border-t border-t-neutral-300 dark:border-t-neutral-700"></div>
     <div class="flex items-center flex-wrap gap-2">
       <div class="flex items-start sm:items-end gap-1">
         Card Category
@@ -269,7 +237,7 @@ watch(
       <CardCategories v-model="category" @update:model-value="handleCardCategory" />
     </div>
     <template v-if="filters.category === 'monster'">
-      <div class="flex flex-wrap justify-between gap-3 mt-3">
+      <div class="flex flex-wrap justify-between gap-3">
         <div class="flex flex-col gap-1">
           <SelectOption id="monster-card" label-text="Card Frame" class="flex flex-col gap-0.5" :options="monsterCards"
             v-model="monsterCardType" @update:model-value="handleDropdownFilters('frame')" />
@@ -306,13 +274,13 @@ watch(
           <LinkArrows class="mt-1" v-model="linkArrows" @update:model-value="handleLinkArrows" />
         </div>
       </div>
-      <div class="flex flex-col gap-2 mt-3">
+      <div class="flex flex-col gap-2">
         <SwitchWithLabel id="unknown-atk" label-val="Show monsters that have ? ATK" v-model="isUnknownAtk"
           @update-value="handleUnknownAtkDef('atk')" />
         <SwitchWithLabel id="unknown-def" label-val="Show monsters that have ? DEF" v-model="isUnknownDef"
           @update-value="handleUnknownAtkDef('def')" />
       </div>
-      <div class="mt-3">
+      <div>
         <span>Filter by ATK range</span>
         <div class="flex justify-between mb-3">
           <span>Min: <strong>{{ atkRange[0] }}</strong></span>
@@ -321,7 +289,7 @@ watch(
         <SliderComponent v-model="atkRange" :max="5000" :step="50" label-val="Attack value"
           @update:model-value="handleRangeFilter('atk')" />
       </div>
-      <div class="mt-3">
+      <div class="mb-3">
         <span>Filter by DEF range</span>
         <div class="flex justify-between mb-3">
           <span>Min: <strong>{{ defRange[0] }}</strong></span>
@@ -332,12 +300,46 @@ watch(
       </div>
     </template>
     <template v-else-if="filters.category === 'spell'">
-      <SelectOption id="spell" label-text="Spell Type" label-class="mr-3" class="mt-3" :options="spellTypes"
-        v-model="spellType" @update:model-value="handleSpellTrapType('spell')" />
+      <SelectOption id="spell" label-text="Spell Type" label-class="mr-3" :options="spellTypes" v-model="spellType"
+        @update:model-value="handleSpellTrapType('spell')" />
     </template>
     <template v-else-if="filters.category === 'trap'">
-      <SelectOption id="trap" label-text="Trap Type" label-class="mr-3" class="mt-3" :options="trapTypes"
-        v-model="trapType" @update:model-value="handleSpellTrapType('trap')" />
+      <SelectOption id="trap" label-text="Trap Type" label-class="mr-3" :options="trapTypes" v-model="trapType"
+        @update:model-value="handleSpellTrapType('trap')" />
     </template>
+    <div class="border-t border-t-neutral-300 dark:border-t-neutral-700"></div>
+    <SwitchWithLabel id="alt-arts" label-val="Show cards with alternative artworks" v-model="showCardsWithAltArts"
+      @update-value="handleToggleAltArts" />
+    <fieldset v-if="format === 'none'" class="flex gap-4">
+      <legend>Select a format to filter dates:</legend>
+      <div class="flex items-center gap-1">
+        <input type="radio" id="date-ocg" name="date-selection" value="ocg" class="scheme-light dark:scheme-dark"
+          v-model="selectedFormatForDateFilter">
+        <label for="date-ocg">OCG</label>
+      </div>
+      <div class="flex items-center gap-1">
+        <input type="radio" id="date-tcg" name="date-selection" value="tcg" class="scheme-light dark:scheme-dark"
+          v-model="selectedFormatForDateFilter">
+        <label for="date-tcg">TCG</label>
+      </div>
+    </fieldset>
+    <div v-if="format === 'ocg' || (format === 'none' && selectedFormatForDateFilter === 'ocg')"
+      class="flex justify-between gap-2">
+      <DateInput id="ocg-start-date" label-text="OCG date from" :min="MIN_OCG_DATE" class="flex flex-col gap-1"
+        v-model="ocgStartDate" @update:model-value="handleDateRange('ocg')" />
+      <DateInput id="ocg-end-date" label-text="OCG date to" :min="MIN_OCG_DATE" class="flex flex-col gap-1"
+        v-model="ocgEndDate" @update:model-value="handleDateRange('ocg')" />
+    </div>
+    <div
+      v-else-if="format === 'tcg' || format === 'genesys' || (format === 'none' && selectedFormatForDateFilter === 'tcg')"
+      class="flex justify-between gap-2">
+      <DateInput id="tcg-start-date" label-text="TCG date from" :min="MIN_TCG_DATE" class="flex flex-col gap-1"
+        v-model="tcgStartDate" @update:model-value="handleDateRange('tcg')" />
+      <DateInput id="tcg-end-date" label-text="TCG date to" :min="MIN_TCG_DATE" class="flex flex-col gap-1"
+        v-model="tcgEndDate" @update:model-value="handleDateRange('tcg')" />
+    </div>
+    <span v-if="format === 'genesys'" class="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
+      <strong>Note</strong>: Genesys format is TCG-exclusive, so filtered dates use the TCG.
+    </span>
   </div>
 </template>

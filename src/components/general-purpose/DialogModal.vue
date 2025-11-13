@@ -115,7 +115,7 @@ function handleClearDecks() {
             <NumberField id="page" :min="1" :max="totalPages" label-val="Page Number" v-model="pageInputValue"
               @keydown.enter="handleKeyDown" />
           </div>
-          <div class="mt-5 mr-1 flex justify-end gap-2">
+          <div class="mt-5 flex justify-end gap-2">
             <ButtonComponent variant="neutral" text-content="Reset filters" v-if="usage === 'filters'"
               @click="resetFilters" />
             <template v-else-if="usage === 'clear-all'">
