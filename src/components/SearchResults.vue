@@ -32,7 +32,7 @@ const searchValue = ref('')
 
 const searchInput = useTemplateRef<HTMLInputElement>('search-input')
 
-const Pagination = defineAsyncComponent(() => import('./Pagination.vue'))
+const PaginationComponent = defineAsyncComponent(() => import('./PaginationComponent.vue'))
 const CardTooltip = defineAsyncComponent(() => import('./CardTooltip.vue'))
 const CardDialog = defineAsyncComponent(() => import('./CardDialog.vue'))
 const CardDetailsMobile = defineAsyncComponent(() => import('./CardDetailsMobile.vue'))
@@ -180,7 +180,7 @@ onMounted(() => {
           </div>
         </div>
         <ToastComponent ref="toastRef" :is-success="isSuccessToast" :description="toastMessage" />
-        <Pagination v-model="currentPage" />
+        <PaginationComponent v-model="currentPage" />
       </div>
     </div>
   </div>
