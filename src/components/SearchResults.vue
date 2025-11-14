@@ -4,6 +4,11 @@ import DialogModal from './general-purpose/DialogModal.vue'
 import SelectOption from './general-purpose/SelectOption.vue'
 import ButtonComponent from './general-purpose/ButtonComponent.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
+import CardTooltip from './CardTooltip.vue'
+import CardDialog from './CardDialog.vue'
+import BanStatus from './BanStatus.vue'
+import GenesysPoint from './GenesysPoint.vue'
+import PaginationComponent from './PaginationComponent.vue'
 import { sortTypes, sortDirections } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
@@ -32,13 +37,8 @@ const searchValue = ref('')
 
 const searchInput = useTemplateRef<HTMLInputElement>('search-input')
 
-const PaginationComponent = defineAsyncComponent(() => import('./PaginationComponent.vue'))
-const CardTooltip = defineAsyncComponent(() => import('./CardTooltip.vue'))
-const CardDialog = defineAsyncComponent(() => import('./CardDialog.vue'))
 const CardDetailsMobile = defineAsyncComponent(() => import('./CardDetailsMobile.vue'))
-const BanStatus = defineAsyncComponent(() => import('./BanStatus.vue'))
 const ToastComponent = defineAsyncComponent(() => import('./ToastComponent.vue'))
-const GenesysPoint = defineAsyncComponent(() => import('./GenesysPoint.vue'))
 
 /**
  * Debounced function for filtering cards based on the search term

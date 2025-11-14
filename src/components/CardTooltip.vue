@@ -3,6 +3,8 @@ import {
   TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRoot, TooltipTrigger, PopoverArrow, PopoverClose, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger
 } from 'reka-ui'
 import CardPlaceholder from './CardPlaceholder.vue'
+import BanStatus from './BanStatus.vue'
+import GenesysPoint from './GenesysPoint.vue'
 import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
 import { ref, defineAsyncComponent } from 'vue'
@@ -28,10 +30,8 @@ const isHovered = ref(false)
 const isPopoverOpen = ref(false)
 
 const CardInfo = defineAsyncComponent(() => import('./CardInfo.vue'))
-const BanStatus = defineAsyncComponent(() => import('./BanStatus.vue'))
 const GridToDeck = defineAsyncComponent(() => import('./card-operations/GridToDeck.vue'))
 const DropzoneOps = defineAsyncComponent(() => import('./card-operations/DropzoneOps.vue'))
-const GenesysPoint = defineAsyncComponent(() => import('./GenesysPoint.vue'))
 </script>
 <template>
   <div @mouseenter="isHovered = true" @mouseleave="isHovered = false"
