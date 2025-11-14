@@ -200,6 +200,10 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     filters.value.category = undefined
     filters.value.ocgStatus = ''
     filters.value.tcgStatus = ''
+    filters.value.ocgStartDate = ''
+    filters.value.ocgEndDate = ''
+    filters.value.tcgStartDate = ''
+    filters.value.tcgEndDate = ''
 
     resetCardCategoryFilters()
     resetGenesysFilters()
