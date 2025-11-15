@@ -9,6 +9,8 @@ import CardDialog from './CardDialog.vue'
 import BanStatus from './BanStatus.vue'
 import GenesysPoint from './GenesysPoint.vue'
 import PaginationComponent from './PaginationComponent.vue'
+import CardDetailsMobileLoader from './loaders/CardDetailsMobileLoader.vue'
+import ErrorComponent from './loaders/ErrorComponent.vue'
 import { sortTypes, sortDirections } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
@@ -37,7 +39,11 @@ const searchValue = ref('')
 
 const searchInput = useTemplateRef<HTMLInputElement>('search-input')
 
-const CardDetailsMobile = defineAsyncComponent(() => import('./CardDetailsMobile.vue'))
+const CardDetailsMobile = defineAsyncComponent({
+  loader: () => import('./CardDetailsMobile.vue'),
+  loadingComponent: CardDetailsMobileLoader,
+  errorComponent: ErrorComponent
+})
 const ToastComponent = defineAsyncComponent(() => import('./ToastComponent.vue'))
 
 /**

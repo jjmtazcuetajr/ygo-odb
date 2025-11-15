@@ -5,6 +5,8 @@ import { onMounted, onUnmounted, defineAsyncComponent } from 'vue'
 import CardPlaceholder from './CardPlaceholder.vue'
 import BanStatus from './BanStatus.vue'
 import GenesysPoint from './GenesysPoint.vue'
+import CardInfoLoader from './loaders/CardInfoLoader.vue'
+import ErrorComponent from './loaders/ErrorComponent.vue'
 import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
 import { useMobileDragAndDrop } from '@/composables/mobileDragAndDrop'
 import { useImageLoadingStore } from '@/stores/imageLoading'
@@ -20,7 +22,11 @@ const { handleTouchStart, isDialogOpen } = useMobileDragAndDrop()
 
 const { hasFinishedLoadingImage } = useImageLoadingStore()
 
-const CardInfo = defineAsyncComponent(() => import('./CardInfo.vue'))
+const CardInfo = defineAsyncComponent({
+  loader: () => import('./CardInfo.vue'),
+  loadingComponent: CardInfoLoader,
+  errorComponent: ErrorComponent
+})
 
 function hideDialog() {
   if (window.innerWidth >= 1024 && isDialogOpen.value) isDialogOpen.value = false

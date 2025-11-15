@@ -4,6 +4,8 @@ import { ref, onMounted, onUnmounted, defineAsyncComponent } from 'vue'
 import { X } from 'lucide-vue-next'
 import ButtonComponent from './general-purpose/ButtonComponent.vue'
 import CardPlaceholder from './CardPlaceholder.vue'
+import CardInfoLoader from './loaders/CardInfoLoader.vue'
+import ErrorComponent from './loaders/ErrorComponent.vue'
 import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
 import { useDeckStore } from '@/stores/deck'
 import { useImageLoadingStore } from '@/stores/imageLoading'
@@ -25,7 +27,11 @@ const { hasFinishedLoadingImage } = useImageLoadingStore()
 
 const { toastMessage, isSuccessToast, createToastMessage } = useToast()
 
-const CardInfo = defineAsyncComponent(() => import('./CardInfo.vue'))
+const CardInfo = defineAsyncComponent({
+  loader: () => import('./CardInfo.vue'),
+  loadingComponent: CardInfoLoader,
+  errorComponent: ErrorComponent
+})
 
 /**
  * Add a card to a type of deck and show a toast
