@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, watch, defineAsyncComponent } from 'vue'
+import { ref, onBeforeMount, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { GENESYS_STANDARD_POINT_LIMIT } from '@/utils/constants'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { debounce } from '@/utils/helpers'
+import NumberField from '../general-purpose/NumberField.vue'
+import SliderComponent from '../general-purpose/SliderComponent.vue'
+import SwitchWithLabel from '../general-purpose/SwitchWithLabel.vue'
 
 const { filters } = storeToRefs(useYgoCardsStore())
 const { toFirst } = usePaginationStore()
@@ -13,10 +16,6 @@ const isGreaterThanZeroGenesysPoints = ref(false)
 const isZeroGenesysPoints = ref(false)
 const genesysPointRange = ref<[number, number]>([0, GENESYS_STANDARD_POINT_LIMIT])
 const exactGenesysPoint = ref<number | undefined>(undefined)
-
-const NumberField = defineAsyncComponent(() => import('../general-purpose/NumberField.vue'))
-const SliderComponent = defineAsyncComponent(() => import('../general-purpose/SliderComponent.vue'))
-const SwitchWithLabel = defineAsyncComponent(() => import('../general-purpose/SwitchWithLabel.vue'))
 
 /**
  * Debounced function for filtering cards if they have greater than zero Genesys points
