@@ -274,8 +274,8 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                 <strong>Note:</strong> Importing will remove your current progress in deck-building.
               </span>
-              <span id="ydk-file-import-error" class="invisible text-xs sm:text-sm text-red-600 dark:text-red-400"
-                :class="{ 'visible': isErrorYDKFileImport }">
+              <span v-if="isErrorYDKFileImport" id="ydk-file-import-error"
+                class="text-xs sm:text-sm text-red-600 dark:text-red-400">
                 You did not upload a YDK file!
               </span>
             </template>
@@ -285,8 +285,8 @@ function persistDialog(event: PointerDownOutsideEvent) {
                 v-model="ydkeUrlImport" @input="handleInputYDKeURL" aria-errormessage="ydke-url-import-error"
                 :class="{ 'border-red-600 dark:border-red-400 focus-within:outline focus-within:outline-red-600 dark:focus-within:outline-red-400': isErrorYDKeUrlImport }"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
-              <span id="ydke-url-import-error" class="invisible text-xs sm:text-sm text-red-600 dark:text-red-400"
-                :class="{ 'visible': isErrorYDKeUrlImport }">
+              <span v-if="isErrorYDKeUrlImport" id="ydke-url-import-error"
+                class="text-xs sm:text-sm text-red-600 dark:text-red-400">
                 {{ ydkeUrlImportErrorMessage }}
               </span>
             </template>
@@ -299,23 +299,22 @@ function persistDialog(event: PointerDownOutsideEvent) {
               <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
                 You may only type letters, numbers, spaces, hyphens, and underscores.
               </span>
-              <span class="invisible text-xs sm:text-sm text-red-600 dark:text-red-400"
-                :class="{ 'visible': isErrorYDKFileExport }" aria-live="polite">
+              <span v-if="isErrorYDKFileExport" class="text-xs sm:text-sm text-red-600 dark:text-red-400"
+                aria-live="polite">
                 Please add at least <strong>one</strong> card in either the main, extra, or side deck.
               </span>
             </template>
             <template v-else-if="usage === 'ydke-url-export'">
               <textarea id="ydke-export" rows="7" v-model="ydkeUrlExport"
                 class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:focus-within:outline dark:focus-within:outline-neutral-300"></textarea>
-              <span class="invisible text-xs sm:text-sm text-red-600 dark:text-red-400"
-                :class="{ 'visible': isErrorYDKeUrlExport }" aria-live="polite">
+              <span v-if="isErrorYDKeUrlExport" class="text-xs sm:text-sm text-red-600 dark:text-red-400"
+                aria-live="polite">
                 Please add at least <strong>one</strong> card in either the main, extra, or side deck.
               </span>
             </template>
           </div>
           <div class="mt-3 flex justify-end items-center gap-2">
-            <span role="status" :class="{ 'visible': isCopySuccess }"
-              class="invisible text-xs sm:text-sm text-emerald-700 dark:text-emerald-500">
+            <span v-if="isCopySuccess" role="status" class="text-xs sm:text-sm text-emerald-700 dark:text-emerald-500">
               <strong>Copied!</strong>
             </span>
             <ButtonComponent variant="emerald" @click="clickHandler"
