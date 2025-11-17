@@ -17,7 +17,7 @@ const { isHoverDetected } = useDetectHover()
     <TooltipRoot>
       <TooltipTrigger aria-label="Hint"
         class="rounded-md size-5 flex items-center justify-center cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-700">
-        <CircleHelp class="size-3.5 sm:size-4" />
+        <CircleHelp :size="16" />
       </TooltipTrigger>
       <TooltipPortal>
         <TooltipContent :side-offset="5"
@@ -32,7 +32,7 @@ const { isHoverDetected } = useDetectHover()
   <PopoverRoot v-else>
     <PopoverTrigger aria-label="Hint"
       class="rounded-md size-5 flex items-center justify-center cursor-pointer active:bg-neutral-200 dark:active:bg-neutral-700">
-      <CircleHelp class="size-3.5 sm:size-4" />
+      <CircleHelp :size="16" />
     </PopoverTrigger>
     <PopoverPortal>
       <PopoverContent side="bottom" :side-offset="5"
