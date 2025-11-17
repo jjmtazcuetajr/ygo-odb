@@ -2,6 +2,9 @@
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger } from 'reka-ui'
 import { X } from 'lucide-vue-next'
 import ButtonComponent from './ButtonComponent.vue'
+import NumberField from './NumberField.vue'
+import CardFiltersLoader from '../loaders/CardFiltersLoader.vue'
+import ErrorComponent from '../loaders/ErrorComponent.vue'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { useDeckStore } from '@/stores/deck'
@@ -30,8 +33,11 @@ const dialogTitle: Record<string, string> = {
 const pageInputValue = ref(1)
 const isDialogOpen = ref(false)
 
-const CardFilters = defineAsyncComponent(() => import('../card-filtering/CardFilters.vue'))
-const NumberField = defineAsyncComponent(() => import('./NumberField.vue'))
+const CardFilters = defineAsyncComponent({
+  loader: () => import('../card-filtering/CardFilters.vue'),
+  loadingComponent: CardFiltersLoader,
+  errorComponent: ErrorComponent
+})
 
 /**
  * Set the title of this dialog component
@@ -111,7 +117,7 @@ function handleClearDecks() {
               </li>
             </ol>
           </div>
-          <div class="flex justify-center text-xs sm:text-base" v-else-if="usage === 'pagination'">
+          <div class="flex justify-center text-xs sm:text-base mt-5" v-else-if="usage === 'pagination'">
             <NumberField id="page" :min="1" :max="totalPages" label-val="Page Number" v-model="pageInputValue"
               @keydown.enter="handleKeyDown" />
           </div>

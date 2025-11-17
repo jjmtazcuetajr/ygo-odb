@@ -5,6 +5,10 @@ import {
 import CardPlaceholder from './CardPlaceholder.vue'
 import BanStatus from './BanStatus.vue'
 import GenesysPoint from './GenesysPoint.vue'
+import CardInfoLoader from './loaders/CardInfoLoader.vue'
+import GridToDeckLoader from './loaders/GridToDeckLoader.vue'
+import DropzoneOpsLoader from './loaders/DropzoneOpsLoader.vue'
+import ErrorComponent from './loaders/ErrorComponent.vue'
 import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
 import { ref, defineAsyncComponent } from 'vue'
@@ -29,9 +33,21 @@ const { hasFinishedLoadingImage } = useImageLoadingStore()
 const isHovered = ref(false)
 const isPopoverOpen = ref(false)
 
-const CardInfo = defineAsyncComponent(() => import('./CardInfo.vue'))
-const GridToDeck = defineAsyncComponent(() => import('./card-operations/GridToDeck.vue'))
-const DropzoneOps = defineAsyncComponent(() => import('./card-operations/DropzoneOps.vue'))
+const CardInfo = defineAsyncComponent({
+  loader: () => import('./CardInfo.vue'),
+  loadingComponent: CardInfoLoader,
+  errorComponent: ErrorComponent
+})
+const GridToDeck = defineAsyncComponent({
+  loader: () => import('./card-operations/GridToDeck.vue'),
+  loadingComponent: GridToDeckLoader,
+  errorComponent: ErrorComponent
+})
+const DropzoneOps = defineAsyncComponent({
+  loader: () => import('./card-operations/DropzoneOps.vue'),
+  loadingComponent: DropzoneOpsLoader,
+  errorComponent: ErrorComponent
+})
 </script>
 <template>
   <div @mouseenter="isHovered = true" @mouseleave="isHovered = false"
