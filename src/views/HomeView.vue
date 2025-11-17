@@ -6,7 +6,7 @@ import DialogModal from '@/components/general-purpose/DialogModal.vue'
 import ButtonComponent from '@/components/general-purpose/ButtonComponent.vue'
 import SelectOption from '@/components/general-purpose/SelectOption.vue'
 import NumberField from '@/components/general-purpose/NumberField.vue'
-import LoadingComponent from '@/components/LoadingComponent.vue'
+import MainLoader from '@/components/loaders/MainLoader.vue'
 import { Trash2, CircleHelp, Search, Pen, Check, X } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { formats } from '@/utils/select-options'
@@ -68,7 +68,7 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
 <template>
   <main class="flex flex-col h-full p-5 text-neutral-800 dark:text-neutral-300 transition-[color] duration-400">
     <transition name="fade">
-      <LoadingComponent v-if="isLoading" />
+      <MainLoader v-if="isLoading" />
     </transition>
     <div class="flex justify-between flex-wrap gap-3">
       <div class="flex flex-col">
