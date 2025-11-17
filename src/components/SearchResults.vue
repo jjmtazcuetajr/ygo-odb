@@ -162,7 +162,7 @@ onMounted(() => {
       </div>
       <div class="flex flex-col h-full" v-else>
         <div
-          class="hidden lg:grid grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-9 px-2 mt-3 content-start scheme-light dark:scheme-dark">
+          class="hidden lg:grid grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-2 px-2 mt-3 content-start scheme-light dark:scheme-dark">
           <template v-for="(card, index) in paginatedResults" :key="card.id">
             <CardTooltip v-if="isHoverDetected" :card="card" :format="format" from="grid" :index="index" />
             <CardDialog v-else :card="card" :format="format" from="grid" :index="index" />
