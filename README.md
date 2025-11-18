@@ -58,6 +58,20 @@ This Yu-Gi-Oh! web application is not meant to be a full-fledged deck builder, b
 - Execute `npm run build` to build the application if you are ready to deploy it.
 - The build output can be found in the `dist` folder.
 
+### Docker
+
+If you don't want to install Node.js and have [Docker Desktop](https://www.docker.com/products/docker-desktop/) already installed, run these two commands:
+
+```
+docker build -t ygo-odb .
+```
+and
+```
+docker run --name ygo-odb -p 5173:5173 -v ${PWD}:/app -v /app/node_modules ygo-odb
+```
+
+**Note**: The second command is Powershell-specific. It may have a certain equivalent depending on your operating system.
+
 ## Contact
 
 You may go to my GitHub profile and find my email there.
@@ -69,7 +83,7 @@ If you have problems about the card data accuracy, it's YGOPRODeck's fault. They
 ## Credits
 
 - [YGOPRODeck](https://ygoprodeck.com) for the API for all card data.
-- Other deck builders and duel simulators out there that this application take inspiration from.
+- Other deck builders out there that this application take inspiration from.
 
 ## License
 
