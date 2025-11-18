@@ -4,7 +4,7 @@ An online, fan-made Yu-Gi-Oh! deck builder.
 
 ## Introduction
 
-This Yu-Gi-Oh! web application is not meant to be a full-fledged deck builder, but something that is good enough to get the job done. It was made with the intent of readily building and editing decks in the comfort of your web browser, with no additional installation required or even creating an account in order to use it. There are no plans to support other importing and exporting methods. There is no intent to include other formats like Speed Duels, GOAT, etc.
+This Yu-Gi-Oh! web application is not meant to be a full-fledged deck builder, but something that is good enough to get the job done. After all, this is only a side project of mine done in my free time that will be added to my portfolio eventually. It was made with the intent of readily building and editing decks in the comfort of your web browser. There are no plans to support other importing and exporting methods. There is no intent to include other formats like Speed Duels, GOAT, etc.
 
 ### Features
 
@@ -27,9 +27,9 @@ This Yu-Gi-Oh! web application is not meant to be a full-fledged deck builder, b
 
 ### Prerequisites
 
-- Git
-- Node.js
-- NPM
+- [Git](https://git-scm.com/install/)
+- [Node.js](https://nodejs.org/en/download)
+- NPM (already included in Node.js)
 
 ### Recommended IDE Setup
 
@@ -61,6 +61,10 @@ This Yu-Gi-Oh! web application is not meant to be a full-fledged deck builder, b
 ## Contact
 
 You may go to my GitHub profile and find my email there.
+
+If you have suggestions and/or improvements about the app, you may open an issue [here](https://github.com/jjmtazcuetajr/ygo-odb/issues).
+
+If you have problems about the card data accuracy, it's YGOPRODeck's fault. They are frequently slow on updating their API probably because very few people work on it. You can either open an issue in their GitHub [issue tracker](https://github.com/AlanOC91/YGOPRODeck) (response not guaranteed) or, much better, contact them in their Discord server.
 
 ## Credits
 
