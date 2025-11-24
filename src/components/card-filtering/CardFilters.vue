@@ -8,19 +8,24 @@ import SliderComponent from '../general-purpose/SliderComponent.vue'
 import SwitchWithLabel from '../general-purpose/SwitchWithLabel.vue'
 import LinkArrows from './LinkArrows.vue'
 import DateInput from '../general-purpose/DateInput.vue'
+import { X, Search } from 'lucide-vue-next'
 import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tuners, pendulums, attributes, banStatus } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { storeToRefs } from 'pinia'
-import { ref, onBeforeMount, watch } from 'vue'
+import { ref, onBeforeMount, watch, useTemplateRef } from 'vue'
 import { debounce } from '@/utils/helpers'
 import { MAX_ATK_DEF, MIN_OCG_DATE, MIN_TCG_DATE } from '@/utils/constants'
 import type { CardCategory, BanStatus, MonsterStat } from '@/utils/interfaces'
 
 const { filters, format, isAltArtShown, selectedFormatForDateFilter } = storeToRefs(useYgoCardsStore())
 const { resetCardCategoryFilters, toggleCardsWithAltArts } = useYgoCardsStore()
+const { currentPage } = storeToRefs(usePaginationStore())
 const { toFirst } = usePaginationStore()
 
+const searchInput = useTemplateRef<HTMLInputElement>('search-input')
+
+const searchValue = ref('')
 const ocgStatus = ref<BanStatus | 'Unrestricted' | ''>('')
 const tcgStatus = ref<BanStatus | 'Unrestricted' | ''>('')
 const category = ref<CardCategory | undefined>(undefined)
@@ -48,6 +53,38 @@ const ocgStartDate = ref('')
 const ocgEndDate = ref('')
 const tcgStartDate = ref('')
 const tcgEndDate = ref('')
+
+/**
+ * Debounced function for filtering cards based on the search term
+ * @param e The event object
+ */
+const handleSearch = debounce((e: Event) => {
+  const target = e.target as HTMLInputElement
+  let value = target.value
+
+  // white space rules
+  if (value.trim() === '') value = ''
+  value = value.trimStart()
+  value = value.replace(/\s+/g, ' ')
+
+  searchValue.value = value
+
+  const length = searchValue.value.length
+  if (length >= 3 || length === 0) {
+    filters.value.search = searchValue.value
+    if (currentPage.value > 1) toFirst()
+  }
+}, 300)
+
+/**
+ * Clear the search input
+ */
+function clearSearchInput() {
+  searchValue.value = ''
+  filters.value.search = searchValue.value
+  if (currentPage.value > 1) toFirst()
+  if (searchInput.value) searchInput.value.focus()
+}
 
 /**
  * Debounced function for card filtering based on its status in the OCG & TCG formats
@@ -162,6 +199,7 @@ const handleDateRange = debounce((usage: 'ocg' | 'tcg') => {
  * Set the values of local refs from the related store
  */
 function setValues() {
+  searchValue.value = filters.value.search
   ocgStatus.value = filters.value.ocgStatus
   tcgStatus.value = filters.value.tcgStatus
   category.value = filters.value.category
@@ -195,6 +233,7 @@ onBeforeMount(() => setValues())
 
 watch(
   [
+    () => filters.value.search,
     () => filters.value.ocgStatus,
     () => filters.value.tcgStatus,
     () => filters.value.category,
@@ -228,6 +267,17 @@ watch(
 
 <template>
   <div class="flex flex-col gap-3 mt-3 text-xs sm:text-base">
+    <div class="relative">
+      <input id="search-input" type="text" ref="search-input" v-model="searchValue" @input="handleSearch"
+        placeholder="Enter a card name or effect..." aria-label="Enter a card name or effect"
+        class="w-full text-sm sm:text-base rounded-md px-7 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
+      <Search class="absolute top-[50%] transform-[translateY(-50%)] left-2 pointer-events-none" :size="16" />
+      <button type="button" aria-label="Clear search input" v-if="searchValue.length > 0" @click="clearSearchInput"
+        class="absolute top-1/2 right-1 -translate-y-1/2 cursor-pointer size-5 rounded-full flex justify-center items-center hover:bg-neutral-300 dark:hover:bg-neutral-500 active:bg-neutral-400 dark:active:bg-neutral-600 transition-[background-color] duration-200">
+        <X :size="14" />
+      </button>
+    </div>
+    <div class="border-t border-t-neutral-300 dark:border-t-neutral-700"></div>
     <SelectOption v-if="format === 'ocg'" id="ocg-status" label-text="OCG Status" class="flex items-center gap-1"
       :options="banStatus" v-model="ocgStatus" @update:model-value="handleFormatStatus('ocg')" />
     <SelectOption v-else-if="format === 'tcg'" id="tcg-status" label-text="TCG Status" class="flex items-center gap-1"

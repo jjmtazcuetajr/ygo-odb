@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { X, Filter, Search, LoaderCircle } from 'lucide-vue-next'
+import { X, Filter, LoaderCircle } from 'lucide-vue-next'
 import DialogModal from './general-purpose/DialogModal.vue'
 import SelectOption from './general-purpose/SelectOption.vue'
 import ButtonComponent from './general-purpose/ButtonComponent.vue'
@@ -16,16 +16,14 @@ import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted, watch, defineAsyncComponent, useTemplateRef } from 'vue'
+import { ref, onMounted, watch, defineAsyncComponent } from 'vue'
 import { useDetectHover } from '@/composables/detectHover'
-import { debounce } from '@/utils/helpers'
 
 const cardStore = useYgoCardsStore()
-const { filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards } = storeToRefs(cardStore)
+const { sortBy, sortDir, isLoading, isError, format, getFilteredCards } = storeToRefs(cardStore)
 
 const paginationStore = usePaginationStore()
 const { currentPage, paginatedResults } = storeToRefs(paginationStore)
-const { toFirst } = paginationStore
 
 const { queueImagesForCurrentPage, processImageQueue, hasFinishedLoadingImage } = useImageLoadingStore()
 
@@ -35,9 +33,6 @@ const toastRef = ref<InstanceType<typeof ToastComponent>>()
 const toastMessage = ref('')
 const isSuccessToast = ref(false)
 const timer = ref(0)
-const searchValue = ref('')
-
-const searchInput = useTemplateRef<HTMLInputElement>('search-input')
 
 const CardDetailsMobile = defineAsyncComponent({
   loader: () => import('./CardDetailsMobile.vue'),
@@ -45,28 +40,6 @@ const CardDetailsMobile = defineAsyncComponent({
   errorComponent: ErrorComponent
 })
 const ToastComponent = defineAsyncComponent(() => import('./ToastComponent.vue'))
-
-/**
- * Debounced function for filtering cards based on the search term
- * @param e The event object
- */
-const debounceSearch = debounce((e: Event) => {
-  const target = e.target as HTMLInputElement
-  let value = target.value
-
-  // white space rules
-  if (value.trim() === '') value = ''
-  value = value.trimStart()
-  value = value.replace(/\s+/g, ' ')
-
-  searchValue.value = value
-
-  const length = searchValue.value.length
-  if (length >= 3 || length === 0) {
-    filters.value.search = searchValue.value
-    if (currentPage.value > 1) toFirst()
-  }
-}, 300)
 
 /**
  * Show a toast with an appropriate message when adding cards
@@ -84,27 +57,13 @@ function handleToast(msg: string, feedback: boolean) {
   toastRef.value?.handleShow()
 }
 
-/**
- * Clear the search input
- */
-function clearSearchInput() {
-  searchValue.value = ''
-  filters.value.search = searchValue.value
-  if (currentPage.value > 1) toFirst()
-  if (searchInput.value) searchInput.value.focus()
-}
-
 // watch for changes in the current page and the filtered cards, then queue and process the corresponding card images accordingly
 watch([currentPage, getFilteredCards], () => {
   queueImagesForCurrentPage()
   processImageQueue()
 })
 
-// watch for changes in the store's search filter ref, then update the corresponding local ref
-watch(() => filters.value.search, () => { searchValue.value = filters.value.search })
-
 onMounted(() => {
-  searchValue.value = filters.value.search // retain the search input of the user
   queueImagesForCurrentPage()
   processImageQueue()
 })
@@ -119,16 +78,6 @@ onMounted(() => {
         <button type="button" aria-label="Hide search results" @click="$emit('handleCloseSideDrawer')"
           class="self-start p-1 size-6 rounded-full cursor-pointer bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-600 dark:active:bg-neutral-500 transition-[background-color] duration-200">
           <X :size="16" />
-        </button>
-      </div>
-      <div class="relative">
-        <input id="search-input" type="text" ref="search-input" v-model="searchValue" @input="debounceSearch"
-          placeholder="Enter a card name or effect..." aria-label="Enter a card name or effect"
-          class="w-full text-sm sm:text-base rounded-md px-7 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
-        <Search class="absolute top-[50%] transform-[translateY(-50%)] left-2 pointer-events-none" :size="16" />
-        <button type="button" aria-label="Clear search input" v-if="searchValue.length > 0" @click="clearSearchInput"
-          class="absolute top-1/2 right-1 -translate-y-1/2 cursor-pointer size-5 rounded-full flex justify-center items-center hover:bg-neutral-300 dark:hover:bg-neutral-500 active:bg-neutral-400 dark:active:bg-neutral-600 transition-[background-color] duration-200">
-          <X :size="14" />
         </button>
       </div>
       <div class="flex flex-wrap items-end gap-2">
