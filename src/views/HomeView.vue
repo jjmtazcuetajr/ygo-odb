@@ -117,7 +117,7 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
             <div class="flex sm:hidden gap-2">
               <DialogModal usage="clear-all">
                 <template #trigger>
-                  <ButtonComponent variant="red" has-icon>
+                  <ButtonComponent variant="red" aria-label="Clear deck builder" has-icon>
                     <template #textWithIcon>
                       <Trash2 :size="20" />
                     </template>
@@ -126,14 +126,14 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
               </DialogModal>
               <DialogModal usage="help">
                 <template #trigger>
-                  <ButtonComponent variant="sky" has-icon>
+                  <ButtonComponent variant="sky" aria-label="Tips and hints" has-icon>
                     <template #textWithIcon>
                       <CircleHelp :size="20" />
                     </template>
                   </ButtonComponent>
                 </template>
               </DialogModal>
-              <ButtonComponent variant="emerald" has-icon @click="isSideDrawerShown = true">
+              <ButtonComponent variant="emerald" aria-label="Add card" has-icon @click="isSideDrawerShown = true">
                 <template #textWithIcon>
                   <Plus :size="20" />
                 </template>
