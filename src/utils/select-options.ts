@@ -41,8 +41,8 @@ export const sortTypes = [
 ]
 
 export const sortDirections = [
-  { val: 'asc', textContent: 'Ascending' },
-  { val: 'desc', textContent: 'Descending' }
+  { val: 'asc', textContent: 'ASC' },
+  { val: 'desc', textContent: 'DESC' }
 ]
 
 export const monsterTypes = [
