@@ -217,7 +217,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
   <DialogRoot v-model:open="isDialogOpen" v-on:update:open="handleDialogClose">
     <DropdownMenuRoot v-model:open="toggleState" :modal="false">
       <DropdownMenuTrigger :aria-label="type + ' options'"
-        class="flex place-items-center gap-1 px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base text-white bg-neutral-500 hover:bg-neutral-600 active:bg-neutral-700 transition-[background-color] duration-200">
+        class="flex items-center justify-center grow gap-1 px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base text-white bg-neutral-500 hover:bg-neutral-600 active:bg-neutral-700 transition-[background-color] duration-200">
         <FileInput v-if="type === 'Import'" :size="16" />
         <FileOutput v-else-if="type === 'Export'" :size="16" />
         <ArrowDownUp v-else :size="16" />

@@ -70,16 +70,18 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
     <transition name="fade">
       <MainLoader v-if="isLoading" />
     </transition>
-    <div class="flex justify-between flex-wrap gap-3">
+    <div class="flex justify-between flex-wrap gap-3 flex-col lg:flex-row">
       <div class="flex flex-col">
         <h1 class="text-3xl font-medium">YGO ODB</h1>
         <span class="text-sm">An online, fan-made Yu-Gi-Oh! deck builder</span>
       </div>
-      <div class="flex gap-2 place-items-center flex-wrap">
-        <DropdownMenu type="Import" />
-        <DropdownMenu type="Export" />
-        <DropdownMenu type="Sort" />
-        <div class="flex gap-2">
+      <div class="flex gap-2 place-items-center flex-wrap justify-between grow lg:grow-0">
+        <div class="flex gap-2 flex-wrap grow sm:grow-0">
+          <DropdownMenu type="Import" />
+          <DropdownMenu type="Export" />
+          <DropdownMenu type="Sort" />
+        </div>
+        <div class="hidden sm:flex gap-2">
           <DialogModal usage="clear-all">
             <template #trigger>
               <ButtonComponent variant="red" has-icon>
@@ -108,9 +110,36 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
     </div>
     <div class="flex gap-4 mt-3 h-full">
       <div class="flex flex-col gap-3 grow shrink basis-0">
-        <div class="flex flex-wrap gap-3 justify-between items-center text-xs sm:text-base">
-          <SelectOption id="ban-list" label-text="Format" class="flex items-center gap-1" :options="formats"
-            v-model="format" @update:model-value="handleFormatChange" />
+        <div class="flex flex-col sm:flex-row gap-3 justify-between text-xs sm:text-base">
+          <div class="flex justify-between gap-3 flex-wrap">
+            <SelectOption id="ban-list" label-text="Format" class="flex items-center gap-1" :options="formats"
+              v-model="format" @update:model-value="handleFormatChange" />
+            <div class="flex sm:hidden gap-2">
+              <DialogModal usage="clear-all">
+                <template #trigger>
+                  <ButtonComponent variant="red" has-icon>
+                    <template #textWithIcon>
+                      <Trash2 :size="20" />
+                    </template>
+                  </ButtonComponent>
+                </template>
+              </DialogModal>
+              <DialogModal usage="help">
+                <template #trigger>
+                  <ButtonComponent variant="sky" has-icon>
+                    <template #textWithIcon>
+                      <CircleHelp :size="20" />
+                    </template>
+                  </ButtonComponent>
+                </template>
+              </DialogModal>
+              <ButtonComponent variant="emerald" has-icon @click="isSideDrawerShown = true">
+                <template #textWithIcon>
+                  <Plus :size="20" />
+                </template>
+              </ButtonComponent>
+            </div>
+          </div>
           <template v-if="format === 'genesys'">
             <div v-if="!isEditingGenesysLimit" class="flex gap-3 items-center">
               <span>Genesys Points:
