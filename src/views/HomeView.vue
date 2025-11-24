@@ -7,7 +7,7 @@ import ButtonComponent from '@/components/general-purpose/ButtonComponent.vue'
 import SelectOption from '@/components/general-purpose/SelectOption.vue'
 import NumberField from '@/components/general-purpose/NumberField.vue'
 import MainLoader from '@/components/loaders/MainLoader.vue'
-import { Trash2, CircleHelp, Search, Pen, Check, X } from 'lucide-vue-next'
+import { Trash2, CircleHelp, Plus, Pen, Check, X } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { formats } from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
@@ -82,7 +82,7 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
         <div class="flex gap-2">
           <DialogModal usage="clear-all">
             <template #trigger>
-              <ButtonComponent variant="neutral" has-icon>
+              <ButtonComponent variant="red" has-icon>
                 <template #textWithIcon>
                   <Trash2 :size="16" /> Clear
                 </template>
@@ -91,16 +91,16 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
           </DialogModal>
           <DialogModal usage="help">
             <template #trigger>
-              <ButtonComponent variant="neutral" has-icon>
+              <ButtonComponent variant="sky" has-icon>
                 <template #textWithIcon>
                   <CircleHelp :size="16" /> Help
                 </template>
               </ButtonComponent>
             </template>
           </DialogModal>
-          <ButtonComponent variant="neutral" has-icon only-in-mobile @click="isSideDrawerShown = true">
+          <ButtonComponent variant="emerald" has-icon only-in-mobile @click="isSideDrawerShown = true">
             <template #textWithIcon>
-              <Search :size="16" /> Search
+              <Plus :size="16" /> Add Card
             </template>
           </ButtonComponent>
         </div>
