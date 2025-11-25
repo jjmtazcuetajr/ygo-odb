@@ -80,8 +80,8 @@ onMounted(() => {
     <div
       class="inner flex flex-col gap-2 p-3 bg-neutral-100 dark:bg-neutral-800 border-r lg:border-r-0 border-y lg:border-y-0 rounded-r-lg lg:rounded-l-lg border-neutral-400 dark:border-neutral-500 shadow-[5px_15px_15px_5px_#555] dark:shadow-[5px_15px_15px_5px_#000] lg:shadow-[unset] dark:lg:shadow-[unset] w-full sm:w-[70%] md:w-[50%] lg:w-full h-full transition-[background-color] duration-400">
       <div class="flex lg:hidden items-center">
-        <span class="text-base sm:text-lg leading-none font-medium grow">Search & filter</span>
-        <button type="button" aria-label="Hide search results" @click="$emit('handleCloseSideDrawer')"
+        <span class="text-base sm:text-lg leading-none font-medium grow">Sort & filter cards</span>
+        <button type="button" aria-label="Hide card list side panel" @click="$emit('handleCloseSideDrawer')"
           class="self-start p-1 size-6 rounded-full cursor-pointer bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-600 dark:active:bg-neutral-500 transition-[background-color] duration-200">
           <X :size="16" />
         </button>

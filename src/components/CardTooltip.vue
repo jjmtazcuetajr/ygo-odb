@@ -63,7 +63,7 @@ const DropzoneOps = defineAsyncComponent({
       :frame-type="card.frameType" />
     <TooltipProvider :delay-duration="100" :disable-hoverable-content="true" :ignore-non-keyboard-focus="true">
       <TooltipRoot>
-        <TooltipTrigger aria-label="More Info" :class="{ 'opacity-100': isHovered }"
+        <TooltipTrigger aria-label="Show card info" :class="{ 'opacity-100': isHovered }"
           class="absolute top-1 right-1 rounded-full size-5 flex items-center justify-center cursor-pointer opacity-0 focus-visible:opacity-100 transition-opacity duration-200 text-neutral-300 bg-neutral-500 shadow-md shadow-neutral-900">
           <Info :size="20" />
         </TooltipTrigger>
@@ -81,7 +81,7 @@ const DropzoneOps = defineAsyncComponent({
       </TooltipRoot>
     </TooltipProvider>
     <PopoverRoot v-model:open="isPopoverOpen">
-      <PopoverTrigger aria-label="Options"
+      <PopoverTrigger :aria-label="from === 'grid' ? 'Add card options' : 'Card in deck options'"
         :class="{ 'opacity-100': isHovered, 'bg-emerald-600 hover:bg-emerald-700': (from === 'grid'), 'bg-neutral-500 hover:bg-neutral-600': (from !== 'grid') }"
         class="absolute top-[50%] left-[50%] transform-[translate(-50%,-50%)] rounded-full size-6 flex items-center justify-center cursor-pointer opacity-0 focus-visible:opacity-100 text-neutral-100 shadow-md shadow-neutral-900 transition-[background-color,opacity] duration-200">
         <Plus v-if="from === 'grid'" :size="20" />
