@@ -12,7 +12,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   // states
   const cards = ref<YGOCardData[]>([])
   const altArts = ref<YGOCardData[]>([])
-  const filters = ref<FilterOptions>({
+  const filterInitialValues: FilterOptions = {
     search: '',
     category: undefined,
     monsterCardType: '',
@@ -44,7 +44,8 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
     ocgEndDate: '',
     tcgStartDate: '',
     tcgEndDate: ''
-  })
+  }
+  const filters = ref<FilterOptions>({...filterInitialValues})
   const sortBy = ref<MonsterStat | 'name' | 'genesys-point' | 'ocg-date' | 'tcg-date'>('name')
   const sortDir = ref<SortDirection>('asc')
   const isLoading = ref(false)
@@ -221,7 +222,7 @@ export const useYgoCardsStore = defineStore('ygo-cards', () => {
   }
 
   return {
-    cards, altArts, filters, sortBy, sortDir, isLoading, isError, format, isAltArtShown, selectedFormatForDateFilter, getFilteredCards,
+    cards, altArts, filters, sortBy, sortDir, isLoading, isError, format, isAltArtShown, selectedFormatForDateFilter, getFilteredCards, filterInitialValues,
     fetchCards, resetCardCategoryFilters, resetFilters, toggleCardsWithAltArts
   }
 })

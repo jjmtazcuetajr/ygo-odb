@@ -16,23 +16,29 @@ import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
-import { ref, onMounted, watch, defineAsyncComponent } from 'vue'
+import { ref, onMounted, watch, defineAsyncComponent, computed } from 'vue'
 import { useDetectHover } from '@/composables/detectHover'
 
-const cardStore = useYgoCardsStore()
-const { sortBy, sortDir, isLoading, isError, format, getFilteredCards } = storeToRefs(cardStore)
-
-const paginationStore = usePaginationStore()
-const { currentPage, paginatedResults } = storeToRefs(paginationStore)
+const { filters, sortBy, sortDir, isLoading, isError, format, getFilteredCards } = storeToRefs(useYgoCardsStore())
+const { filterInitialValues } = useYgoCardsStore()
+const { currentPage, paginatedResults } = storeToRefs(usePaginationStore())
 
 const { queueImagesForCurrentPage, processImageQueue, hasFinishedLoadingImage } = useImageLoadingStore()
-
 const { isHoverDetected } = useDetectHover()
 
 const toastRef = ref<InstanceType<typeof ToastComponent>>()
 const toastMessage = ref('')
 const isSuccessToast = ref(false)
 const timer = ref(0)
+
+/**
+ * Change filter button color
+ * - If no card filters were used, the default color is `neutral` (grey)
+ * - Else, the color changes to `emerald` (green)
+ */
+const buttonVariant = computed(() => {
+  return JSON.stringify(filters.value) === JSON.stringify(filterInitialValues) ? 'neutral' : 'emerald'
+})
 
 const CardDetailsMobile = defineAsyncComponent({
   loader: () => import('./CardDetailsMobile.vue'),
@@ -87,7 +93,7 @@ onMounted(() => {
           label-class="text-xs sm:text-sm" class="flex flex-col gap-1" :options="sortDirections" v-model="sortDir" />
         <DialogModal usage="filters">
           <template #trigger>
-            <ButtonComponent variant="neutral" has-icon>
+            <ButtonComponent :variant="buttonVariant" has-icon>
               <template #textWithIcon>
                 <Filter :size="16" /> Filters
               </template>
