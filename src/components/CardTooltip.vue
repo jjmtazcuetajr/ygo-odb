@@ -12,7 +12,7 @@ import ErrorComponent from './loaders/ErrorComponent.vue'
 import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
 import { useDragAndDrop } from '@/composables/dragAndDrop'
 import { ref, defineAsyncComponent } from 'vue'
-import { Info, Settings2, X } from 'lucide-vue-next'
+import { Info, Settings2, X, Plus } from 'lucide-vue-next'
 import { useDeckStore } from '@/stores/deck'
 import { useImageLoadingStore } from '@/stores/imageLoading'
 import { storeToRefs } from 'pinia'
@@ -81,9 +81,11 @@ const DropzoneOps = defineAsyncComponent({
       </TooltipRoot>
     </TooltipProvider>
     <PopoverRoot v-model:open="isPopoverOpen">
-      <PopoverTrigger aria-label="Options" :class="{ 'opacity-100': isHovered }"
-        class="absolute top-[50%] left-[50%] transform-[translate(-50%,-50%)] rounded-full size-6 flex items-center justify-center cursor-pointer opacity-0 focus-visible:opacity-100 text-neutral-300 bg-neutral-500 hover:bg-neutral-600 shadow-md shadow-neutral-900 transition-[background-color,opacity] duration-200">
-        <Settings2 :size="20" />
+      <PopoverTrigger aria-label="Options"
+        :class="{ 'opacity-100': isHovered, 'bg-emerald-600 hover:bg-emerald-700': (from === 'grid'), 'bg-neutral-500 hover:bg-neutral-600': (from !== 'grid') }"
+        class="absolute top-[50%] left-[50%] transform-[translate(-50%,-50%)] rounded-full size-6 flex items-center justify-center cursor-pointer opacity-0 focus-visible:opacity-100 text-neutral-100 shadow-md shadow-neutral-900 transition-[background-color,opacity] duration-200">
+        <Plus v-if="from === 'grid'" :size="20" />
+        <Settings2 v-else :size="20" />
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverContent side="bottom" :side-offset="5"
