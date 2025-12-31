@@ -1,4 +1,12 @@
-import type { YGOCardData, SortDirection, MonsterStat, CardCategory, BanStatus, CardImages, ReleasedDates } from '@/utils/interfaces'
+import type {
+  YGOCardData,
+  SortDirection,
+  MonsterStat,
+  CardCategory,
+  BanStatus,
+  CardImages,
+  ReleasedDates,
+} from '@/utils/interfaces'
 import { MAX_ATK_DEF, MIN_OCG_DATE, MIN_TCG_DATE } from './constants'
 
 /**
@@ -50,7 +58,7 @@ export function matchMonsterAbility(card: YGOCardData, ability: string): boolean
   if (card.typeline) {
     type AbilityProperties = {
       typeline: string
-      ids?: number[],
+      ids?: number[]
       checkDesc?: boolean
     }
 
@@ -59,18 +67,18 @@ export function matchMonsterAbility(card: YGOCardData, ability: string): boolean
       flip: {
         typeline: 'Flip',
         ids: [62587693], // Deus X-Krawler
-        checkDesc: true
+        checkDesc: true,
       },
       gemini: { typeline: 'Gemini' },
       spirit: {
         typeline: 'Spirit',
-        ids: [52900000, 60823690, 25415052, 33325951] // Shinobaron Peacock, Shinobaron Shade Peacock, Shinobaroness Peacock, Shinobaroness Shade Peacock
+        ids: [52900000, 60823690, 25415052, 33325951], // Shinobaron Peacock, Shinobaron Shade Peacock, Shinobaroness Peacock, Shinobaroness Shade Peacock
       },
       toon: { typeline: 'Toon' },
       union: {
         typeline: 'Union',
-        ids: [79538761] // Torque Tune Gear
-      }
+        ids: [79538761], // Torque Tune Gear
+      },
     }
 
     const abilityInfo = abilityMapping[ability]
@@ -96,7 +104,7 @@ export function matchTunerType(card: YGOCardData, tuner: string): boolean {
     // this is needed because the YGOPRODeck API lacks the 'Tuner' type in the typeline data for these monsters
     const specialTuners: Record<string, number[]> = {
       effect: [16769305], // Turbo-Tainted Hot Rod GT19
-      fusion: [45655875, 66532962] // Magikey Beast - Ansyalabolas, Magistus Chorozo
+      fusion: [45655875, 66532962], // Magikey Beast - Ansyalabolas, Magistus Chorozo
     }
 
     const frameTypeMapping: Record<string, string[]> = {
@@ -105,13 +113,13 @@ export function matchTunerType(card: YGOCardData, tuner: string): boolean {
       ritual: ['ritual'],
       fusion: ['fusion'],
       synchro: ['synchro'],
-      pendulum: ['normal_pendulum', 'effect_pendulum']
+      pendulum: ['normal_pendulum', 'effect_pendulum'],
     }
 
     const isTuner = card.typeline.includes('Tuner')
     const frameMatch = frameTypeMapping[tuner]?.includes(card.frameType)
     const specialTunerMatch = specialTuners[tuner]?.includes(card.id)
-    
+
     return (isTuner && frameMatch) || specialTunerMatch
   }
   return true
@@ -140,7 +148,10 @@ export function matchLevel(card: YGOCardData, level: number | undefined): boolea
     // this is a fix for Dracotail Shaurus that has level=null instead of 6
     const overrideLevel: Record<number, number[]> = { 6: [42125140] }
     const isOverrideLevel = overrideLevel[level]?.includes(card.id)
-    return (!['xyz', 'xyz_pendulum', 'link'].includes(card.frameType) && card.level === level) || isOverrideLevel
+    return (
+      (!['xyz', 'xyz_pendulum', 'link'].includes(card.frameType) && card.level === level) ||
+      isOverrideLevel
+    )
   }
   return true
 }
@@ -156,7 +167,10 @@ export function matchRank(card: YGOCardData, rank: number | undefined): boolean 
     // this is needed because Materiactor Exagard has level=null instead of 3 in the YGOPRODeck API
     const specialXyzMonsters: Record<number, number[]> = { 3: [72409226] }
     const isSpecialXyzMonster = specialXyzMonsters[rank]?.includes(card.id)
-    return (['xyz', 'xyz_pendulum'].includes(card.frameType) && card.level === rank) || isSpecialXyzMonster
+    return (
+      (['xyz', 'xyz_pendulum'].includes(card.frameType) && card.level === rank) ||
+      isSpecialXyzMonster
+    )
   }
   return true
 }
@@ -201,7 +215,9 @@ export function matchAtk(card: YGOCardData, atk: number | undefined): boolean {
 
   // this is needed because the ATK of Goblin Biker Mean Merciless should be 1400, not 1300
   const exclusions = [{ atk: 1300, id: 64257161 }]
-  const isExcluded = exclusions.some(exclusion => exclusion.atk === atk && exclusion.id === card.id)
+  const isExcluded = exclusions.some(
+    (exclusion) => exclusion.atk === atk && exclusion.id === card.id,
+  )
 
   const correctAtkData: Record<number, number[]> = { 1400: [64257161] }
   const isCorrectAtkData = correctAtkData[atk]?.includes(card.id)
@@ -234,7 +250,7 @@ function getCorrectDef(card: YGOCardData): number {
     86239173: 1800, // Horned Saurus
     16037007: 2300, // Number 74: Master of Blades
     77754169: 2800, // Super Armored Robot Armed Black Iron "C"
-    27134209: 2800 // Beargram, Shelled Emperor of the Forest Crown
+    27134209: 2800, // Beargram, Shelled Emperor of the Forest Crown
   }
   return defenseOverrides[card.id] ?? card.def ?? 0
 }
@@ -255,7 +271,7 @@ export function matchDef(card: YGOCardData, def: number | undefined): boolean {
     1600: [10602628, 86239173], // Blackwing - Boreastorm the Wicked Wind, Horned Saurus
     2000: [77754169], // Super Armored Robot Armed Black Iron "C"
     2100: [16037007], // Number 74: Master of Blades
-    2900: [27134209] // Beargram, Shelled Emperor of the Forest Crown
+    2900: [27134209], // Beargram, Shelled Emperor of the Forest Crown
   }
   const isExcluded = exclusions[def]?.includes(card.id)
 
@@ -265,7 +281,7 @@ export function matchDef(card: YGOCardData, def: number | undefined): boolean {
     1300: [21368273], // Mannadium Trisukta
     1800: [86239173], // Horned Saurus
     2300: [16037007], // Number 74: Master of Blades
-    2800: [77754169, 27134209] // Super Armored Robot Armed Black Iron "C"; Beargram, Shelled Emperor of the Forest Crown
+    2800: [77754169, 27134209], // Super Armored Robot Armed Black Iron "C"; Beargram, Shelled Emperor of the Forest Crown
   }
   const isCorrectDefData = correctDefData[def]?.includes(card.id)
 
@@ -292,12 +308,15 @@ export function matchDefRange(card: YGOCardData, range: [number, number]): boole
  */
 export function matchLinkArrows(card: YGOCardData, linkArrows: string[]): boolean {
   if (linkArrows.length === 0) return true
-  
+
   // this is needed because Marincess Great Bubble Reef's bottom-right link arrow should be bottom-left
   const specificCard = card.id === 47910940
   const exclude = !(linkArrows.includes('Bottom-Right') && specificCard)
-  const include = linkArrows.every(linkArrow => ['Left', 'Right', 'Bottom', 'Bottom-Left'].includes(linkArrow)) && specificCard
-  const allMatch = linkArrows.every(linkArrow => card.linkmarkers?.includes(linkArrow))
+  const include =
+    linkArrows.every((linkArrow) =>
+      ['Left', 'Right', 'Bottom', 'Bottom-Left'].includes(linkArrow),
+    ) && specificCard
+  const allMatch = linkArrows.every((linkArrow) => card.linkmarkers?.includes(linkArrow))
   return (card.frameType === 'link' && allMatch && exclude) || include
 }
 
@@ -307,7 +326,11 @@ export function matchLinkArrows(card: YGOCardData, linkArrows: string[]): boolea
  * @param format Format of either OCG or TCG
  * @param status Either Forbidden, Limited, or Semi-Limited
  */
-export function matchBanStatus(card: YGOCardData, format: 'ocg' | 'tcg', status: BanStatus | 'Unrestricted' | ''): boolean {
+export function matchBanStatus(
+  card: YGOCardData,
+  format: 'ocg' | 'tcg',
+  status: BanStatus | 'Unrestricted' | '',
+): boolean {
   if (format === 'ocg') {
     if (status !== '' && status !== 'Unrestricted') return card.banlist_info?.ban_ocg === status
     else if (status === 'Unrestricted') return card.banlist_info?.ban_ocg === undefined
@@ -330,7 +353,7 @@ export function getCorrectReleaseDates(card: YGOCardData): ReleasedDates {
     31786838: { ocgDate: '2025-01-25', tcgDate: '2025-05-01' }, // Regenesis
     97227123: { ocgDate: '2025-04-26', tcgDate: '2025-07-03' }, // Return of the Duelist
     212652: { ocgDate: '2025-09-12' }, // Trap of the Poisonous Scorpion
-    20240828: { ocgDate: '2025-06-24' } // Decoy
+    20240828: { ocgDate: '2025-06-24' }, // Decoy
   }
 
   const ocgReleaseDate = dateOverrides[card.id]?.ocgDate ?? card.misc_info[0].ocg_date
@@ -347,16 +370,22 @@ export function getCorrectReleaseDates(card: YGOCardData): ReleasedDates {
  * @param endDate The ending date in the format `yyyy-mm-dd`
  * @returns The matching cards within the given date range
  */
-export function matchDateRange(card: YGOCardData, format: 'ocg' | 'tcg', startDate: string, endDate: string): boolean {
+export function matchDateRange(
+  card: YGOCardData,
+  format: 'ocg' | 'tcg',
+  startDate: string,
+  endDate: string,
+): boolean {
   if (startDate === '' && endDate === '') return true
 
   const startDateString = format === 'ocg' ? MIN_OCG_DATE : MIN_TCG_DATE
   const start = new Date(startDate === '' ? startDateString : startDate).getTime()
   const end = endDate === '' ? Date.now() : new Date(endDate).getTime()
 
-  const cardReleaseDate = format === 'ocg' ? getCorrectReleaseDates(card).ocgDate : getCorrectReleaseDates(card).tcgDate
+  const cardReleaseDate =
+    format === 'ocg' ? getCorrectReleaseDates(card).ocgDate : getCorrectReleaseDates(card).tcgDate
   if (cardReleaseDate === undefined) return false
-  
+
   const timeStamp = new Date(cardReleaseDate).getTime()
   return timeStamp >= start && timeStamp <= end
 }
@@ -368,14 +397,20 @@ export function matchDateRange(card: YGOCardData, format: 'ocg' | 'tcg', startDa
  * @param stat Monster stat to use for sorting. Either `atk`, `def`, `level`, `rank`, `scale`, or `link-rating`
  * @param dir Sort direction. Either ascending (`asc`) or descending (`desc`)
  */
-export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: MonsterStat, dir: SortDirection): number {
+export function sortByMonsterStat(
+  cardA: YGOCardData,
+  cardB: YGOCardData,
+  stat: MonsterStat,
+  dir: SortDirection,
+): number {
   const collator = new Intl.Collator('en', { sensitivity: 'base' })
 
   /**
    * Determine if card is a Monster card
    * @param card Yu-Gi-Oh! card data
    */
-  const isMonster = (card: YGOCardData): boolean => card.frameType !== 'spell' && card.frameType !== 'trap'
+  const isMonster = (card: YGOCardData): boolean =>
+    card.frameType !== 'spell' && card.frameType !== 'trap'
 
   // monsters come first
   if (isMonster(cardA) && !isMonster(cardB)) return -1 // prev monster comes first
@@ -388,7 +423,7 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         if (atkComparison !== 0) return dir === 'asc' ? atkComparison : -atkComparison
         break
       case 'def':
-        // monsters that have defense come first, then link monsters (because they don't have defense) 
+        // monsters that have defense come first, then link monsters (because they don't have defense)
         if (cardA.frameType !== 'link' && cardB.frameType === 'link') return -1
         if (cardA.frameType === 'link' && cardB.frameType !== 'link') return 1
 
@@ -400,7 +435,8 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
          * Determine if card is not a Xyz and Link Monster
          * @param card Yu-Gi-Oh! card data
          */
-        const isNotXyzAndLink = (card: YGOCardData): boolean => !card.frameType.includes('xyz') && card.frameType !== 'link'
+        const isNotXyzAndLink = (card: YGOCardData): boolean =>
+          !card.frameType.includes('xyz') && card.frameType !== 'link'
 
         // monsters that aren't Xyz, Xyz Pendulum, and Link come first before them
         if (isNotXyzAndLink(cardA) && !isNotXyzAndLink(cardB)) return -1
@@ -419,11 +455,12 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
         if (cardA.frameType.includes('xyz') && cardB.frameType.includes('xyz')) {
           /**
            * Returns the correct Rank value for certain Xyz Monsters
-           * 
+           *
            * **Note**: this should handle the correct Rank value of `Materiactor Exagard`
            * @param card Yu-Gi-Oh! card data
            */
-          const getCorrectRank = (card: YGOCardData): number => card.id === 72409226 ? 3 : (card.level ?? 0)
+          const getCorrectRank = (card: YGOCardData): number =>
+            card.id === 72409226 ? 3 : (card.level ?? 0)
           const rankComparison = getCorrectRank(cardA) - getCorrectRank(cardB)
           if (rankComparison !== 0) return dir === 'asc' ? rankComparison : -rankComparison
         }
@@ -433,7 +470,8 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
          * Determine if card is a Pendulum Monster
          * @param card Yu-Gi-Oh! card data
          */
-        const isPendulumMonster = (card: YGOCardData): boolean => card.frameType.includes('pendulum')
+        const isPendulumMonster = (card: YGOCardData): boolean =>
+          card.frameType.includes('pendulum')
 
         // Pendulum monsters come first than everything else
         if (isPendulumMonster(cardA) && !isPendulumMonster(cardB)) return -1
@@ -445,20 +483,21 @@ export function sortByMonsterStat(cardA: YGOCardData, cardB: YGOCardData, stat: 
          */
         function getCorrectScale(card: YGOCardData): number {
           const scaleOverrides: Record<number, number> = {
-            25857977: 4 // D/D/D Vice King Requiem
+            25857977: 4, // D/D/D Vice King Requiem
           }
           return scaleOverrides[card.id] ?? card.scale ?? 0
         }
         const scaleComparison = getCorrectScale(cardA) - getCorrectScale(cardB)
         if (scaleComparison !== 0) return dir === 'asc' ? scaleComparison : -scaleComparison
         break
-      case "link-rating":
+      case 'link-rating':
         // Link monsters come first than everything else
         if (cardA.frameType === 'link' && cardB.frameType !== 'link') return -1
         if (cardA.frameType !== 'link' && cardB.frameType === 'link') return 1
 
         const linkRatingComparison = (cardA.linkval ?? 0) - (cardB.linkval ?? 0)
-        if (linkRatingComparison !== 0) return dir === 'asc' ? linkRatingComparison : -linkRatingComparison
+        if (linkRatingComparison !== 0)
+          return dir === 'asc' ? linkRatingComparison : -linkRatingComparison
         break
       default:
         break
@@ -519,7 +558,16 @@ export function removeSingleQuotes(str: string): string {
  * @param cardFrame Type of card based on frame color
  */
 export function isMainDeckCard(cardFrame: string): boolean {
-  const mainDeckCards = ['spell', 'trap', 'normal', 'effect', 'ritual', 'normal_pendulum', 'effect_pendulum', 'ritual_pendulum']
+  const mainDeckCards = [
+    'spell',
+    'trap',
+    'normal',
+    'effect',
+    'ritual',
+    'normal_pendulum',
+    'effect_pendulum',
+    'ritual_pendulum',
+  ]
   return mainDeckCards.includes(cardFrame)
 }
 
@@ -528,7 +576,15 @@ export function isMainDeckCard(cardFrame: string): boolean {
  * @param cardFrame Type of card based on frame color
  */
 export function isExtraDeckCard(cardFrame: string): boolean {
-  const extraDeckCards = ['fusion', 'synchro', 'xyz', 'fusion_pendulum', 'synchro_pendulum', 'xyz_pendulum', 'link']
+  const extraDeckCards = [
+    'fusion',
+    'synchro',
+    'xyz',
+    'fusion_pendulum',
+    'synchro_pendulum',
+    'xyz_pendulum',
+    'link',
+  ]
   return extraDeckCards.includes(cardFrame)
 }
 
@@ -543,7 +599,7 @@ export function parseAlwaysTreatedAs(description: string): string | undefined {
   // common patterns for "always treated as" in card effects
   const patterns = [
     /this card'?s? (?:name )?is (?:always )?treated as (?:"|"|')([^"'"]+)(?:"|"|')/i,
-    /this card'?s? (?:name )?is (?:always )?treated as "?([^".]+)"?/i
+    /this card'?s? (?:name )?is (?:always )?treated as "?([^".]+)"?/i,
   ]
 
   for (const pattern of patterns) {
@@ -561,7 +617,7 @@ export function parseAlwaysTreatedAs(description: string): string | undefined {
  * @returns An array of matching card names
  */
 export function getMatchingCardNames(deck: YGOCardData[], cardToAdd: YGOCardData): YGOCardData[] {
-  return deck.filter(card => {
+  return deck.filter((card) => {
     const cardNameInDeck = parseAlwaysTreatedAs(card.desc) || card.name
     const nameOfCardToAdd = parseAlwaysTreatedAs(cardToAdd.desc) || cardToAdd.name
     return card.name === cardToAdd.name || cardNameInDeck === nameOfCardToAdd
@@ -575,7 +631,11 @@ export function getMatchingCardNames(deck: YGOCardData[], cardToAdd: YGOCardData
  * @param dir Sort direction. Either ascending or descending
  * @returns Number to determine the sorting order
  */
-export function sortByGenesysPoint(cardA: YGOCardData, cardB: YGOCardData, dir: SortDirection): number {
+export function sortByGenesysPoint(
+  cardA: YGOCardData,
+  cardB: YGOCardData,
+  dir: SortDirection,
+): number {
   const collator = new Intl.Collator('en', { sensitivity: 'base' })
 
   /**
@@ -583,15 +643,18 @@ export function sortByGenesysPoint(cardA: YGOCardData, cardB: YGOCardData, dir: 
    * @param card Yu-Gi-Oh! card data
    * @returns Boolean value
    */
-  const isNotPendulumAndLink = (card: YGOCardData): boolean => !card.frameType.includes('pendulum') && card.frameType !== 'link'
+  const isNotPendulumAndLink = (card: YGOCardData): boolean =>
+    !card.frameType.includes('pendulum') && card.frameType !== 'link'
 
   // monsters that aren't Pendulum and Link come first before them
   if (isNotPendulumAndLink(cardA) && !isNotPendulumAndLink(cardB)) return -1
   if (!isNotPendulumAndLink(cardA) && isNotPendulumAndLink(cardB)) return 1
 
   if (isNotPendulumAndLink(cardA) && isNotPendulumAndLink(cardB)) {
-    const genesysPointComparison = (cardA.misc_info[0].genesys_points ?? 0) - (cardB.misc_info[0].genesys_points ?? 0)
-    if (genesysPointComparison !== 0) return dir === 'asc' ? genesysPointComparison : -genesysPointComparison
+    const genesysPointComparison =
+      (cardA.misc_info[0].genesys_points ?? 0) - (cardB.misc_info[0].genesys_points ?? 0)
+    if (genesysPointComparison !== 0)
+      return dir === 'asc' ? genesysPointComparison : -genesysPointComparison
   }
 
   // sort by name if two cards have the same Genesys points
@@ -606,7 +669,12 @@ export function sortByGenesysPoint(cardA: YGOCardData, cardB: YGOCardData, dir: 
  * @param dir Sort direction. Either ascending or descending
  * @returns Number to determine the sorting order
  */
-export function sortByReleaseDate(cardA: YGOCardData, cardB: YGOCardData, format: 'ocg' | 'tcg', dir: SortDirection): number {
+export function sortByReleaseDate(
+  cardA: YGOCardData,
+  cardB: YGOCardData,
+  format: 'ocg' | 'tcg',
+  dir: SortDirection,
+): number {
   const collator = new Intl.Collator('en', { sensitivity: 'base' })
 
   if (format === 'ocg') {
@@ -620,7 +688,8 @@ export function sortByReleaseDate(cardA: YGOCardData, cardB: YGOCardData, format
       const ocgTimeStampA = new Date(ocgReleaseDateA).getTime()
       const ocgTimeStampB = new Date(ocgReleaseDateB).getTime()
       const ocgTimeStampComparison = ocgTimeStampA - ocgTimeStampB
-      if (ocgTimeStampComparison !== 0) return dir === 'asc' ? ocgTimeStampComparison : -ocgTimeStampComparison
+      if (ocgTimeStampComparison !== 0)
+        return dir === 'asc' ? ocgTimeStampComparison : -ocgTimeStampComparison
     }
   } else {
     const tcgReleaseDateA = getCorrectReleaseDates(cardA).tcgDate
@@ -633,7 +702,8 @@ export function sortByReleaseDate(cardA: YGOCardData, cardB: YGOCardData, format
       const tcgTimeStampA = new Date(tcgReleaseDateA).getTime()
       const tcgTimeStampB = new Date(tcgReleaseDateB).getTime()
       const tcgTimeStampComparison = tcgTimeStampA - tcgTimeStampB
-      if (tcgTimeStampComparison !== 0) return dir === 'asc' ? tcgTimeStampComparison : -tcgTimeStampComparison
+      if (tcgTimeStampComparison !== 0)
+        return dir === 'asc' ? tcgTimeStampComparison : -tcgTimeStampComparison
     }
   }
 
@@ -648,13 +718,13 @@ export function sortByReleaseDate(cardA: YGOCardData, cardB: YGOCardData, format
  * @param wait The number of milliseconds to delay
  * @returns A debounced version of the function
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: never[]) => unknown>(
   func: T,
-  wait: number
+  wait: number,
 ): (...args: Parameters<T>) => void {
   let timeout: ReturnType<typeof setTimeout> | null = null
 
-  return function(...args: Parameters<T>) {
+  return function (...args: Parameters<T>) {
     if (timeout) clearTimeout(timeout)
 
     timeout = setTimeout(() => {
@@ -679,7 +749,7 @@ export function extractAltArts(cards: YGOCardData[]): YGOCardData[] {
   function removeDuplicates(arr: CardImages[]): CardImages[] {
     const seen = new Set<number>()
 
-    return arr.filter(obj => {
+    return arr.filter((obj) => {
       if (seen.has(obj.id)) return false
 
       seen.add(obj.id)
@@ -688,6 +758,7 @@ export function extractAltArts(cards: YGOCardData[]): YGOCardData[] {
   }
 
   for (const card of cards) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, card_images, isAltArt, ...otherProps } = card
 
     // if the length of the image object array is greater than one, it means that particular card has at least one alternative artwork
@@ -700,7 +771,7 @@ export function extractAltArts(cards: YGOCardData[]): YGOCardData[] {
             id: altCard.id,
             card_images: [cardImages[index]],
             isAltArt: true,
-            ...otherProps
+            ...otherProps,
           })
         }
       }
