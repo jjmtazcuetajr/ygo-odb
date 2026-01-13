@@ -19,8 +19,21 @@ const { format, isLoading } = storeToRefs(cardsStore)
 
 const deckStore = useDeckStore()
 const {
-  mainDeck, mainDeckMonsters, mainDeckSpells, mainDeckTraps, sideDeck, sideDeckMonsters, sideDeckSpells, sideDeckTraps,
-  extraDeck, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters, genesysLimit, getSumOfGenesysPoints
+  mainDeck,
+  mainDeckMonsters,
+  mainDeckSpells,
+  mainDeckTraps,
+  sideDeck,
+  sideDeckMonsters,
+  sideDeckSpells,
+  sideDeckTraps,
+  extraDeck,
+  fusionMonsters,
+  synchroMonsters,
+  xyzMonsters,
+  linkMonsters,
+  genesysLimit,
+  getSumOfGenesysPoints,
 } = storeToRefs(deckStore)
 
 const isSideDrawerShown = ref(false)
@@ -28,7 +41,8 @@ const isEditingGenesysLimit = ref(false)
 const newGenesysPointLimit = ref(0)
 
 function closeSideDrawer(ev: MouseEvent) {
-  if (ev && (ev.target as HTMLElement).id === 'overlay' && isSideDrawerShown.value) isSideDrawerShown.value = false
+  if (ev && (ev.target as HTMLElement).id === 'overlay' && isSideDrawerShown.value)
+    isSideDrawerShown.value = false
 }
 
 function showSideDrawerOnLargeScreens() {
@@ -63,10 +77,14 @@ onMounted(() => {
   window.addEventListener('resize', showSideDrawerOnLargeScreens)
 })
 
-onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeScreens) })
+onUnmounted(() => {
+  window.removeEventListener('resize', showSideDrawerOnLargeScreens)
+})
 </script>
 <template>
-  <main class="flex flex-col h-full p-5 text-neutral-800 dark:text-neutral-300 transition-[color] duration-400">
+  <main
+    class="flex flex-col h-full p-5 text-neutral-800 dark:text-neutral-300 transition-[color] duration-400"
+  >
     <transition name="fade">
       <MainLoader v-if="isLoading" />
     </transition>
@@ -85,25 +103,24 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
           <DialogModal usage="clear-all">
             <template #trigger>
               <ButtonComponent variant="red" has-icon>
-                <template #textWithIcon>
-                  <Trash2 :size="16" /> Clear
-                </template>
+                <template #textWithIcon> <Trash2 :size="16" /> Clear </template>
               </ButtonComponent>
             </template>
           </DialogModal>
           <DialogModal usage="help">
             <template #trigger>
               <ButtonComponent variant="sky" has-icon>
-                <template #textWithIcon>
-                  <CircleHelp :size="16" /> Help
-                </template>
+                <template #textWithIcon> <CircleHelp :size="16" /> Help </template>
               </ButtonComponent>
             </template>
           </DialogModal>
-          <ButtonComponent variant="emerald" has-icon only-in-mobile @click="isSideDrawerShown = true">
-            <template #textWithIcon>
-              <Plus :size="16" /> Add Card
-            </template>
+          <ButtonComponent
+            variant="emerald"
+            has-icon
+            only-in-mobile
+            @click="isSideDrawerShown = true"
+          >
+            <template #textWithIcon> <Plus :size="16" /> Add Card </template>
           </ButtonComponent>
         </div>
       </div>
@@ -112,8 +129,14 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
       <div class="flex flex-col gap-3 grow shrink basis-0">
         <div class="flex flex-col sm:flex-row gap-3 justify-between text-xs sm:text-base">
           <div class="flex justify-between gap-3 flex-wrap">
-            <SelectOption id="ban-list" label-text="Format" class="flex items-center gap-1" :options="formats"
-              v-model="format" @update:model-value="handleFormatChange" />
+            <SelectOption
+              id="ban-list"
+              label-text="Format"
+              class="flex items-center gap-1"
+              :options="formats"
+              v-model="format"
+              @update:model-value="handleFormatChange"
+            />
             <div class="flex sm:hidden gap-2">
               <DialogModal usage="clear-all">
                 <template #trigger>
@@ -133,7 +156,12 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
                   </ButtonComponent>
                 </template>
               </DialogModal>
-              <ButtonComponent variant="emerald" aria-label="Add card" has-icon @click="isSideDrawerShown = true">
+              <ButtonComponent
+                variant="emerald"
+                aria-label="Add card"
+                has-icon
+                @click="isSideDrawerShown = true"
+              >
                 <template #textWithIcon>
                   <Plus :size="20" />
                 </template>
@@ -142,27 +170,54 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
           </div>
           <template v-if="format === 'genesys'">
             <div v-if="!isEditingGenesysLimit" class="flex gap-3 items-center">
-              <span>Genesys Points:
-                <strong>{{ `${getSumOfGenesysPoints.toLocaleString()}/${genesysLimit.toLocaleString()}` }}</strong>
+              <span>
+                Genesys Points:
+                <strong>
+                  {{ `${getSumOfGenesysPoints.toLocaleString()}/${genesysLimit.toLocaleString()}` }}
+                </strong>
               </span>
-              <ButtonComponent variant="neutral" has-icon class="rounded-full! p-1.5!"
-                aria-label="Change Genesys point limit" title="Change Genesys point limit" @click="editGenesysLimit">
+              <ButtonComponent
+                variant="neutral"
+                has-icon
+                class="rounded-full! p-1.5!"
+                aria-label="Change Genesys point limit"
+                title="Change Genesys point limit"
+                @click="editGenesysLimit"
+              >
                 <template #textWithIcon>
                   <Pen :size="16" aria-hidden="true" />
                 </template>
               </ButtonComponent>
             </div>
             <div v-else class="flex gap-3 items-center">
-              <NumberField id="genesys-limit" label-val="Edit Genesys Limit" class="flex-row! gap-2!" :max="10000"
-                v-model="newGenesysPointLimit" @keydown.enter="setGenesysLimit" />
-              <ButtonComponent variant="emerald" has-icon class="rounded-full! p-1.5!"
-                aria-label="Confirm Genesys point limit change" title="Confirm" @click="setGenesysLimit">
+              <NumberField
+                id="genesys-limit"
+                label-val="Edit Genesys Limit"
+                class="flex-row! gap-2!"
+                :max="10000"
+                v-model="newGenesysPointLimit"
+                @keydown.enter="setGenesysLimit"
+              />
+              <ButtonComponent
+                variant="emerald"
+                has-icon
+                class="rounded-full! p-1.5!"
+                aria-label="Confirm Genesys point limit change"
+                title="Confirm"
+                @click="setGenesysLimit"
+              >
                 <template #textWithIcon>
                   <Check :size="16" aria-hidden="true" />
                 </template>
               </ButtonComponent>
-              <ButtonComponent variant="red" has-icon class="rounded-full! p-1.5!"
-                aria-label="Cancel Genesys point limit change" title="Cancel" @click="isEditingGenesysLimit = false">
+              <ButtonComponent
+                variant="red"
+                has-icon
+                class="rounded-full! p-1.5!"
+                aria-label="Cancel Genesys point limit change"
+                title="Cancel"
+                @click="isEditingGenesysLimit = false"
+              >
                 <template #textWithIcon>
                   <X :size="16" aria-hidden="true" />
                 </template>
@@ -170,16 +225,35 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
             </div>
           </template>
         </div>
-        <DeckType type="main" :deck="mainDeck" :monster-count="mainDeckMonsters.length"
-          :spell-count="mainDeckSpells.length" :trap-count="mainDeckTraps.length" />
-        <DeckType type="extra" :deck="extraDeck" :fusion-count="fusionMonsters.length"
-          :synchro-count="synchroMonsters.length" :xyz-count="xyzMonsters.length" :link-count="linkMonsters.length" />
-        <DeckType type="side" :deck="sideDeck" :monster-count="sideDeckMonsters.length"
-          :spell-count="sideDeckSpells.length" :trap-count="sideDeckTraps.length" />
+        <DeckType
+          type="main"
+          :deck="mainDeck"
+          :monster-count="mainDeckMonsters.length"
+          :spell-count="mainDeckSpells.length"
+          :trap-count="mainDeckTraps.length"
+        />
+        <DeckType
+          type="extra"
+          :deck="extraDeck"
+          :fusion-count="fusionMonsters.length"
+          :synchro-count="synchroMonsters.length"
+          :xyz-count="xyzMonsters.length"
+          :link-count="linkMonsters.length"
+        />
+        <DeckType
+          type="side"
+          :deck="sideDeck"
+          :monster-count="sideDeckMonsters.length"
+          :spell-count="sideDeckSpells.length"
+          :trap-count="sideDeckTraps.length"
+        />
       </div>
       <transition name="nested">
-        <SearchResults v-if="isSideDrawerShown" @handle-overlay-click="closeSideDrawer"
-          @handle-close-side-drawer="isSideDrawerShown = false" />
+        <SearchResults
+          v-if="isSideDrawerShown"
+          @handle-overlay-click="closeSideDrawer"
+          @handle-close-side-drawer="isSideDrawerShown = false"
+        />
       </transition>
     </div>
   </main>
@@ -196,7 +270,6 @@ onUnmounted(() => { window.removeEventListener('resize', showSideDrawerOnLargeSc
 }
 
 @media screen and (max-width: 1023px) {
-
   .nested-enter-active,
   .nested-leave-active {
     transition: opacity 0.3s ease-in-out;
