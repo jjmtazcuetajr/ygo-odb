@@ -7,7 +7,7 @@ export const monsterCards = [
   { val: 'synchro', textContent: 'Synchro' },
   { val: 'xyz', textContent: 'Xyz' },
   { val: 'pendulum', textContent: 'Pendulum' },
-  { val: 'link', textContent: 'Link' }
+  { val: 'link', textContent: 'Link' },
 ]
 
 export const spellTypes = [
@@ -17,14 +17,14 @@ export const spellTypes = [
   { val: 'equip', textContent: 'Equip' },
   { val: 'field', textContent: 'Field' },
   { val: 'quick-play', textContent: 'Quick-Play' },
-  { val: 'ritual', textContent: 'Ritual' }
+  { val: 'ritual', textContent: 'Ritual' },
 ]
 
 export const trapTypes = [
   { val: '', textContent: 'All' },
   { val: 'normal', textContent: 'Normal' },
   { val: 'continuous', textContent: 'Continuous' },
-  { val: 'counter', textContent: 'Counter' }
+  { val: 'counter', textContent: 'Counter' },
 ]
 
 export const sortTypes = [
@@ -37,12 +37,12 @@ export const sortTypes = [
   { val: 'link-rating', textContent: 'Link Rating' },
   { val: 'genesys-point', textContent: 'Genesys Point' },
   { val: 'ocg-date', textContent: 'OCG Date' },
-  { val: 'tcg-date', textContent: 'TCG Date' }
+  { val: 'tcg-date', textContent: 'TCG Date' },
 ]
 
 export const sortDirections = [
   { val: 'asc', textContent: 'ASC' },
-  { val: 'desc', textContent: 'DESC' }
+  { val: 'desc', textContent: 'DESC' },
 ]
 
 export const monsterTypes = [
@@ -72,7 +72,7 @@ export const monsterTypes = [
   { val: 'warrior', textContent: 'Warrior' },
   { val: 'winged beast', textContent: 'Winged Beast' },
   { val: 'wyrm', textContent: 'Wyrm' },
-  { val: 'zombie', textContent: 'Zombie' }
+  { val: 'zombie', textContent: 'Zombie' },
 ]
 
 export const monsterAbilities = [
@@ -81,7 +81,7 @@ export const monsterAbilities = [
   { val: 'gemini', textContent: 'Gemini' },
   { val: 'spirit', textContent: 'Spirit' },
   { val: 'toon', textContent: 'Toon' },
-  { val: 'union', textContent: 'Union' }
+  { val: 'union', textContent: 'Union' },
 ]
 
 export const tuners = [
@@ -91,7 +91,7 @@ export const tuners = [
   { val: 'ritual', textContent: 'Ritual' },
   { val: 'fusion', textContent: 'Fusion' },
   { val: 'synchro', textContent: 'Synchro' },
-  { val: 'pendulum', textContent: 'Pendulum' }
+  { val: 'pendulum', textContent: 'Pendulum' },
 ]
 
 export const pendulums = [
@@ -101,7 +101,7 @@ export const pendulums = [
   { val: 'ritual_pendulum', textContent: 'Ritual' },
   { val: 'fusion_pendulum', textContent: 'Fusion' },
   { val: 'synchro_pendulum', textContent: 'Synchro' },
-  { val: 'xyz_pendulum', textContent: 'Xyz' }
+  { val: 'xyz_pendulum', textContent: 'Xyz' },
 ]
 
 export const attributes = [
@@ -112,14 +112,14 @@ export const attributes = [
   { val: 'wind', textContent: 'WIND' },
   { val: 'light', textContent: 'LIGHT' },
   { val: 'dark', textContent: 'DARK' },
-  { val: 'divine', textContent: 'DIVINE' }
+  { val: 'divine', textContent: 'DIVINE' },
 ]
 
 export const formats = [
   { val: 'none', textContent: 'None' },
   { val: 'ocg', textContent: 'OCG' },
   { val: 'tcg', textContent: 'TCG' },
-  { val: 'genesys', textContent: 'Genesys' }
+  { val: 'genesys', textContent: 'Genesys' },
 ]
 
 export const banStatus = [
@@ -127,5 +127,5 @@ export const banStatus = [
   { val: 'Forbidden', textContent: 'Forbidden' },
   { val: 'Limited', textContent: 'Limited' },
   { val: 'Semi-Limited', textContent: 'Semi-Limited' },
-  { val: 'Unrestricted', textContent: 'Unrestricted' }
+  { val: 'Unrestricted', textContent: 'Unrestricted' },
 ]
