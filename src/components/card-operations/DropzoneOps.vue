@@ -59,7 +59,11 @@ function crossdeckCardTransfer(from: Dropzone, num: 1 | 2 | 3) {
  * @param to Destination of card
  */
 function handleLastIndex(to: Dropzone): number {
-  return to === 'main' ? mainDeck.value.length : to === 'extra' ? extraDeck.value.length : sideDeck.value.length
+  return to === 'main'
+    ? mainDeck.value.length
+    : to === 'extra'
+      ? extraDeck.value.length
+      : sideDeck.value.length
 }
 
 /**
@@ -78,11 +82,19 @@ function popoverClose() {
 function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
   switch (to) {
     case 'main':
-      return !isCardWithinLimit(props.card, to, num) || MAIN_DECK_LIMIT - mainDeck.value.length < num
+      return (
+        !isCardWithinLimit(props.card, to, num) || MAIN_DECK_LIMIT - mainDeck.value.length < num
+      )
     case 'extra':
-      return !isCardWithinLimit(props.card, to, num) || EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < num
+      return (
+        !isCardWithinLimit(props.card, to, num) ||
+        EXTRA_AND_SIDE_DECK_LIMIT - extraDeck.value.length < num
+      )
     case 'side':
-      return !isCardWithinLimit(props.card, to, num) || EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < num
+      return (
+        !isCardWithinLimit(props.card, to, num) ||
+        EXTRA_AND_SIDE_DECK_LIMIT - sideDeck.value.length < num
+      )
     default:
       break
   }
@@ -91,16 +103,37 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
 </script>
 <template>
   <div
-    v-if="!((format === 'ocg' && card.banlist_info?.ban_ocg === 'Limited') || (format === 'tcg' && card.banlist_info?.ban_tcg === 'Limited'))">
+    v-if="
+      !(
+        (format === 'ocg' && card.banlist_info?.ban_ocg === 'Limited') ||
+        (format === 'tcg' && card.banlist_info?.ban_tcg === 'Limited')
+      )
+    "
+  >
     <span>Add more:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonComponent variant="emerald" text-content="&#xd7; 1" class="w-full" aria-label="Add 1 Copy"
-        :disabled="handleDisabledState(source, 1)" @click="addCardToDeck([card], handleLastIndex(source), source)" />
       <ButtonComponent
-        v-if="(format === 'ocg' && !card.banlist_info?.ban_ocg) || (format === 'tcg' && !card.banlist_info?.ban_tcg) || format === 'none' || format === 'genesys'"
-        variant="emerald" text-content="&#xd7; 2" class="w-full" aria-label="Add 2 Copies"
+        variant="emerald"
+        text-content="&#xd7; 1"
+        class="w-full"
+        aria-label="Add 1 Copy"
+        :disabled="handleDisabledState(source, 1)"
+        @click="addCardToDeck([card], handleLastIndex(source), source)"
+      />
+      <ButtonComponent
+        v-if="
+          (format === 'ocg' && !card.banlist_info?.ban_ocg) ||
+          (format === 'tcg' && !card.banlist_info?.ban_tcg) ||
+          format === 'none' ||
+          format === 'genesys'
+        "
+        variant="emerald"
+        text-content="&#xd7; 2"
+        class="w-full"
+        aria-label="Add 2 Copies"
         :disabled="handleDisabledState(source, 2)"
-        @click="addCardToDeck([card, card], handleLastIndex(source), source)" />
+        @click="addCardToDeck([card, card], handleLastIndex(source), source)"
+      />
     </div>
   </div>
   <div>
@@ -110,23 +143,57 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
       <span v-else-if="isExtraDeckCard(card.frameType)">Move to Extra Deck:</span>
     </template>
     <div class="flex gap-2 mt-1">
-      <ButtonComponent variant="neutral" text-content="&#xd7; 1" class="w-full" aria-label="Move 1 Copy"
-        @click="crossdeckCardTransfer(source, 1)" />
-      <ButtonComponent v-if="getCardFrequency(card, source) >= 2" variant="neutral" text-content="&#xd7; 2"
-        class="w-full" aria-label="Move 2 Copies" @click="crossdeckCardTransfer(source, 2)" />
-      <ButtonComponent v-if="getCardFrequency(card, source) === 3" variant="neutral" text-content="&#xd7; 3"
-        class="w-full" aria-label="Move 3 Copies" @click="crossdeckCardTransfer(source, 3)" />
+      <ButtonComponent
+        variant="neutral"
+        text-content="&#xd7; 1"
+        class="w-full"
+        aria-label="Move 1 Copy"
+        @click="crossdeckCardTransfer(source, 1)"
+      />
+      <ButtonComponent
+        v-if="getCardFrequency(card, source) >= 2"
+        variant="neutral"
+        text-content="&#xd7; 2"
+        class="w-full"
+        aria-label="Move 2 Copies"
+        @click="crossdeckCardTransfer(source, 2)"
+      />
+      <ButtonComponent
+        v-if="getCardFrequency(card, source) === 3"
+        variant="neutral"
+        text-content="&#xd7; 3"
+        class="w-full"
+        aria-label="Move 3 Copies"
+        @click="crossdeckCardTransfer(source, 3)"
+      />
     </div>
   </div>
   <div>
     <span>Remove:</span>
     <div class="flex gap-2 mt-1">
-      <ButtonComponent variant="red" text-content="&#xd7; 1" class="w-full" aria-label="Remove 1 Copy"
-        @click="[removeCardFromDeck(fromIndex, source), popoverClose()]" />
-      <ButtonComponent v-if="getCardFrequency(card, source) >= 2" variant="red" text-content="&#xd7; 2" class="w-full"
-        aria-label="Remove 2 Copies" @click="[removeCardFromDeck(fromIndex, source, 2), popoverClose()]" />
-      <ButtonComponent v-if="getCardFrequency(card, source) === 3" variant="red" text-content="&#xd7; 3" class="w-full"
-        aria-label="Remove 3 Copies" @click="[removeCardFromDeck(fromIndex, source, 3), popoverClose()]" />
+      <ButtonComponent
+        variant="red"
+        text-content="&#xd7; 1"
+        class="w-full"
+        aria-label="Remove 1 Copy"
+        @click="[removeCardFromDeck(fromIndex, source), popoverClose()]"
+      />
+      <ButtonComponent
+        v-if="getCardFrequency(card, source) >= 2"
+        variant="red"
+        text-content="&#xd7; 2"
+        class="w-full"
+        aria-label="Remove 2 Copies"
+        @click="[removeCardFromDeck(fromIndex, source, 2), popoverClose()]"
+      />
+      <ButtonComponent
+        v-if="getCardFrequency(card, source) === 3"
+        variant="red"
+        text-content="&#xd7; 3"
+        class="w-full"
+        aria-label="Remove 3 Copies"
+        @click="[removeCardFromDeck(fromIndex, source, 3), popoverClose()]"
+      />
     </div>
   </div>
 </template>
