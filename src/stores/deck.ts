@@ -3,7 +3,13 @@ import { defineStore, storeToRefs } from 'pinia'
 import { useYgoCardsStore } from './ygo-cards'
 import type { YGOCardData, BanStatus, Dropzone } from '@/utils/interfaces'
 import {
-  MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, FORBIDDEN_CARD_LIMIT, LIMITED_CARD_LIMIT, SEMI_LIMITED_CARD_LIMIT, UNRESTRICTED_CARD_LIMIT, GENESYS_STANDARD_POINT_LIMIT
+  MAIN_DECK_LIMIT,
+  EXTRA_AND_SIDE_DECK_LIMIT,
+  FORBIDDEN_CARD_LIMIT,
+  LIMITED_CARD_LIMIT,
+  SEMI_LIMITED_CARD_LIMIT,
+  UNRESTRICTED_CARD_LIMIT,
+  GENESYS_STANDARD_POINT_LIMIT,
 } from '@/utils/constants'
 import { isMainDeckCard } from '@/utils/helpers'
 import { parseAlwaysTreatedAs, getMatchingCardNames } from '@/utils/helpers'
@@ -36,7 +42,7 @@ export const useDeckStore = defineStore('deck', () => {
     return extraDeck.value.filter((card: YGOCardData) => {
       return card.frameType.toLowerCase().includes('fusion')
     })
-  }) 
+  })
   const synchroMonsters = computed(() => {
     return extraDeck.value.filter((card: YGOCardData) => {
       return card.frameType.toLowerCase().includes('synchro')
@@ -57,7 +63,7 @@ export const useDeckStore = defineStore('deck', () => {
     return sideDeck.value.filter((card: YGOCardData) => {
       return card.frameType !== 'spell' && card.frameType !== 'trap'
     })
-  }) 
+  })
   const sideDeckSpells = computed(() => {
     return sideDeck.value.filter((card: YGOCardData) => {
       return card.frameType === 'spell'
@@ -77,7 +83,7 @@ export const useDeckStore = defineStore('deck', () => {
   })
 
   const getSumOfGenesysPoints = computed(() => {
-    const combinedDeckTypes = [...mainDeck.value, ... extraDeck.value, ...sideDeck.value]
+    const combinedDeckTypes = [...mainDeck.value, ...extraDeck.value, ...sideDeck.value]
     return combinedDeckTypes.reduce((accumulator, currentItem) => {
       return accumulator + currentItem.misc_info[0].genesys_points
     }, 0)
@@ -130,7 +136,9 @@ export const useDeckStore = defineStore('deck', () => {
         break
       case 'side':
         // since the side deck can contain both main & extra deck cards, check the frame type of the card first
-        totalCount = (isMainDeckCard(cardToAdd.frameType) ? countInMainDeck : countInExtraDeck) + countInSideDeck
+        totalCount =
+          (isMainDeckCard(cardToAdd.frameType) ? countInMainDeck : countInExtraDeck) +
+          countInSideDeck
         break
       default:
         break
@@ -138,12 +146,14 @@ export const useDeckStore = defineStore('deck', () => {
 
     // check ban status of a card (basically the card limit that can be added to the deck types)
     const cardLimitMap: Record<BanStatus, number> = {
-      'Forbidden': FORBIDDEN_CARD_LIMIT,
-      'Limited': LIMITED_CARD_LIMIT,
-      'Semi-Limited': SEMI_LIMITED_CARD_LIMIT
+      Forbidden: FORBIDDEN_CARD_LIMIT,
+      Limited: LIMITED_CARD_LIMIT,
+      'Semi-Limited': SEMI_LIMITED_CARD_LIMIT,
     }
-    const limitOCG = cardLimitMap[cardToAdd.banlist_info?.ban_ocg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
-    const limitTCG = cardLimitMap[cardToAdd.banlist_info?.ban_tcg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
+    const limitOCG =
+      cardLimitMap[cardToAdd.banlist_info?.ban_ocg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
+    const limitTCG =
+      cardLimitMap[cardToAdd.banlist_info?.ban_tcg as BanStatus] ?? UNRESTRICTED_CARD_LIMIT
 
     const numberToAdd = totalCount + (num - 1)
 
@@ -155,8 +165,10 @@ export const useDeckStore = defineStore('deck', () => {
       cardToAdd.frameType !== 'link' &&
       !cardToAdd.frameType.includes('pendulum') &&
       numberToAdd < UNRESTRICTED_CARD_LIMIT &&
-      cardToAdd.misc_info[0].genesys_points * num <= genesysLimit.value - getSumOfGenesysPoints.value
-    ) return true
+      cardToAdd.misc_info[0].genesys_points * num <=
+        genesysLimit.value - getSumOfGenesysPoints.value
+    )
+      return true
     return false
   }
 
@@ -167,7 +179,11 @@ export const useDeckStore = defineStore('deck', () => {
    * @param [num=1] Number of cards to remove. Defaults to `1` copy
    * @returns An array containing the cards that were removed
    */
-  function removeCardFromDeck(index: number, deckType: Dropzone, num: 1 | 2 | 3 = 1): YGOCardData[] {
+  function removeCardFromDeck(
+    index: number,
+    deckType: Dropzone,
+    num: 1 | 2 | 3 = 1,
+  ): YGOCardData[] {
     const array = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
     const removedCards: YGOCardData[] = []
 
@@ -179,7 +195,7 @@ export const useDeckStore = defineStore('deck', () => {
         // remove cards from first instance found
         const cardAtIndex = array.value[index] // get card at index
         for (let i = 0; i < num; i++) {
-          const idx = array.value.findIndex(card => {
+          const idx = array.value.findIndex((card) => {
             const cardNameInDeck = parseAlwaysTreatedAs(card.desc) || card.name
             const cardNameAtIndex = parseAlwaysTreatedAs(cardAtIndex.desc) || cardAtIndex.name
             return card.name === cardAtIndex.name || cardNameInDeck === cardNameAtIndex
@@ -213,21 +229,21 @@ export const useDeckStore = defineStore('deck', () => {
     const deck = deckType === 'main' ? mainDeck : deckType === 'extra' ? extraDeck : sideDeck
     const collator = new Intl.Collator('en', { sensitivity: 'base' })
     const FRAME_TYPE_ORDER: Record<string, number> = {
-      'normal': 0,
-      'normal_pendulum': 1,
-      'effect': 2,
-      'effect_pendulum': 3,
-      'ritual': 4,
-      'ritual_pendulum': 5,
-      'spell': 6,
-      'trap': 7,
-      'fusion': 8,
-      'fusion_pendulum': 9,
-      'synchro': 10,
-      'synchro_pendulum': 11,
-      'xyz': 12,
-      'xyz_pendulum': 13,
-      'link': 14,
+      normal: 0,
+      normal_pendulum: 1,
+      effect: 2,
+      effect_pendulum: 3,
+      ritual: 4,
+      ritual_pendulum: 5,
+      spell: 6,
+      trap: 7,
+      fusion: 8,
+      fusion_pendulum: 9,
+      synchro: 10,
+      synchro_pendulum: 11,
+      xyz: 12,
+      xyz_pendulum: 13,
+      link: 14,
     }
 
     /**
@@ -238,7 +254,7 @@ export const useDeckStore = defineStore('deck', () => {
     function getCardTypePriority(frameType: string): number {
       return FRAME_TYPE_ORDER[frameType] ?? 99
     }
-    
+
     deck.value.sort((a, b) => {
       const priorityA = getCardTypePriority(a.frameType)
       const priorityB = getCardTypePriority(b.frameType)
@@ -259,9 +275,27 @@ export const useDeckStore = defineStore('deck', () => {
   }
 
   return {
-    mainDeck, extraDeck, sideDeck, genesysLimit,
-    mainDeckMonsters, mainDeckSpells, mainDeckTraps, fusionMonsters, synchroMonsters, xyzMonsters, linkMonsters, sideDeckMonsters, sideDeckSpells, sideDeckTraps,
-    getCardFrequency, getSumOfGenesysPoints,
-    addCardToDeck, isCardWithinLimit, removeCardFromDeck, sortDeckByName, sortDeckByCardType, clearAllDecks
+    mainDeck,
+    extraDeck,
+    sideDeck,
+    genesysLimit,
+    mainDeckMonsters,
+    mainDeckSpells,
+    mainDeckTraps,
+    fusionMonsters,
+    synchroMonsters,
+    xyzMonsters,
+    linkMonsters,
+    sideDeckMonsters,
+    sideDeckSpells,
+    sideDeckTraps,
+    getCardFrequency,
+    getSumOfGenesysPoints,
+    addCardToDeck,
+    isCardWithinLimit,
+    removeCardFromDeck,
+    sortDeckByName,
+    sortDeckByCardType,
+    clearAllDecks,
   }
 })

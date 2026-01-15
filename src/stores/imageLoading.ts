@@ -20,12 +20,12 @@ export const useImageLoadingStore = defineStore('imageLoading', () => {
    */
   function queueImagesForCurrentPage() {
     const { paginatedResults } = storeToRefs(usePaginationStore())
-    
+
     // clear any existing queue items that haven't started loading yet (i.e., pending status)
-    imageQueue.value = imageQueue.value.filter(item => item.status === 'loading')
+    imageQueue.value = imageQueue.value.filter((item) => item.status === 'loading')
 
     // add the card image URLs to the queue
-    paginatedResults.value.forEach(card => {
+    paginatedResults.value.forEach((card) => {
       const imageUrl = card.card_images[0].image_url_small
 
       // only queue if not already loaded
@@ -40,11 +40,12 @@ export const useImageLoadingStore = defineStore('imageLoading', () => {
   function queueImagesInDeck(targetDeck: YGOCardData[]) {
     if (targetDeck.length > 0) {
       // add the card image URLs to the queue
-      targetDeck.forEach(card => {
+      targetDeck.forEach((card) => {
         const imageUrl = card.card_images[0].image_url_small
 
-      // only queue if not already loaded
-        if (!loadedImages.value.has(imageUrl)) imageQueue.value.push({ imageUrl, status: 'pending' })
+        // only queue if not already loaded
+        if (!loadedImages.value.has(imageUrl))
+          imageQueue.value.push({ imageUrl, status: 'pending' })
       })
     }
   }
@@ -61,9 +62,9 @@ export const useImageLoadingStore = defineStore('imageLoading', () => {
 
   /**
    * Start loading the image URLs in the queue.
-   * 
+   *
    *  - Image loading is sequential in nature to avoid hitting server rate limits.
-   * 
+   *
    *  - This is a recursive function.
    */
   function processImageQueue() {
@@ -71,8 +72,11 @@ export const useImageLoadingStore = defineStore('imageLoading', () => {
     if (imageQueue.value.length === 0) return
 
     // find the next image to load
-    const imagesToLoad = imageQueue.value.filter(item => item.status === 'pending')
-    const nextImage = imagesToLoad.length > 0 ? imagesToLoad[0] : imageQueue.value.find(item => item.status === 'pending')
+    const imagesToLoad = imageQueue.value.filter((item) => item.status === 'pending')
+    const nextImage =
+      imagesToLoad.length > 0
+        ? imagesToLoad[0]
+        : imageQueue.value.find((item) => item.status === 'pending')
     if (nextImage === undefined) return
 
     // mark as loading
@@ -84,14 +88,14 @@ export const useImageLoadingStore = defineStore('imageLoading', () => {
     img.onload = () => {
       nextImage.status = 'loaded' // mark as loaded
       loadedImages.value.add(nextImage.imageUrl)
-      imageQueue.value = imageQueue.value.filter(item => item !== nextImage) // remove from queue
+      imageQueue.value = imageQueue.value.filter((item) => item !== nextImage) // remove from queue
       processImageQueue()
     }
 
     img.onerror = () => {
       nextImage.status = 'error' // mark as error
       errorImages.value.add(nextImage.imageUrl)
-      imageQueue.value = imageQueue.value.filter(item => item !== nextImage) // remove from queue
+      imageQueue.value = imageQueue.value.filter((item) => item !== nextImage) // remove from queue
       processImageQueue()
     }
 
@@ -99,5 +103,13 @@ export const useImageLoadingStore = defineStore('imageLoading', () => {
     img.src = nextImage.imageUrl
   }
 
-  return { imageQueue, loadedImages, errorImages, processImageQueue, hasFinishedLoadingImage, queueImagesForCurrentPage, queueImagesInDeck }
+  return {
+    imageQueue,
+    loadedImages,
+    errorImages,
+    processImageQueue,
+    hasFinishedLoadingImage,
+    queueImagesForCurrentPage,
+    queueImagesInDeck,
+  }
 })

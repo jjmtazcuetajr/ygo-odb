@@ -44,12 +44,16 @@ export const usePaginationStore = defineStore('pagination', () => {
   /**
    * Go to the first page of the paginated cards
    */
-  function toFirst() { currentPage.value = 1 }
+  function toFirst() {
+    currentPage.value = 1
+  }
 
   /**
    * Go to the last page of the paginated cards
    */
-  function toLast() { currentPage.value = totalPages.value }
+  function toLast() {
+    currentPage.value = totalPages.value
+  }
 
   return { currentPage, paginatedResults, totalPages, toPage, prev, next, toFirst, toLast }
 })
