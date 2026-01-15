@@ -1,12 +1,19 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
-import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, FORBIDDEN_CARD_LIMIT, LIMITED_CARD_LIMIT, SEMI_LIMITED_CARD_LIMIT } from '@/utils/constants'
+import {
+  MAIN_DECK_LIMIT,
+  EXTRA_AND_SIDE_DECK_LIMIT,
+  FORBIDDEN_CARD_LIMIT,
+  LIMITED_CARD_LIMIT,
+  SEMI_LIMITED_CARD_LIMIT,
+} from '@/utils/constants'
 import type { YGOCardData, Dropzone, BanStatus, Format } from '@/utils/interfaces'
 import { parseAlwaysTreatedAs } from '@/utils/helpers'
 
 export function useToast() {
-  const { mainDeck, extraDeck, sideDeck, genesysLimit, getSumOfGenesysPoints } = storeToRefs(useDeckStore())
+  const { mainDeck, extraDeck, sideDeck, genesysLimit, getSumOfGenesysPoints } =
+    storeToRefs(useDeckStore())
   const { isCardWithinLimit } = useDeckStore()
 
   const toastMessage = ref('')
@@ -35,27 +42,39 @@ export function useToast() {
       }
     } else {
       const formatName: Record<Format, string> = {
-        'ocg': 'OCG',
-        'tcg': 'TCG',
-        'genesys': 'Genesys',
-        'none': 'none'
+        ocg: 'OCG',
+        tcg: 'TCG',
+        genesys: 'Genesys',
+        none: 'none',
       }
-      const banStatus = format === 'ocg' ? card.banlist_info?.ban_ocg
-        : format === 'tcg' ? card.banlist_info?.ban_tcg
-        : undefined
+      const banStatus =
+        format === 'ocg'
+          ? card.banlist_info?.ban_ocg
+          : format === 'tcg'
+            ? card.banlist_info?.ban_tcg
+            : undefined
 
       if (banStatus && ['ocg', 'tcg'].includes(format)) {
         const cardLimitMap: Record<BanStatus, number> = {
-          'Forbidden': FORBIDDEN_CARD_LIMIT,
-          'Limited': LIMITED_CARD_LIMIT,
-          'Semi-Limited': SEMI_LIMITED_CARD_LIMIT
+          Forbidden: FORBIDDEN_CARD_LIMIT,
+          Limited: LIMITED_CARD_LIMIT,
+          'Semi-Limited': SEMI_LIMITED_CARD_LIMIT,
         }
         const isSingular = cardLimitMap[banStatus] === LIMITED_CARD_LIMIT ? 'card' : 'cards'
-        const limitText = cardLimitMap[banStatus] === FORBIDDEN_CARD_LIMIT ? 'You cannot add it' : `Limit is ${cardLimitMap[banStatus]} ${isSingular}`
+        const limitText =
+          cardLimitMap[banStatus] === FORBIDDEN_CARD_LIMIT
+            ? 'You cannot add it'
+            : `Limit is ${cardLimitMap[banStatus]} ${isSingular}`
         toastMessage.value = `${card.name} is ${banStatus} in ${formatName[format]} format. ${limitText}!`
-      } else if (format === 'genesys' && (card.frameType.includes('pendulum') || card.frameType === 'link')) {
+      } else if (
+        format === 'genesys' &&
+        (card.frameType.includes('pendulum') || card.frameType === 'link')
+      ) {
         toastMessage.value = 'Pendulum and Link monsters cannot be added in Genesys format.'
-      } else if (format === 'genesys' && card.misc_info[0].genesys_points > genesysLimit.value - getSumOfGenesysPoints.value) {
+      } else if (
+        format === 'genesys' &&
+        card.misc_info[0].genesys_points > genesysLimit.value - getSumOfGenesysPoints.value
+      ) {
         const genesysPointsUsed = `${getSumOfGenesysPoints.value.toLocaleString()}/${genesysLimit.value.toLocaleString()}`
         toastMessage.value = `You will exceed the Genesys point limit. Currently ${genesysPointsUsed} points.`
       } else {

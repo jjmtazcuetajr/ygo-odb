@@ -3,7 +3,11 @@ import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { useImageLoadingStore } from '@/stores/imageLoading'
-import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
+import {
+  MAIN_DECK_LIMIT,
+  EXTRA_AND_SIDE_DECK_LIMIT,
+  UNRESTRICTED_CARD_LIMIT,
+} from '@/utils/constants'
 import type { YGOCardData } from '@/utils/interfaces'
 
 export function useYdkFile() {
@@ -53,7 +57,8 @@ export function useYdkFile() {
     // create link then download
     const link = document.createElement('a')
     link.href = url
-    const finalFileName = filename !== '' ? filename.trim().replace(/\s+/g, '_') : `deck-${Date.now()}`
+    const finalFileName =
+      filename !== '' ? filename.trim().replace(/\s+/g, '_') : `deck-${Date.now()}`
     link.download = `${finalFileName}.ydk`
     document.body.appendChild(link)
     link.click()
@@ -69,7 +74,7 @@ export function useYdkFile() {
    */
   function parseYDK(content: string) {
     const referenceCardArray: YGOCardData[] = []
-    const lines = content.split('\n').map(line => line.trim())
+    const lines = content.split('\n').map((line) => line.trim())
     let currentSection: 'main' | 'extra' | 'side' = 'main'
 
     // clear main/extra/side deck contents
@@ -95,15 +100,25 @@ export function useYdkFile() {
       if (isNaN(cardId)) continue
 
       // determine target deck type
-      const targetDeck = currentSection === 'main' ? mainDeck.value :
-        currentSection === 'extra' ? extraDeck.value :
-        currentSection === 'side' ? sideDeck.value : []
+      const targetDeck =
+        currentSection === 'main'
+          ? mainDeck.value
+          : currentSection === 'extra'
+            ? extraDeck.value
+            : currentSection === 'side'
+              ? sideDeck.value
+              : []
 
-      const existingCard = referenceCardArray.find(card => card.id === cardId)
+      const existingCard = referenceCardArray.find((card) => card.id === cardId)
       if (existingCard) {
-        if (targetDeck.filter(card => card.id === existingCard.id).length > UNRESTRICTED_CARD_LIMIT - 1) {
+        if (
+          targetDeck.filter((card) => card.id === existingCard.id).length >
+          UNRESTRICTED_CARD_LIMIT - 1
+        ) {
           // if a card's quantity exceeded 3, skip to next iteration
-          console.warn(`Card id: ${existingCard.id} with name: ${existingCard.name} has exceeded 3 copies. Importing only 3.`)
+          console.warn(
+            `Card id: ${existingCard.id} with name: ${existingCard.name} has exceeded 3 copies. Importing only 3.`,
+          )
           continue
         }
 
@@ -112,7 +127,7 @@ export function useYdkFile() {
         targetDeck.push(existingCard)
       } else {
         // querying the `cards` reactive array to get card info
-        const getCard = cards.value.find(card => card.id === cardId)
+        const getCard = cards.value.find((card) => card.id === cardId)
         if (getCard) {
           // add the found card to both the reference array and target deck
           referenceCardArray.push(getCard)
@@ -138,35 +153,34 @@ export function useYdkFile() {
   }
 
   /**
- * Read the imported YDK file and attempt to parse it
- * @param file file of type `File`
- */
-function readYDKFile(file: File) {
-  const reader = new FileReader()
+   * Read the imported YDK file and attempt to parse it
+   * @param file file of type `File`
+   */
+  function readYDKFile(file: File) {
+    const reader = new FileReader()
 
-  reader.onload = (ev) => {
-    if (ev.target && ev.target.result) {
-      const fileContent = ev.target.result
-      if (typeof fileContent === 'string') {
-        parseYDK(fileContent)
-        ydkFile.value = null // empty the variable holding the ydk file
+    reader.onload = (ev) => {
+      if (ev.target && ev.target.result) {
+        const fileContent = ev.target.result
+        if (typeof fileContent === 'string') {
+          parseYDK(fileContent)
+          ydkFile.value = null // empty the variable holding the ydk file
 
-        // load card images
-        queueImagesInDeck(mainDeck.value)
-        queueImagesInDeck(extraDeck.value)
-        queueImagesInDeck(sideDeck.value)
-        processImageQueue()
-      } else
-        console.error('YDK file is not valid.')
+          // load card images
+          queueImagesInDeck(mainDeck.value)
+          queueImagesInDeck(extraDeck.value)
+          queueImagesInDeck(sideDeck.value)
+          processImageQueue()
+        } else console.error('YDK file is not valid.')
+      }
     }
-  }
 
-  reader.onerror = (ev) => {
-    console.error("Error reading file:", ev.target?.error)
-  }
+    reader.onerror = (ev) => {
+      console.error('Error reading file:', ev.target?.error)
+    }
 
-  reader.readAsText(file)
-}
+    reader.readAsText(file)
+  }
 
   return { ydkFile, downloadYDKFile, readYDKFile }
 }

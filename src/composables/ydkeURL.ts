@@ -2,7 +2,11 @@ import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { useImageLoadingStore } from '@/stores/imageLoading'
-import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT, UNRESTRICTED_CARD_LIMIT } from '@/utils/constants'
+import {
+  MAIN_DECK_LIMIT,
+  EXTRA_AND_SIDE_DECK_LIMIT,
+  UNRESTRICTED_CARD_LIMIT,
+} from '@/utils/constants'
 import type { YGOCardData, Dropzone } from '@/utils/interfaces'
 
 export function useYdkeUrl() {
@@ -17,10 +21,10 @@ export function useYdkeUrl() {
    */
   function numberToLittleEndian(num: number): number[] {
     const bytes: number[] = []
-    bytes.push(num & 0xFF)
-    bytes.push((num >> 8) & 0xFF)
-    bytes.push((num >> 16) & 0xFF)
-    bytes.push((num >> 24) & 0xFF)
+    bytes.push(num & 0xff)
+    bytes.push((num >> 8) & 0xff)
+    bytes.push((num >> 16) & 0xff)
+    bytes.push((num >> 24) & 0xff)
     return bytes
   }
 
@@ -32,11 +36,12 @@ export function useYdkeUrl() {
    */
   function littleEndianToNumber(bytes: number[], offset: number = 0): number {
     return (
-      bytes[offset] |
-      (bytes[offset + 1] << 8) |
-      (bytes[offset + 2] << 16) |
-      (bytes[offset + 3] << 24)
-    ) >>> 0
+      (bytes[offset] |
+        (bytes[offset + 1] << 8) |
+        (bytes[offset + 2] << 16) |
+        (bytes[offset + 3] << 24)) >>>
+      0
+    )
   }
 
   /**
@@ -119,11 +124,16 @@ export function useYdkeUrl() {
     targetDeck.length = 0 // clear the target deck's contents
 
     for (const cardID of cardIDs) {
-      const existingCard = referenceCardArray.find(card => card.id === cardID)
+      const existingCard = referenceCardArray.find((card) => card.id === cardID)
       if (existingCard) {
-        if (targetDeck.filter(card => card.id === existingCard.id).length > UNRESTRICTED_CARD_LIMIT - 1) {
+        if (
+          targetDeck.filter((card) => card.id === existingCard.id).length >
+          UNRESTRICTED_CARD_LIMIT - 1
+        ) {
           // if a card's quantity exceeded 3, skip to next iteration
-          console.warn(`Card id: ${existingCard.id} with name: ${existingCard.name} has exceeded 3 copies. Importing only 3.`)
+          console.warn(
+            `Card id: ${existingCard.id} with name: ${existingCard.name} has exceeded 3 copies. Importing only 3.`,
+          )
           continue
         }
 
@@ -132,7 +142,7 @@ export function useYdkeUrl() {
         targetDeck.push(existingCard)
       } else {
         // query the `cards` reactive array to get card info
-        const getCard = cards.value.find(card => card.id === cardID)
+        const getCard = cards.value.find((card) => card.id === cardID)
         if (getCard) {
           // add the found card to both the reference array and target deck
           referenceCardArray.push(getCard)
@@ -216,12 +226,14 @@ export function useYdkeUrl() {
   function validateYDKeURL(ydkeUrl: string): { isValid: boolean; error?: string } {
     try {
       if (ydkeUrl === '') return { isValid: false, error: 'You did not input a YDKe URL.' }
-      if (!ydkeUrl.startsWith('ydke://')) return { isValid: false, error: 'YDKe URL must start with the prefix ydke://' }
+      if (!ydkeUrl.startsWith('ydke://'))
+        return { isValid: false, error: 'YDKe URL must start with the prefix ydke://' }
 
       const urlData = ydkeUrl.replace(/^ydke:\/\//, '')
       const parts = urlData.split('!')
 
-      if (parts.length !== 4) return { isValid: false, error: 'Invalid YDKe URL format - expecting 3 exclamation marks' }
+      if (parts.length !== 4)
+        return { isValid: false, error: 'Invalid YDKe URL format - expecting 3 exclamation marks' }
 
       return { isValid: true }
     } catch (error) {

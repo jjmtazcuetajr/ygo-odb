@@ -9,7 +9,7 @@ export function useDragAndDrop() {
   const { mainDeck, extraDeck, sideDeck } = storeToRefs(useDeckStore())
   const { addCardToDeck, isCardWithinLimit, removeCardFromDeck } = useDeckStore()
 
-  const offset = reactive({x: 0, y: 0})
+  const offset = reactive({ x: 0, y: 0 })
   const isDragging = ref(false)
   const ghostElement = ref<HTMLImageElement | null>(null)
   const draggedCard = ref<YGOCardData | null>(null)
@@ -25,7 +25,12 @@ export function useDragAndDrop() {
    * @param from Source of draggable card
    * @param fromIndex Index of draggable card from source
    */
-  function handleMouseDown(e: MouseEvent, card: YGOCardData, from: Dropzone | 'grid', fromIndex: number) {
+  function handleMouseDown(
+    e: MouseEvent,
+    card: YGOCardData,
+    from: Dropzone | 'grid',
+    fromIndex: number,
+  ) {
     e.preventDefault()
     isDragging.value = true
     draggedCard.value = card
@@ -108,41 +113,32 @@ export function useDragAndDrop() {
       if (
         (extraDeckDropzone && isMainDeckCard(cardFrame)) ||
         (mainDeckDropzone && isExtraDeckCard(cardFrame)) ||
-        (
-          source.value === 'grid' &&
-          (!isCardWithinLimit(draggedCard.value, 'main') || !isCardWithinLimit(draggedCard.value, 'extra') || !isCardWithinLimit(draggedCard.value, 'side'))
-        ) ||
-        (
-          source.value === 'grid' && 
-          (
-            mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT ||
-            extraDeckDropzone && extraDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT ||
-            sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT
-          )
-        ) ||
-        (
-          source.value === 'main' &&
-          ((sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) || (mainDeckDropzone && mainDeck.value.length > MAIN_DECK_LIMIT))
-        ) ||
-        (
-          source.value === 'extra' &&
-          ((sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) || (extraDeckDropzone && extraDeck.value.length > EXTRA_AND_SIDE_DECK_LIMIT))
-        ) ||
-        (
-          source.value === 'side' &&
-          (
-            (mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT) ||
+        (source.value === 'grid' &&
+          (!isCardWithinLimit(draggedCard.value, 'main') ||
+            !isCardWithinLimit(draggedCard.value, 'extra') ||
+            !isCardWithinLimit(draggedCard.value, 'side'))) ||
+        (source.value === 'grid' &&
+          ((mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT) ||
             (extraDeckDropzone && extraDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
-            (sideDeckDropzone && sideDeck.value.length > EXTRA_AND_SIDE_DECK_LIMIT)
-          )
-        )
+            (sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT))) ||
+        (source.value === 'main' &&
+          ((sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
+            (mainDeckDropzone && mainDeck.value.length > MAIN_DECK_LIMIT))) ||
+        (source.value === 'extra' &&
+          ((sideDeckDropzone && sideDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
+            (extraDeckDropzone && extraDeck.value.length > EXTRA_AND_SIDE_DECK_LIMIT))) ||
+        (source.value === 'side' &&
+          ((mainDeckDropzone && mainDeck.value.length >= MAIN_DECK_LIMIT) ||
+            (extraDeckDropzone && extraDeck.value.length >= EXTRA_AND_SIDE_DECK_LIMIT) ||
+            (sideDeckDropzone && sideDeck.value.length > EXTRA_AND_SIDE_DECK_LIMIT)))
       ) {
         ghostElement.value.style.cursor = 'not-allowed'
       } else {
         ghostElement.value.style.cursor = 'grabbing'
 
         // change cursor to 'copy' when dragging a card to a valid dropzone
-        if (mainDeckDropzone || extraDeckDropzone || sideDeckDropzone) ghostElement.value.style.cursor = 'copy'
+        if (mainDeckDropzone || extraDeckDropzone || sideDeckDropzone)
+          ghostElement.value.style.cursor = 'copy'
 
         if (mainDeckDropzone) {
           setIndexInsertion(mainDeckDropzone, e.clientX, e.clientY)
@@ -153,7 +149,7 @@ export function useDragAndDrop() {
         } else {
           // remove all highlights from cards when hovering away from deck dropzones
           const imageItems = document.querySelectorAll('.draggable')
-          imageItems.forEach(item => {
+          imageItems.forEach((item) => {
             const element = item as HTMLElement
             element.classList.remove('outline-4', 'outline-amber-500')
           })
@@ -170,28 +166,24 @@ export function useDragAndDrop() {
 
     // remove card from deck drop zone source
     if (
-      (
-        source.value === 'main' &&
-        (
-          (currentDropTarget.value === 'main' && mainDeck.value.length <= MAIN_DECK_LIMIT) ||
-          (currentDropTarget.value === 'side' && sideDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT)
-        )
-      ) ||
-      (
-        source.value === 'extra' &&
-        (
-          (currentDropTarget.value === 'extra' && extraDeck.value.length <= EXTRA_AND_SIDE_DECK_LIMIT) ||
-          (currentDropTarget.value === 'side' && sideDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT)
-        )
-      ) ||
-      (
-        source.value === 'side' &&
-        (
-          (currentDropTarget.value === 'main' && mainDeck.value.length < MAIN_DECK_LIMIT && isMainDeckCard(draggedCard.value.frameType)) ||
-          (currentDropTarget.value === 'extra' && extraDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT && isExtraDeckCard(draggedCard.value.frameType)) ||
-          (currentDropTarget.value === 'side' && sideDeck.value.length <= EXTRA_AND_SIDE_DECK_LIMIT)
-        )
-      ) ||
+      (source.value === 'main' &&
+        ((currentDropTarget.value === 'main' && mainDeck.value.length <= MAIN_DECK_LIMIT) ||
+          (currentDropTarget.value === 'side' &&
+            sideDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT))) ||
+      (source.value === 'extra' &&
+        ((currentDropTarget.value === 'extra' &&
+          extraDeck.value.length <= EXTRA_AND_SIDE_DECK_LIMIT) ||
+          (currentDropTarget.value === 'side' &&
+            sideDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT))) ||
+      (source.value === 'side' &&
+        ((currentDropTarget.value === 'main' &&
+          mainDeck.value.length < MAIN_DECK_LIMIT &&
+          isMainDeckCard(draggedCard.value.frameType)) ||
+          (currentDropTarget.value === 'extra' &&
+            extraDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT &&
+            isExtraDeckCard(draggedCard.value.frameType)) ||
+          (currentDropTarget.value === 'side' &&
+            sideDeck.value.length <= EXTRA_AND_SIDE_DECK_LIMIT))) ||
       (source.value !== 'grid' && currentDropTarget.value === null)
     ) {
       removeCardFromDeck(cardIndex.value, source.value)
@@ -199,8 +191,12 @@ export function useDragAndDrop() {
 
     // add card to new deck drop zone
     if (
-      (currentDropTarget.value === 'main' && mainDeck.value.length < MAIN_DECK_LIMIT && isMainDeckCard(draggedCard.value.frameType)) ||
-      (currentDropTarget.value === 'extra' && extraDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT && isExtraDeckCard(draggedCard.value.frameType)) ||
+      (currentDropTarget.value === 'main' &&
+        mainDeck.value.length < MAIN_DECK_LIMIT &&
+        isMainDeckCard(draggedCard.value.frameType)) ||
+      (currentDropTarget.value === 'extra' &&
+        extraDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT &&
+        isExtraDeckCard(draggedCard.value.frameType)) ||
       (currentDropTarget.value === 'side' && sideDeck.value.length < EXTRA_AND_SIDE_DECK_LIMIT)
     ) {
       addCardToDeck([draggedCard.value], toIndex.value, currentDropTarget.value)
@@ -208,12 +204,12 @@ export function useDragAndDrop() {
 
     // reset original image appearances
     const imageItems = document.querySelectorAll('.draggable')
-    imageItems.forEach(item => {
+    imageItems.forEach((item) => {
       const element = item as HTMLElement
       element.removeAttribute('style')
       element.classList.remove('outline-4', 'outline-amber-500')
     })
-    
+
     removeGhostElement()
     draggedCard.value = null
     currentDropTarget.value = null
@@ -232,7 +228,8 @@ export function useDragAndDrop() {
    */
   function createGhostElement(originalElement: HTMLElement, width: number, x: number, y: number) {
     const ghost = originalElement.cloneNode(true) as HTMLImageElement
-    ghost.className = 'fixed z-9999 opacity-80 rounded-sm aspect-268/391 text-xs text-black dark:text-white overflow-hidden bg-neutral-400 dark:bg-neutral-600 shadow-md shadow-neutral-400 dark:shadow-neutral-950'
+    ghost.className =
+      'fixed z-9999 opacity-80 rounded-sm aspect-268/391 text-xs text-black dark:text-white overflow-hidden bg-neutral-400 dark:bg-neutral-600 shadow-md shadow-neutral-400 dark:shadow-neutral-950'
     ghost.width = width - 20
     ghost.style.cursor = 'grabbing'
     ghost.style.left = `${x}px`
@@ -278,7 +275,9 @@ export function useDragAndDrop() {
    * @param y y-coordinate of cursor
    */
   function setIndexInsertion(deckDropzone: Element, x: number, y: number) {
-    const cards = Array.from(deckDropzone.children).filter(child => child.classList.contains('draggable')) as HTMLElement[]
+    const cards = Array.from(deckDropzone.children).filter((child) =>
+      child.classList.contains('draggable'),
+    ) as HTMLElement[]
     if (cards.length > 0) {
       let card: HTMLElement | null = null
       for (const img of cards) {
@@ -296,7 +295,8 @@ export function useDragAndDrop() {
       const idx = cards.indexOf(card)
       if (idx !== -1) {
         // add a highlight to the hovered card within deck dropzones when performing dragging
-        if (cardIndex.value !== idx || source.value !== currentDropTarget.value) card.classList.add('outline-4', 'outline-amber-500')
+        if (cardIndex.value !== idx || source.value !== currentDropTarget.value)
+          card.classList.add('outline-4', 'outline-amber-500')
         toIndex.value = idx
       }
     }
