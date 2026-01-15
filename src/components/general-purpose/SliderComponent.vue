@@ -9,16 +9,23 @@ defineProps<{
 }>()
 </script>
 <template>
-  <SliderRoot class="relative flex items-center select-none touch-none w-full h-3" :min="min || 0" :max="max"
-    :step="step || 1" :min-steps-between-thumbs="1">
+  <SliderRoot
+    class="relative flex items-center select-none touch-none w-full h-3"
+    :min="min || 0"
+    :max="max"
+    :step="step || 1"
+    :min-steps-between-thumbs="1"
+  >
     <SliderTrack class="bg-neutral-300 dark:bg-neutral-700 relative grow rounded-full h-2">
       <SliderRange class="absolute bg-emerald-600 rounded-full h-full" />
     </SliderTrack>
     <SliderThumb
       class="block size-6 rounded-full shadow-md bg-neutral-500 dark:bg-white hover:bg-neutral-600 dark:hover:bg-neutral-200 focus:outline-2 focus:outline-emerald-500 dark:focus:outline-emerald-400 transition-[background-color] duration-300"
-      :aria-label="`Minimum ${labelVal}`" />
+      :aria-label="`Minimum ${labelVal}`"
+    />
     <SliderThumb
       class="block size-6 rounded-full shadow-md bg-neutral-500 dark:bg-white hover:bg-neutral-600 dark:hover:bg-neutral-200 focus:outline-2 focus:outline-emerald-500 dark:focus:outline-emerald-400 transition-[background-color] duration-300"
-      :aria-label="`Maximum ${labelVal}`" />
+      :aria-label="`Maximum ${labelVal}`"
+    />
   </SliderRoot>
 </template>

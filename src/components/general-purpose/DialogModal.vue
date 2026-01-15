@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger } from 'reka-ui'
+import {
+  DialogClose,
+  DialogContent,
+  DialogOverlay,
+  DialogPortal,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from 'reka-ui'
 import { X } from 'lucide-vue-next'
 import ButtonComponent from './ButtonComponent.vue'
 import NumberField from './NumberField.vue'
@@ -24,10 +32,10 @@ const { toPage } = paginationStore
 const { clearAllDecks } = useDeckStore()
 
 const dialogTitle: Record<string, string> = {
-  'filters': 'Filter Cards',
+  filters: 'Filter Cards',
   'clear-all': 'Clear All',
-  'help': 'Tips and Hints',
-  'pagination': 'Jump to Page'
+  help: 'Tips and Hints',
+  pagination: 'Jump to Page',
 }
 
 const pageInputValue = ref(1)
@@ -36,14 +44,16 @@ const isDialogOpen = ref(false)
 const CardFilters = defineAsyncComponent({
   loader: () => import('../card-filtering/CardFilters.vue'),
   loadingComponent: CardFiltersLoader,
-  errorComponent: ErrorComponent
+  errorComponent: ErrorComponent,
 })
 
 /**
  * Set the title of this dialog component
  * @param usage Value based from this component's `usage` prop
  */
-function setDialogTitle(usage: string) { return dialogTitle[usage] }
+function setDialogTitle(usage: string) {
+  return dialogTitle[usage]
+}
 
 /**
  * Handle the dialog's open state change. Used only for pagination purposes.
@@ -79,9 +89,12 @@ function handleClearDecks() {
     </DialogTrigger>
     <DialogPortal>
       <DialogOverlay
-        class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto scheme-light-dark">
-        <DialogContent :aria-describedby="undefined"
-          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] xl:my-[5%] w-[90vw] max-w-[450px] p-6 z-100 rounded-md border text-neutral-800 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-900">
+        class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto scheme-light-dark"
+      >
+        <DialogContent
+          :aria-describedby="undefined"
+          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] xl:my-[5%] w-[90vw] max-w-[450px] p-6 z-100 rounded-md border text-neutral-800 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-900"
+        >
           <DialogTitle class="text-lg font-semibold">
             {{ setDialogTitle(usage) }}
           </DialogTitle>
@@ -95,35 +108,50 @@ function handleClearDecks() {
                 Placing your cursor over a card will show a hint that the card can be dragged.
               </li>
               <li class="mb-2">
-                Additionally, it will show controls for viewing card information and various operations like adding,
-                removing, and cross-deck transferring of cards either individually or in bulk.
+                Additionally, it will show controls for viewing card information and various
+                operations like adding, removing, and cross-deck transferring of cards either
+                individually or in bulk.
               </li>
               <li class="mb-2">
-                When dragging cards, the dragged card or your cursor will show an appropriate feedback depending on
-                what is underneath it and your device.
+                When dragging cards, the dragged card or your cursor will show an appropriate
+                feedback depending on what is underneath it and your device.
               </li>
               <li class="mb-2">
-                Similarly, if it is another card that is below the dragged card, the former will be highlighted to
-                signify that the dragged card can be placed on the highlighted card's position.
+                Similarly, if it is another card that is below the dragged card, the former will be
+                highlighted to signify that the dragged card can be placed on the highlighted card's
+                position.
               </li>
               <li class="mb-2">
-                A card inside the main, extra, or side deck can be removed either by right-clicking it
-                (for desktop users) or dragging outside its current place.
+                A card inside the main, extra, or side deck can be removed either by right-clicking
+                it (for desktop users) or dragging outside its current place.
               </li>
               <li class="mb-2">
-                For users using a touchscreen device, you can drag cards by long pressing on a card and moving it
-                around. To view a card's information, do a double tap. To remove a card from a deck, tap and hold
-                on a card for a bit then release it.
+                For users using a touchscreen device, you can drag cards by long pressing on a card
+                and moving it around. To view a card's information, do a double tap. To remove a
+                card from a deck, tap and hold on a card for a bit then release it.
               </li>
             </ol>
           </div>
-          <div class="flex justify-center text-xs sm:text-base mt-5" v-else-if="usage === 'pagination'">
-            <NumberField id="page" :min="1" :max="totalPages" label-val="Page Number" v-model="pageInputValue"
-              @keydown.enter="handleKeyDown" />
+          <div
+            class="flex justify-center text-xs sm:text-base mt-5"
+            v-else-if="usage === 'pagination'"
+          >
+            <NumberField
+              id="page"
+              :min="1"
+              :max="totalPages"
+              label-val="Page Number"
+              v-model="pageInputValue"
+              @keydown.enter="handleKeyDown"
+            />
           </div>
           <div class="mt-5 flex justify-end gap-2">
-            <ButtonComponent variant="neutral" text-content="Reset filters" v-if="usage === 'filters'"
-              @click="resetFilters" />
+            <ButtonComponent
+              variant="neutral"
+              text-content="Reset filters"
+              v-if="usage === 'filters'"
+              @click="resetFilters"
+            />
             <template v-else-if="usage === 'clear-all'">
               <ButtonComponent variant="red" text-content="Clear" @click="handleClearDecks" />
               <DialogClose as-child>
@@ -132,7 +160,11 @@ function handleClearDecks() {
             </template>
             <template v-else-if="usage === 'pagination'">
               <DialogClose as-child>
-                <ButtonComponent variant="emerald" text-content="Jump" @click="toPage(pageInputValue)" />
+                <ButtonComponent
+                  variant="emerald"
+                  text-content="Jump"
+                  @click="toPage(pageInputValue)"
+                />
               </DialogClose>
               <DialogClose as-child>
                 <ButtonComponent variant="neutral" text-content="Cancel" />
@@ -142,8 +174,10 @@ function handleClearDecks() {
               <ButtonComponent variant="neutral" text-content="Close" />
             </DialogClose>
           </div>
-          <DialogClose aria-label="Close"
-            class="absolute top-2.5 right-2.5 self-start p-1 size-6 rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
+          <DialogClose
+            aria-label="Close"
+            class="absolute top-2.5 right-2.5 self-start p-1 size-6 rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200"
+          >
             <X :size="16" />
           </DialogClose>
         </DialogContent>
