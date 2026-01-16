@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { DialogClose, DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTitle, DialogTrigger, VisuallyHidden } from 'reka-ui'
+import {
+  DialogClose,
+  DialogContent,
+  DialogOverlay,
+  DialogPortal,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+  VisuallyHidden,
+} from 'reka-ui'
 import { ref, onMounted, onUnmounted, defineAsyncComponent } from 'vue'
 import { X } from 'lucide-vue-next'
 import ButtonComponent from './general-purpose/ButtonComponent.vue'
@@ -30,7 +39,7 @@ const { toastMessage, isSuccessToast, createToastMessage } = useToast()
 const CardInfo = defineAsyncComponent({
   loader: () => import('./CardInfo.vue'),
   loadingComponent: CardInfoLoader,
-  errorComponent: ErrorComponent
+  errorComponent: ErrorComponent,
 })
 
 /**
@@ -55,8 +64,12 @@ function hideDialog() {
   if (window.innerWidth >= 1024 && isDialogOpen.value) isDialogOpen.value = false
 }
 
-onMounted(() => { window.addEventListener('resize', hideDialog) })
-onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
+onMounted(() => {
+  window.addEventListener('resize', hideDialog)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', hideDialog)
+})
 </script>
 <template>
   <div class="flex flex-col min-w-0 w-full gap-2 text-sm sm:text-base">
@@ -68,21 +81,34 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
         </DialogTrigger>
         <DialogPortal>
           <DialogOverlay
-            class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto">
-            <DialogContent :aria-describedby="undefined"
-              class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] w-[90vw] max-w-[450px] p-6 z-100 text-sm text-neutral-800 dark:text-neutral-300 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900">
+            class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto"
+          >
+            <DialogContent
+              :aria-describedby="undefined"
+              class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] w-[90vw] max-w-[450px] p-6 z-100 text-sm text-neutral-800 dark:text-neutral-300 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900"
+            >
               <VisuallyHidden>
                 <DialogTitle>Card Details</DialogTitle>
               </VisuallyHidden>
               <div class="flex justify-center px-14 mb-2">
-                <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)"
-                  class="w-[170px]" />
-                <img v-else :src="card.card_images[0].image_url_small" :alt="card.name" width="170" draggable="false"
-                  class="rounded-sm aspect-268/391 text-xs bg-neutral-400/70 dark:bg-neutral-600">
+                <CardPlaceholder
+                  v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)"
+                  class="w-[170px]"
+                />
+                <img
+                  v-else
+                  :src="card.card_images[0].image_url_small"
+                  :alt="card.name"
+                  width="170"
+                  draggable="false"
+                  class="rounded-sm aspect-268/391 text-xs bg-neutral-400/70 dark:bg-neutral-600"
+                />
               </div>
               <CardInfo :card="card" />
-              <DialogClose aria-label="Close"
-                class="absolute top-2.5 right-2.5 self-start p-1 size-6 rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200">
+              <DialogClose
+                aria-label="Close"
+                class="absolute top-2.5 right-2.5 self-start p-1 size-6 rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200"
+              >
                 <X :size="16" />
               </DialogClose>
             </DialogContent>
@@ -90,11 +116,23 @@ onUnmounted(() => { window.removeEventListener('resize', hideDialog) })
         </DialogPortal>
       </DialogRoot>
       <div class="flex gap-4">
-        <ButtonComponent v-if="isMainDeckCard(card.frameType)" variant="emerald" text-content="Add to Main"
-          @click="handleClick('main', mainDeck.length)" />
-        <ButtonComponent v-else-if="isExtraDeckCard(card.frameType)" variant="emerald" text-content="Add to Extra"
-          @click="handleClick('extra', extraDeck.length)" />
-        <ButtonComponent variant="emerald" text-content="Add to Side" @click="handleClick('side', sideDeck.length)" />
+        <ButtonComponent
+          v-if="isMainDeckCard(card.frameType)"
+          variant="emerald"
+          text-content="Add to Main"
+          @click="handleClick('main', mainDeck.length)"
+        />
+        <ButtonComponent
+          v-else-if="isExtraDeckCard(card.frameType)"
+          variant="emerald"
+          text-content="Add to Extra"
+          @click="handleClick('extra', extraDeck.length)"
+        />
+        <ButtonComponent
+          variant="emerald"
+          text-content="Add to Side"
+          @click="handleClick('side', sideDeck.length)"
+        />
       </div>
     </div>
   </div>

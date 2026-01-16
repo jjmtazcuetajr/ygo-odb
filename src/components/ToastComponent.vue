@@ -12,8 +12,10 @@ defineExpose({ handleShow })
 const open = ref(false)
 const timer = ref(0)
 
-const feedback = computed(
-  () => props.isSuccess ? 'bg-emerald-300 dark:bg-emerald-800 border-emerald-600 dark:border-emerald-500' : 'bg-red-300 dark:bg-red-900 border-red-600 dark:border-red-600'
+const feedback = computed(() =>
+  props.isSuccess
+    ? 'bg-emerald-300 dark:bg-emerald-800 border-emerald-600 dark:border-emerald-500'
+    : 'bg-red-300 dark:bg-red-900 border-red-600 dark:border-red-600',
 )
 
 /**
@@ -32,8 +34,11 @@ function handleShow() {
 
 <template>
   <ToastProvider>
-    <ToastRoot v-model:open="open" :class="feedback"
-      class="toast-root flex justify-between items-center gap-4 p-4 rounded-md border">
+    <ToastRoot
+      v-model:open="open"
+      :class="feedback"
+      class="toast-root flex justify-between items-center gap-4 p-4 rounded-md border"
+    >
       <ToastDescription class="text-sm">
         {{ description }}
       </ToastDescription>

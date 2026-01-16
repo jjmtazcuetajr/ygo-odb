@@ -7,14 +7,18 @@ defineProps<{
 }>()
 </script>
 <template>
-  <span v-if="frameType === 'link' || frameType.includes('pendulum')"
+  <span
+    v-if="frameType === 'link' || frameType.includes('pendulum')"
     title="Pendulum and Link monsters cannot be added."
-    class="absolute top-1 left-1 cursor-help rounded-full shadow-md shadow-neutral-900 text-red-500 bg-black">
+    class="absolute top-1 left-1 cursor-help rounded-full shadow-md shadow-neutral-900 text-red-500 bg-black"
+  >
     <Ban :size="20" />
   </span>
   <template v-else>
-    <span v-if="pointValue > 0"
-      class="absolute top-0 flex justify-center items-center size-6 sm:size-7 text-xs sm:text-sm font-bold select-none cursor-auto shadow-md shadow-neutral-900 rounded-full border-2 border-emerald-800 text-emerald-500 bg-black">
+    <span
+      v-if="pointValue > 0"
+      class="absolute top-0 flex justify-center items-center size-6 sm:size-7 text-xs sm:text-sm font-bold select-none cursor-auto shadow-md shadow-neutral-900 rounded-full border-2 border-emerald-800 text-emerald-500 bg-black"
+    >
       {{ pointValue }}
     </span>
   </template>
