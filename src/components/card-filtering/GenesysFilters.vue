@@ -66,28 +66,50 @@ watch(
     () => filters.value.isGreaterThanZeroGenesysPoints,
     () => filters.value.isZeroGenesysPoints,
     () => filters.value.exactGenesysPoint,
-    () => filters.value.genesysPointRange
+    () => filters.value.genesysPointRange,
   ],
-  () => setValues()
+  () => setValues(),
 )
 </script>
 <template>
   <div class="flex flex-col gap-2 mb-3">
-    <SwitchWithLabel id="gt-zero-genesys-pts" label-val="Show cards that have greater than zero Genesys points"
-      v-model="isGreaterThanZeroGenesysPoints" @update-value="handleIsGreaterThanZeroGenesysPoints" />
-    <SwitchWithLabel id="is-zero-genesys-pts" label-val="Show cards that have zero Genesys points"
-      v-model="isZeroGenesysPoints" @update-value="handleIsZeroGenesysPointsFilter" />
-    <NumberField id="genesys-pts-filter" label-val="Filter by exact Genesys points" class="flex-row! gap-2!" :min="1"
-      :max="GENESYS_STANDARD_POINT_LIMIT" v-model="exactGenesysPoint"
-      @update:model-value="handleExactGenesysPointFilter" />
+    <SwitchWithLabel
+      id="gt-zero-genesys-pts"
+      label-val="Show cards that have greater than zero Genesys points"
+      v-model="isGreaterThanZeroGenesysPoints"
+      @update-value="handleIsGreaterThanZeroGenesysPoints"
+    />
+    <SwitchWithLabel
+      id="is-zero-genesys-pts"
+      label-val="Show cards that have zero Genesys points"
+      v-model="isZeroGenesysPoints"
+      @update-value="handleIsZeroGenesysPointsFilter"
+    />
+    <NumberField
+      id="genesys-pts-filter"
+      label-val="Filter by exact Genesys points"
+      class="flex-row! gap-2!"
+      :min="1"
+      :max="GENESYS_STANDARD_POINT_LIMIT"
+      v-model="exactGenesysPoint"
+      @update:model-value="handleExactGenesysPointFilter"
+    />
     <div class="flex flex-col">
       <span>Filter by Genesys point range</span>
       <div class="flex justify-between mb-3">
-        <span>Min: <strong>{{ genesysPointRange[0] }}</strong></span>
-        <span>Max: <strong>{{ genesysPointRange[1] }}</strong></span>
+        <span>
+          Min: <strong>{{ genesysPointRange[0] }}</strong>
+        </span>
+        <span>
+          Max: <strong>{{ genesysPointRange[1] }}</strong>
+        </span>
       </div>
-      <SliderComponent v-model="genesysPointRange" :max="GENESYS_STANDARD_POINT_LIMIT" label-val="Genesys points"
-        @update:model-value="handleGenesysPointRangeFilter" />
+      <SliderComponent
+        v-model="genesysPointRange"
+        :max="GENESYS_STANDARD_POINT_LIMIT"
+        label-val="Genesys points"
+        @update:model-value="handleGenesysPointRangeFilter"
+      />
     </div>
   </div>
 </template>

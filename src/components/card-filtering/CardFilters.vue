@@ -9,7 +9,17 @@ import SwitchWithLabel from '../general-purpose/SwitchWithLabel.vue'
 import LinkArrows from './LinkArrows.vue'
 import DateInput from '../general-purpose/DateInput.vue'
 import { X, Search } from 'lucide-vue-next'
-import { monsterCards, spellTypes, trapTypes, monsterTypes, monsterAbilities, tuners, pendulums, attributes, banStatus } from '@/utils/select-options'
+import {
+  monsterCards,
+  spellTypes,
+  trapTypes,
+  monsterTypes,
+  monsterAbilities,
+  tuners,
+  pendulums,
+  attributes,
+  banStatus,
+} from '@/utils/select-options'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { usePaginationStore } from '@/stores/pagination'
 import { storeToRefs } from 'pinia'
@@ -18,7 +28,8 @@ import { debounce } from '@/utils/helpers'
 import { MAX_ATK_DEF, MIN_OCG_DATE, MIN_TCG_DATE } from '@/utils/constants'
 import type { CardCategory, BanStatus, MonsterStat } from '@/utils/interfaces'
 
-const { filters, format, isAltArtShown, selectedFormatForDateFilter } = storeToRefs(useYgoCardsStore())
+const { filters, format, isAltArtShown, selectedFormatForDateFilter } =
+  storeToRefs(useYgoCardsStore())
 const { resetCardCategoryFilters, toggleCardsWithAltArts } = useYgoCardsStore()
 const { currentPage } = storeToRefs(usePaginationStore())
 const { toFirst } = usePaginationStore()
@@ -109,15 +120,18 @@ const handleCardCategory = debounce(() => {
  * Debounced function for filtering monsters from the select dropdowns
  * @param usage The usage type to use
  */
-const handleDropdownFilters = debounce((usage: 'frame' | 'ability' | 'tuner' | 'pendulum' | 'monster-type' | 'attribute') => {
-  if (usage === 'frame') filters.value.monsterCardType = monsterCardType.value
-  else if (usage === 'ability') filters.value.monsterAbility = monsterAbility.value
-  else if (usage === 'tuner') filters.value.tunerType = tunerType.value
-  else if (usage === 'pendulum') filters.value.pendulumType = pendulumType.value
-  else if (usage === 'monster-type') filters.value.monsterType = monsterType.value
-  else filters.value.attribute = attribute.value
-  toFirst()
-}, 300)
+const handleDropdownFilters = debounce(
+  (usage: 'frame' | 'ability' | 'tuner' | 'pendulum' | 'monster-type' | 'attribute') => {
+    if (usage === 'frame') filters.value.monsterCardType = monsterCardType.value
+    else if (usage === 'ability') filters.value.monsterAbility = monsterAbility.value
+    else if (usage === 'tuner') filters.value.tunerType = tunerType.value
+    else if (usage === 'pendulum') filters.value.pendulumType = pendulumType.value
+    else if (usage === 'monster-type') filters.value.monsterType = monsterType.value
+    else filters.value.attribute = attribute.value
+    toFirst()
+  },
+  300,
+)
 
 /**
  * Debounced function for filtering monsters based on a numerical criteria
@@ -259,31 +273,63 @@ watch(
     () => filters.value.ocgStartDate,
     () => filters.value.ocgEndDate,
     () => filters.value.tcgStartDate,
-    () => filters.value.tcgEndDate
+    () => filters.value.tcgEndDate,
   ],
-  () => setValues()
+  () => setValues(),
 )
 </script>
 
 <template>
   <div class="flex flex-col gap-3 mt-3 text-xs sm:text-base">
     <div class="relative">
-      <input id="search-input" type="text" ref="search-input" v-model="searchValue" @input="handleSearch"
-        placeholder="Enter a card name or effect..." aria-label="Enter a card name or effect"
-        class="w-full text-sm sm:text-base rounded-md px-7 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400">
-      <Search class="absolute top-[50%] transform-[translateY(-50%)] left-2 pointer-events-none" :size="16" />
-      <button type="button" aria-label="Clear search input" v-if="searchValue.length > 0" @click="clearSearchInput"
-        class="absolute top-1/2 right-1 -translate-y-1/2 cursor-pointer size-5 rounded-full flex justify-center items-center hover:bg-neutral-300 dark:hover:bg-neutral-500 active:bg-neutral-400 dark:active:bg-neutral-600 transition-[background-color] duration-200">
+      <input
+        id="search-input"
+        type="text"
+        ref="search-input"
+        v-model="searchValue"
+        @input="handleSearch"
+        placeholder="Enter a card name or effect..."
+        aria-label="Enter a card name or effect"
+        class="w-full text-sm sm:text-base rounded-md px-7 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400"
+      />
+      <Search
+        class="absolute top-[50%] transform-[translateY(-50%)] left-2 pointer-events-none"
+        :size="16"
+      />
+      <button
+        type="button"
+        aria-label="Clear search input"
+        v-if="searchValue.length > 0"
+        @click="clearSearchInput"
+        class="absolute top-1/2 right-1 -translate-y-1/2 cursor-pointer size-5 rounded-full flex justify-center items-center hover:bg-neutral-300 dark:hover:bg-neutral-500 active:bg-neutral-400 dark:active:bg-neutral-600 transition-[background-color] duration-200"
+      >
         <X :size="14" />
       </button>
     </div>
     <div class="border-t border-t-neutral-300 dark:border-t-neutral-700"></div>
-    <SelectOption v-if="format === 'ocg'" id="ocg-status" label-text="OCG Status" class="flex items-center gap-1"
-      :options="banStatus" v-model="ocgStatus" @update:model-value="handleFormatStatus('ocg')" />
-    <SelectOption v-else-if="format === 'tcg'" id="tcg-status" label-text="TCG Status" class="flex items-center gap-1"
-      :options="banStatus" v-model="tcgStatus" @update:model-value="handleFormatStatus('tcg')" />
+    <SelectOption
+      v-if="format === 'ocg'"
+      id="ocg-status"
+      label-text="OCG Status"
+      class="flex items-center gap-1"
+      :options="banStatus"
+      v-model="ocgStatus"
+      @update:model-value="handleFormatStatus('ocg')"
+    />
+    <SelectOption
+      v-else-if="format === 'tcg'"
+      id="tcg-status"
+      label-text="TCG Status"
+      class="flex items-center gap-1"
+      :options="banStatus"
+      v-model="tcgStatus"
+      @update:model-value="handleFormatStatus('tcg')"
+    />
     <GenesysFilters v-else-if="format === 'genesys'" />
-    <div v-if="format !== 'none'" class="border-t border-t-neutral-300 dark:border-t-neutral-700"></div>
+    <div
+      v-if="format !== 'none'"
+      class="border-t border-t-neutral-300 dark:border-t-neutral-700"
+    ></div>
     <div class="flex items-center flex-wrap gap-2">
       <div class="flex items-start sm:items-end gap-1">
         Card Category
@@ -294,32 +340,101 @@ watch(
     <template v-if="filters.category === 'monster'">
       <div class="flex flex-wrap justify-between gap-3">
         <div class="flex flex-col gap-1">
-          <SelectOption id="monster-card" label-text="Card Frame" class="flex flex-col gap-0.5" :options="monsterCards"
-            v-model="monsterCardType" @update:model-value="handleDropdownFilters('frame')" />
-          <SelectOption id="ability" label-text="Ability" class="flex flex-col gap-0.5" :options="monsterAbilities"
-            v-model="monsterAbility" @update:model-value="handleDropdownFilters('ability')" />
-          <SelectOption id="tuner" label-text="Tuner" class="flex flex-col gap-0.5" :options="tuners"
-            v-model="tunerType" @update:model-value="handleDropdownFilters('tuner')" />
-          <SelectOption id="pendulum" label-text="Pendulum" class="flex flex-col gap-0.5" :options="pendulums"
-            v-model="pendulumType" @update:model-value="handleDropdownFilters('pendulum')" />
-          <SelectOption id="monster-type" label-text="Monster Type" class="flex flex-col gap-0.5"
-            :options="monsterTypes" v-model="monsterType" @update:model-value="handleDropdownFilters('monster-type')" />
-          <SelectOption id="attribute" label-text="Attribute" class="flex flex-col gap-0.5" :options="attributes"
-            v-model="attribute" @update:model-value="handleDropdownFilters('attribute')" />
+          <SelectOption
+            id="monster-card"
+            label-text="Card Frame"
+            class="flex flex-col gap-0.5"
+            :options="monsterCards"
+            v-model="monsterCardType"
+            @update:model-value="handleDropdownFilters('frame')"
+          />
+          <SelectOption
+            id="ability"
+            label-text="Ability"
+            class="flex flex-col gap-0.5"
+            :options="monsterAbilities"
+            v-model="monsterAbility"
+            @update:model-value="handleDropdownFilters('ability')"
+          />
+          <SelectOption
+            id="tuner"
+            label-text="Tuner"
+            class="flex flex-col gap-0.5"
+            :options="tuners"
+            v-model="tunerType"
+            @update:model-value="handleDropdownFilters('tuner')"
+          />
+          <SelectOption
+            id="pendulum"
+            label-text="Pendulum"
+            class="flex flex-col gap-0.5"
+            :options="pendulums"
+            v-model="pendulumType"
+            @update:model-value="handleDropdownFilters('pendulum')"
+          />
+          <SelectOption
+            id="monster-type"
+            label-text="Monster Type"
+            class="flex flex-col gap-0.5"
+            :options="monsterTypes"
+            v-model="monsterType"
+            @update:model-value="handleDropdownFilters('monster-type')"
+          />
+          <SelectOption
+            id="attribute"
+            label-text="Attribute"
+            class="flex flex-col gap-0.5"
+            :options="attributes"
+            v-model="attribute"
+            @update:model-value="handleDropdownFilters('attribute')"
+          />
         </div>
         <div class="flex flex-col gap-1">
-          <NumberField id="level" :max="12" label-val="Level" v-model="level"
-            @update:model-value="handleNumericFilters('level')" />
-          <NumberField id="rank" :max="13" label-val="Rank" v-model="rank"
-            @update:model-value="handleNumericFilters('rank')" />
-          <NumberField id="scale" :max="13" label-val="Scale" v-model="scale"
-            @update:model-value="handleNumericFilters('scale')" />
-          <NumberField id="link" :min="1" :max="6" label-val="Link Rating" v-model="linkRating"
-            @update:model-value="handleNumericFilters('link-rating')" />
-          <NumberField id="atk" :max="5000" :step="50" label-val="ATK" v-model="atk"
-            @update:model-value="handleNumericFilters('atk')" />
-          <NumberField id="def" :max="5000" :step="50" label-val="DEF" v-model="def"
-            @update:model-value="handleNumericFilters('def')" />
+          <NumberField
+            id="level"
+            :max="12"
+            label-val="Level"
+            v-model="level"
+            @update:model-value="handleNumericFilters('level')"
+          />
+          <NumberField
+            id="rank"
+            :max="13"
+            label-val="Rank"
+            v-model="rank"
+            @update:model-value="handleNumericFilters('rank')"
+          />
+          <NumberField
+            id="scale"
+            :max="13"
+            label-val="Scale"
+            v-model="scale"
+            @update:model-value="handleNumericFilters('scale')"
+          />
+          <NumberField
+            id="link"
+            :min="1"
+            :max="6"
+            label-val="Link Rating"
+            v-model="linkRating"
+            @update:model-value="handleNumericFilters('link-rating')"
+          />
+          <NumberField
+            id="atk"
+            :max="5000"
+            :step="50"
+            label-val="ATK"
+            v-model="atk"
+            @update:model-value="handleNumericFilters('atk')"
+          />
+          <NumberField
+            id="def"
+            :max="5000"
+            :step="50"
+            label-val="DEF"
+            v-model="def"
+            @update:model-value="handleNumericFilters('def')"
+          />
         </div>
         <div>
           <div class="flex items-start sm:items-end gap-1">
@@ -330,68 +445,153 @@ watch(
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <SwitchWithLabel id="unknown-atk" label-val="Show monsters that have ? ATK" v-model="isUnknownAtk"
-          @update-value="handleUnknownAtkDef('atk')" />
-        <SwitchWithLabel id="unknown-def" label-val="Show monsters that have ? DEF" v-model="isUnknownDef"
-          @update-value="handleUnknownAtkDef('def')" />
+        <SwitchWithLabel
+          id="unknown-atk"
+          label-val="Show monsters that have ? ATK"
+          v-model="isUnknownAtk"
+          @update-value="handleUnknownAtkDef('atk')"
+        />
+        <SwitchWithLabel
+          id="unknown-def"
+          label-val="Show monsters that have ? DEF"
+          v-model="isUnknownDef"
+          @update-value="handleUnknownAtkDef('def')"
+        />
       </div>
       <div>
         <span>Filter by ATK range</span>
         <div class="flex justify-between mb-3">
-          <span>Min: <strong>{{ atkRange[0] }}</strong></span>
-          <span>Max: <strong>{{ atkRange[1] }}</strong></span>
+          <span>
+            Min: <strong>{{ atkRange[0] }}</strong>
+          </span>
+          <span>
+            Max: <strong>{{ atkRange[1] }}</strong>
+          </span>
         </div>
-        <SliderComponent v-model="atkRange" :max="5000" :step="50" label-val="Attack value"
-          @update:model-value="handleRangeFilter('atk')" />
+        <SliderComponent
+          v-model="atkRange"
+          :max="5000"
+          :step="50"
+          label-val="Attack value"
+          @update:model-value="handleRangeFilter('atk')"
+        />
       </div>
       <div class="mb-3">
         <span>Filter by DEF range</span>
         <div class="flex justify-between mb-3">
-          <span>Min: <strong>{{ defRange[0] }}</strong></span>
-          <span>Max: <strong>{{ defRange[1] }}</strong></span>
+          <span>
+            Min: <strong>{{ defRange[0] }}</strong>
+          </span>
+          <span>
+            Max: <strong>{{ defRange[1] }}</strong>
+          </span>
         </div>
-        <SliderComponent v-model="defRange" :max="5000" :step="50" label-val="Defense value"
-          @update:model-value="handleRangeFilter('def')" />
+        <SliderComponent
+          v-model="defRange"
+          :max="5000"
+          :step="50"
+          label-val="Defense value"
+          @update:model-value="handleRangeFilter('def')"
+        />
       </div>
     </template>
     <template v-else-if="filters.category === 'spell'">
-      <SelectOption id="spell" label-text="Spell Type" label-class="mr-3" :options="spellTypes" v-model="spellType"
-        @update:model-value="handleSpellTrapType('spell')" />
+      <SelectOption
+        id="spell"
+        label-text="Spell Type"
+        label-class="mr-3"
+        :options="spellTypes"
+        v-model="spellType"
+        @update:model-value="handleSpellTrapType('spell')"
+      />
     </template>
     <template v-else-if="filters.category === 'trap'">
-      <SelectOption id="trap" label-text="Trap Type" label-class="mr-3" :options="trapTypes" v-model="trapType"
-        @update:model-value="handleSpellTrapType('trap')" />
+      <SelectOption
+        id="trap"
+        label-text="Trap Type"
+        label-class="mr-3"
+        :options="trapTypes"
+        v-model="trapType"
+        @update:model-value="handleSpellTrapType('trap')"
+      />
     </template>
     <div class="border-t border-t-neutral-300 dark:border-t-neutral-700"></div>
-    <SwitchWithLabel id="alt-arts" label-val="Show cards with alternative artworks" v-model="showCardsWithAltArts"
-      @update-value="handleToggleAltArts" />
+    <SwitchWithLabel
+      id="alt-arts"
+      label-val="Show cards with alternative artworks"
+      v-model="showCardsWithAltArts"
+      @update-value="handleToggleAltArts"
+    />
     <fieldset v-if="format === 'none'" class="flex gap-4">
       <legend>Select a format to filter dates:</legend>
       <div class="flex items-center gap-1">
-        <input type="radio" id="date-ocg" name="date-selection" value="ocg" class="scheme-light dark:scheme-dark"
-          v-model="selectedFormatForDateFilter">
+        <input
+          type="radio"
+          id="date-ocg"
+          name="date-selection"
+          value="ocg"
+          class="scheme-light dark:scheme-dark"
+          v-model="selectedFormatForDateFilter"
+        />
         <label for="date-ocg">OCG</label>
       </div>
       <div class="flex items-center gap-1">
-        <input type="radio" id="date-tcg" name="date-selection" value="tcg" class="scheme-light dark:scheme-dark"
-          v-model="selectedFormatForDateFilter">
+        <input
+          type="radio"
+          id="date-tcg"
+          name="date-selection"
+          value="tcg"
+          class="scheme-light dark:scheme-dark"
+          v-model="selectedFormatForDateFilter"
+        />
         <label for="date-tcg">TCG</label>
       </div>
     </fieldset>
-    <div v-if="format === 'ocg' || (format === 'none' && selectedFormatForDateFilter === 'ocg')"
-      class="flex justify-between gap-2">
-      <DateInput id="ocg-start-date" label-text="OCG date from" :min="MIN_OCG_DATE" class="flex flex-col gap-1"
-        v-model="ocgStartDate" @update:model-value="handleDateRange('ocg')" />
-      <DateInput id="ocg-end-date" label-text="OCG date to" :min="MIN_OCG_DATE" class="flex flex-col gap-1"
-        v-model="ocgEndDate" @update:model-value="handleDateRange('ocg')" />
+    <div
+      v-if="format === 'ocg' || (format === 'none' && selectedFormatForDateFilter === 'ocg')"
+      class="flex justify-between gap-2"
+    >
+      <DateInput
+        id="ocg-start-date"
+        label-text="OCG date from"
+        :min="MIN_OCG_DATE"
+        class="flex flex-col gap-1"
+        v-model="ocgStartDate"
+        @update:model-value="handleDateRange('ocg')"
+      />
+      <DateInput
+        id="ocg-end-date"
+        label-text="OCG date to"
+        :min="MIN_OCG_DATE"
+        class="flex flex-col gap-1"
+        v-model="ocgEndDate"
+        @update:model-value="handleDateRange('ocg')"
+      />
     </div>
     <div
-      v-else-if="format === 'tcg' || format === 'genesys' || (format === 'none' && selectedFormatForDateFilter === 'tcg')"
-      class="flex justify-between gap-2">
-      <DateInput id="tcg-start-date" label-text="TCG date from" :min="MIN_TCG_DATE" class="flex flex-col gap-1"
-        v-model="tcgStartDate" @update:model-value="handleDateRange('tcg')" />
-      <DateInput id="tcg-end-date" label-text="TCG date to" :min="MIN_TCG_DATE" class="flex flex-col gap-1"
-        v-model="tcgEndDate" @update:model-value="handleDateRange('tcg')" />
+      v-else-if="
+        format === 'tcg' ||
+        format === 'genesys' ||
+        (format === 'none' && selectedFormatForDateFilter === 'tcg')
+      "
+      class="flex justify-between gap-2"
+    >
+      <DateInput
+        id="tcg-start-date"
+        label-text="TCG date from"
+        :min="MIN_TCG_DATE"
+        class="flex flex-col gap-1"
+        v-model="tcgStartDate"
+        @update:model-value="handleDateRange('tcg')"
+      />
+      <DateInput
+        id="tcg-end-date"
+        label-text="TCG date to"
+        :min="MIN_TCG_DATE"
+        class="flex flex-col gap-1"
+        v-model="tcgEndDate"
+        @update:model-value="handleDateRange('tcg')"
+      />
     </div>
     <span v-if="format === 'genesys'" class="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
       <strong>Note</strong>: Genesys format is TCG-exclusive, so filtered dates use the TCG.
