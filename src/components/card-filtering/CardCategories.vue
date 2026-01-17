@@ -4,10 +4,10 @@ import { ToggleGroupItem, ToggleGroupRoot } from 'reka-ui'
 const toggleButtonStyles =
   'cursor-pointer px-2 py-0.5 rounded-full w-[60px] sm:w-[80px] text-xs sm:text-base shadow-sm data-[state=on]:inset-shadow-sm data-[state=on]:shadow-none transition-[color,background-color,box-shadow] duration-300'
 const lightThemeColors =
-  ' bg-neutral-200 hover:bg-neutral-300 shadow-neutral-400 data-[state=on]:bg-neutral-400 data-[state=on]:inset-shadow-neutral-600'
+  'bg-neutral-200 hover:bg-neutral-300 shadow-neutral-400 data-[state=on]:bg-neutral-400 data-[state=on]:inset-shadow-neutral-600'
 const darkThemeColors =
-  ' dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:shadow-neutral-500 dark:data-[state=on]:bg-neutral-500 dark:data-[state=on]:inset-shadow-neutral-900'
-const toggleGroupItemClasses = toggleButtonStyles + lightThemeColors + darkThemeColors
+  'dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:shadow-neutral-500 dark:data-[state=on]:bg-neutral-500 dark:data-[state=on]:inset-shadow-neutral-900'
+const toggleGroupItemClasses = `${toggleButtonStyles} ${lightThemeColors} ${darkThemeColors}`
 </script>
 
 <template>
