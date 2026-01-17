@@ -111,7 +111,7 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
     "
   >
     <span>Add more:</span>
-    <div class="flex gap-2 mt-1">
+    <div class="mt-1 flex gap-2">
       <ButtonComponent
         variant="emerald"
         text-content="&#xd7; 1"
@@ -142,7 +142,7 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
       <span v-if="isMainDeckCard(card.frameType)">Move to Main Deck:</span>
       <span v-else-if="isExtraDeckCard(card.frameType)">Move to Extra Deck:</span>
     </template>
-    <div class="flex gap-2 mt-1">
+    <div class="mt-1 flex gap-2">
       <ButtonComponent
         variant="neutral"
         text-content="&#xd7; 1"
@@ -170,7 +170,7 @@ function handleDisabledState(to: Dropzone, num: 1 | 2): boolean {
   </div>
   <div>
     <span>Remove:</span>
-    <div class="flex gap-2 mt-1">
+    <div class="mt-1 flex gap-2">
       <ButtonComponent
         variant="red"
         text-content="&#xd7; 1"

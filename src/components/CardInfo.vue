@@ -27,9 +27,9 @@ function formatDate(dateString: string | undefined): string {
 }
 </script>
 <template>
-  <div class="flex flex-col gap-1 w-full">
-    <div class="flex justify-between items-center flex-wrap gap-1">
-      <span class="text-base font-bold leading-tight">{{ card.name }}</span>
+  <div class="flex w-full flex-col gap-1">
+    <div class="flex flex-wrap items-center justify-between gap-1">
+      <span class="text-base leading-tight font-bold">{{ card.name }}</span>
       <span v-if="card.frameType === 'spell' || card.frameType === 'trap'">
         {{ card.humanReadableCardType }}
       </span>
@@ -120,7 +120,7 @@ function formatDate(dateString: string | undefined): string {
         {{ card.misc_info[0].genesys_points }}
       </span>
     </span>
-    <div class="flex flex-col mt-auto">
+    <div class="mt-auto flex flex-col">
       <strong>Release Date/s:</strong>
       <div class="flex flex-wrap gap-2">
         <span v-if="getCorrectReleaseDates(card).ocgDate !== undefined">

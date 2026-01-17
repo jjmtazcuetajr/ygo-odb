@@ -46,7 +46,7 @@ const { isHoverDetected } = useDetectHover()
 <template>
   <div>
     <div class="flex flex-wrap items-center gap-x-4">
-      <span class="text-lg sm:text-xl font-bold">{{ deckTypeMap[type].name }} Deck</span>
+      <span class="text-lg font-bold sm:text-xl">{{ deckTypeMap[type].name }} Deck</span>
       <span class="text-xs sm:text-base">
         <span>
           Cards:
@@ -91,7 +91,7 @@ const { isHoverDetected } = useDetectHover()
     <div
       :id="type + '-deck'"
       :class="deckTypeMap[type].colors"
-      class="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-15 gap-1 sm:gap-1.5 p-1 sm:p-1.5 content-start mt-1 border rounded-md transition-colors duration-400 min-h-15 sm:min-h-35 lg:min-h-20 xl:min-h-25"
+      class="mt-1 grid min-h-15 grid-cols-6 content-start gap-1 rounded-md border p-1 transition-colors duration-400 sm:min-h-35 sm:gap-1.5 sm:p-1.5 md:grid-cols-8 lg:min-h-20 lg:grid-cols-10 xl:min-h-25 xl:grid-cols-12 2xl:grid-cols-15"
     >
       <template v-for="(card, index) in deck" :key="index">
         <CardTooltip

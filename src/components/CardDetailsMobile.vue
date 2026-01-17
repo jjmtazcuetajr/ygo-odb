@@ -72,25 +72,25 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <div class="flex flex-col min-w-0 w-full gap-2 text-sm sm:text-base">
-    <span class="font-medium truncate">{{ card.name }}</span>
-    <div class="flex flex-col grow justify-around">
+  <div class="flex w-full min-w-0 flex-col gap-2 text-sm sm:text-base">
+    <span class="truncate font-medium">{{ card.name }}</span>
+    <div class="flex grow flex-col justify-around">
       <DialogRoot v-model:open="isDialogOpen">
         <DialogTrigger as-child>
           <ButtonComponent variant="neutral" text-content="More Info" class="self-start" />
         </DialogTrigger>
         <DialogPortal>
           <DialogOverlay
-            class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto"
+            class="fixed inset-0 z-30 overflow-y-auto bg-neutral-900/70 data-[state=closed]:animate-overlayHide data-[state=open]:animate-overlayShow"
           >
             <DialogContent
               :aria-describedby="undefined"
-              class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] w-[90vw] max-w-[450px] p-6 z-100 text-sm text-neutral-800 dark:text-neutral-300 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900"
+              class="relative z-100 mx-auto my-[10%] flex w-[90vw] max-w-[450px] flex-col rounded-md border border-neutral-300 bg-white p-6 text-sm text-neutral-800 data-[state=closed]:animate-contentHide data-[state=open]:animate-contentShow dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-300"
             >
               <VisuallyHidden>
                 <DialogTitle>Card Details</DialogTitle>
               </VisuallyHidden>
-              <div class="flex justify-center px-14 mb-2">
+              <div class="mb-2 flex justify-center px-14">
                 <CardPlaceholder
                   v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)"
                   class="w-[170px]"
@@ -101,13 +101,13 @@ onUnmounted(() => {
                   :alt="card.name"
                   width="170"
                   draggable="false"
-                  class="rounded-sm aspect-268/391 text-xs bg-neutral-400/70 dark:bg-neutral-600"
+                  class="aspect-268/391 rounded-sm bg-neutral-400/70 text-xs dark:bg-neutral-600"
                 />
               </div>
               <CardInfo :card="card" />
               <DialogClose
                 aria-label="Close"
-                class="absolute top-2.5 right-2.5 self-start p-1 size-6 rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200"
+                class="absolute top-2.5 right-2.5 size-6 cursor-pointer self-start rounded-full p-1 transition-[background-color] duration-200 hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
               >
                 <X :size="16" />
               </DialogClose>

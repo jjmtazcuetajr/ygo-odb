@@ -64,14 +64,14 @@ const DropzoneOps = defineAsyncComponent({
   <div
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
-    class="draggable cursor-grab relative rounded-sm active:opacity-80 shadow-md shadow-neutral-600 dark:shadow-neutral-950 transition-[box-shadow,opacity] duration-200"
+    class="draggable relative cursor-grab rounded-sm shadow-md shadow-neutral-600 transition-[box-shadow,opacity] duration-200 active:opacity-80 dark:shadow-neutral-950"
   >
     <CardPlaceholder v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)" />
     <img
       v-else
       :src="card.card_images[0].image_url_small"
       :alt="card.name"
-      class="rounded-sm aspect-268/391 text-xs h-full bg-neutral-400/70 dark:bg-neutral-600 transition-[background-color] duration-400"
+      class="aspect-268/391 h-full rounded-sm bg-neutral-400/70 text-xs transition-[background-color] duration-400 dark:bg-neutral-600"
       @mousedown.left="handleMouseDown($event, card, from, index)"
       @contextmenu="rightClickDeleteCard($event, index, from)"
     />
@@ -91,14 +91,14 @@ const DropzoneOps = defineAsyncComponent({
         <TooltipTrigger
           aria-label="Show card info"
           :class="{ 'opacity-100': isHovered }"
-          class="absolute top-1 right-1 rounded-full size-5 flex items-center justify-center cursor-pointer opacity-0 focus-visible:opacity-100 transition-opacity duration-200 text-neutral-300 bg-neutral-500 shadow-md shadow-neutral-900"
+          class="absolute top-1 right-1 flex size-5 cursor-pointer items-center justify-center rounded-full bg-neutral-500 text-neutral-300 opacity-0 shadow-md shadow-neutral-900 transition-opacity duration-200 focus-visible:opacity-100"
         >
           <Info :size="20" />
         </TooltipTrigger>
         <TooltipPortal>
           <TooltipContent
             :side-offset="5"
-            class="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade flex gap-2 w-xl select-none rounded-md p-2 z-35 text-sm text-neutral-800 dark:text-neutral-300 shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-200 dark:bg-neutral-800 transition-[background-color,box-shadow,color] duration-400 border border-emerald-600 will-change-[transform,opacity]"
+            class="z-35 flex w-xl gap-2 rounded-md border border-emerald-600 bg-neutral-200 p-2 text-sm text-neutral-800 shadow-lg shadow-neutral-700 transition-[background-color,box-shadow,color] duration-400 will-change-[transform,opacity] select-none data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-800 dark:text-neutral-300 dark:shadow-neutral-950"
           >
             <CardPlaceholder
               v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)"
@@ -109,13 +109,13 @@ const DropzoneOps = defineAsyncComponent({
               :src="card.card_images[0].image_url_small"
               :alt="card.name"
               width="150"
-              class="rounded-sm aspect-268/391 text-xs self-start shrink-0 bg-neutral-400/50 dark:bg-neutral-700 transition-[background-color] duration-400"
+              class="aspect-268/391 shrink-0 self-start rounded-sm bg-neutral-400/50 text-xs transition-[background-color] duration-400 dark:bg-neutral-700"
             />
             <CardInfo :card="card" />
             <TooltipArrow
               :height="10"
               :width="20"
-              class="fill-neutral-200 dark:fill-neutral-800 stroke-emerald-600 transition-[fill] duration-400"
+              class="fill-neutral-200 stroke-emerald-600 transition-[fill] duration-400 dark:fill-neutral-800"
             />
           </TooltipContent>
         </TooltipPortal>
@@ -129,7 +129,7 @@ const DropzoneOps = defineAsyncComponent({
           'bg-emerald-600 hover:bg-emerald-700': from === 'grid',
           'bg-neutral-500 hover:bg-neutral-600': from !== 'grid',
         }"
-        class="absolute top-[50%] left-[50%] transform-[translate(-50%,-50%)] rounded-full size-6 flex items-center justify-center cursor-pointer opacity-0 focus-visible:opacity-100 text-neutral-100 shadow-md shadow-neutral-900 transition-[background-color,opacity] duration-200"
+        class="absolute top-[50%] left-[50%] flex size-6 transform-[translate(-50%,-50%)] cursor-pointer items-center justify-center rounded-full text-neutral-100 opacity-0 shadow-md shadow-neutral-900 transition-[background-color,opacity] duration-200 focus-visible:opacity-100"
       >
         <Plus v-if="from === 'grid'" :size="20" />
         <Settings2 v-else :size="20" />
@@ -138,7 +138,7 @@ const DropzoneOps = defineAsyncComponent({
         <PopoverContent
           side="bottom"
           :side-offset="5"
-          class="data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade flex flex-col gap-2 w-45 rounded-md p-3 z-30 text-sm text-neutral-800 dark:text-neutral-300 shadow-lg shadow-neutral-700 dark:shadow-neutral-950 bg-neutral-100 dark:bg-neutral-800 border border-emerald-600 will-change-[transform,opacity]"
+          class="z-30 flex w-45 flex-col gap-2 rounded-md border border-emerald-600 bg-neutral-100 p-3 text-sm text-neutral-800 shadow-lg shadow-neutral-700 will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-800 dark:text-neutral-300 dark:shadow-neutral-950"
         >
           <span
             v-if="
@@ -162,7 +162,7 @@ const DropzoneOps = defineAsyncComponent({
           <template v-else>
             <div>
               <strong>Count</strong>
-              <div class="w-full flex justify-between">
+              <div class="flex w-full justify-between">
                 <span v-if="isMainDeckCard(card.frameType)" class="w-full">
                   Main: {{ getCardFrequency(card, 'main') }}
                 </span>
@@ -184,11 +184,11 @@ const DropzoneOps = defineAsyncComponent({
           </template>
           <PopoverClose
             aria-label="Close"
-            class="absolute top-1 right-1 flex justify-center items-center size-6 rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200"
+            class="absolute top-1 right-1 flex size-6 cursor-pointer items-center justify-center rounded-full transition-[background-color] duration-200 hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
           >
             <X :size="16" />
           </PopoverClose>
-          <PopoverArrow class="fill-neutral-200 dark:fill-neutral-800 stroke-emerald-600" />
+          <PopoverArrow class="fill-neutral-200 stroke-emerald-600 dark:fill-neutral-800" />
         </PopoverContent>
       </PopoverPortal>
     </PopoverRoot>

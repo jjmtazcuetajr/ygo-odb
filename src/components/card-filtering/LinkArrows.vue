@@ -24,7 +24,7 @@ const toggleGroupItemClasses =
 </script>
 
 <template>
-  <ToggleGroupRoot type="multiple" class="flex flex-col justify-between size-[100px]">
+  <ToggleGroupRoot type="multiple" class="flex size-[100px] flex-col justify-between">
     <div class="flex justify-between">
       <ToggleGroupItem
         value="Top-Left"

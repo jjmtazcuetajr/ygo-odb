@@ -89,11 +89,11 @@ function handleClearDecks() {
     </DialogTrigger>
     <DialogPortal>
       <DialogOverlay
-        class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto scheme-light-dark"
+        class="fixed inset-0 z-30 overflow-y-auto bg-neutral-900/70 scheme-light-dark data-[state=closed]:animate-overlayHide data-[state=open]:animate-overlayShow"
       >
         <DialogContent
           :aria-describedby="undefined"
-          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto my-[10%] xl:my-[5%] w-[90vw] max-w-[450px] p-6 z-100 rounded-md border text-neutral-800 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-900"
+          class="relative z-100 mx-auto my-[10%] flex w-[90vw] max-w-[450px] flex-col rounded-md border border-neutral-300 bg-neutral-100 p-6 text-neutral-800 data-[state=closed]:animate-contentHide data-[state=open]:animate-contentShow xl:my-[5%] dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-300"
         >
           <DialogTitle class="text-lg font-semibold">
             {{ setDialogTitle(usage) }}
@@ -103,7 +103,7 @@ function handleClearDecks() {
             Are you sure you want to clear the deck builder?
           </span>
           <div class="mt-3 text-sm sm:text-base" v-else-if="usage === 'help'">
-            <ol class="list-disc list-outside pl-5">
+            <ol class="list-outside list-disc pl-5">
               <li class="mb-2">
                 Placing your cursor over a card will show a hint that the card can be dragged.
               </li>
@@ -133,7 +133,7 @@ function handleClearDecks() {
             </ol>
           </div>
           <div
-            class="flex justify-center text-xs sm:text-base mt-5"
+            class="mt-5 flex justify-center text-xs sm:text-base"
             v-else-if="usage === 'pagination'"
           >
             <NumberField
@@ -176,7 +176,7 @@ function handleClearDecks() {
           </div>
           <DialogClose
             aria-label="Close"
-            class="absolute top-2.5 right-2.5 self-start p-1 size-6 rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200"
+            class="absolute top-2.5 right-2.5 size-6 cursor-pointer self-start rounded-full p-1 transition-[background-color] duration-200 hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
           >
             <X :size="16" />
           </DialogClose>

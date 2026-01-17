@@ -280,7 +280,7 @@ watch(
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 mt-3 text-xs sm:text-base">
+  <div class="mt-3 flex flex-col gap-3 text-xs sm:text-base">
     <div class="relative">
       <input
         id="search-input"
@@ -290,10 +290,10 @@ watch(
         @input="handleSearch"
         placeholder="Enter a card name or effect..."
         aria-label="Enter a card name or effect"
-        class="w-full text-sm sm:text-base rounded-md px-7 py-0.5 placeholder:italic placeholder:text-neutral-400 border border-neutral-500 bg-neutral-50 dark:bg-neutral-900 transition-[background-color] duration-400"
+        class="w-full rounded-md border border-neutral-500 bg-neutral-50 px-7 py-0.5 text-sm transition-[background-color] duration-400 placeholder:text-neutral-400 placeholder:italic sm:text-base dark:bg-neutral-900"
       />
       <Search
-        class="absolute top-[50%] transform-[translateY(-50%)] left-2 pointer-events-none"
+        class="pointer-events-none absolute top-[50%] left-2 transform-[translateY(-50%)]"
         :size="16"
       />
       <button
@@ -301,7 +301,7 @@ watch(
         aria-label="Clear search input"
         v-if="searchValue.length > 0"
         @click="clearSearchInput"
-        class="absolute top-1/2 right-1 -translate-y-1/2 cursor-pointer size-5 rounded-full flex justify-center items-center hover:bg-neutral-300 dark:hover:bg-neutral-500 active:bg-neutral-400 dark:active:bg-neutral-600 transition-[background-color] duration-200"
+        class="absolute top-1/2 right-1 flex size-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full transition-[background-color] duration-200 hover:bg-neutral-300 active:bg-neutral-400 dark:hover:bg-neutral-500 dark:active:bg-neutral-600"
       >
         <X :size="14" />
       </button>
@@ -330,8 +330,8 @@ watch(
       v-if="format !== 'none'"
       class="border-t border-t-neutral-300 dark:border-t-neutral-700"
     ></div>
-    <div class="flex items-center flex-wrap gap-2">
-      <div class="flex items-start sm:items-end gap-1">
+    <div class="flex flex-wrap items-center gap-2">
+      <div class="flex items-start gap-1 sm:items-end">
         Card Category
         <FilterHints usage="category" />
       </div>
@@ -437,7 +437,7 @@ watch(
           />
         </div>
         <div>
-          <div class="flex items-start sm:items-end gap-1">
+          <div class="flex items-start gap-1 sm:items-end">
             Link Arrows
             <FilterHints usage="link-arrows" />
           </div>
@@ -460,7 +460,7 @@ watch(
       </div>
       <div>
         <span>Filter by ATK range</span>
-        <div class="flex justify-between mb-3">
+        <div class="mb-3 flex justify-between">
           <span>
             Min: <strong>{{ atkRange[0] }}</strong>
           </span>
@@ -478,7 +478,7 @@ watch(
       </div>
       <div class="mb-3">
         <span>Filter by DEF range</span>
-        <div class="flex justify-between mb-3">
+        <div class="mb-3 flex justify-between">
           <span>
             Min: <strong>{{ defRange[0] }}</strong>
           </span>

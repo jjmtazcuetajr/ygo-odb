@@ -82,18 +82,18 @@ onMounted(() => {
   <div
     id="overlay"
     @click="$emit('handleOverlayClick', $event)"
-    class="fixed lg:static z-11 lg:z-[unset] inset-0 lg:w-[35%] xl:w-[30%] bg-neutral-700/70 dark:bg-neutral-950/70 lg:bg-[unset] dark:lg:bg-[unset] lg:max-h-[800px]"
+    class="fixed inset-0 z-11 bg-neutral-700/70 lg:static lg:z-[unset] lg:max-h-[800px] lg:w-[35%] lg:bg-[unset] xl:w-[30%] dark:bg-neutral-950/70 dark:lg:bg-[unset]"
   >
     <div
-      class="inner flex flex-col gap-2 p-3 bg-neutral-100 dark:bg-neutral-800 border-r lg:border-r-0 border-y lg:border-y-0 rounded-r-lg lg:rounded-l-lg border-neutral-400 dark:border-neutral-500 shadow-[5px_15px_15px_5px_#555] dark:shadow-[5px_15px_15px_5px_#000] lg:shadow-[unset] dark:lg:shadow-[unset] w-full sm:w-[70%] md:w-[50%] lg:w-full h-full transition-[background-color] duration-400"
+      class="inner flex h-full w-full flex-col gap-2 rounded-r-lg border-y border-r border-neutral-400 bg-neutral-100 p-3 shadow-[5px_15px_15px_5px_#555] transition-[background-color] duration-400 sm:w-[70%] md:w-[50%] lg:w-full lg:rounded-l-lg lg:border-y-0 lg:border-r-0 lg:shadow-[unset] dark:border-neutral-500 dark:bg-neutral-800 dark:shadow-[5px_15px_15px_5px_#000] dark:lg:shadow-[unset]"
     >
-      <div class="flex lg:hidden items-center">
-        <span class="text-base sm:text-lg leading-none font-medium grow">Sort & filter cards</span>
+      <div class="flex items-center lg:hidden">
+        <span class="grow text-base leading-none font-medium sm:text-lg">Sort & filter cards</span>
         <button
           type="button"
           aria-label="Hide card list side panel"
           @click="$emit('handleCloseSideDrawer')"
-          class="self-start p-1 size-6 rounded-full cursor-pointer bg-neutral-300 active:bg-neutral-400 dark:bg-neutral-600 dark:active:bg-neutral-500 transition-[background-color] duration-200"
+          class="size-6 cursor-pointer self-start rounded-full bg-neutral-300 p-1 transition-[background-color] duration-200 active:bg-neutral-400 dark:bg-neutral-600 dark:active:bg-neutral-500"
         >
           <X :size="16" />
         </button>
@@ -126,7 +126,7 @@ onMounted(() => {
         </DialogModal>
       </div>
       <div
-        class="flex justify-center items-center h-full"
+        class="flex h-full items-center justify-center"
         v-if="isLoading && !paginatedResults.length"
       >
         <div class="flex flex-wrap gap-2">
@@ -134,17 +134,17 @@ onMounted(() => {
           Loading cards...
         </div>
       </div>
-      <div class="flex justify-center items-center h-full" v-else-if="isError">
-        <span class="font-bold text-red-700 dark:text-red-400 transition-[color] duration-400">
+      <div class="flex h-full items-center justify-center" v-else-if="isError">
+        <span class="font-bold text-red-700 transition-[color] duration-400 dark:text-red-400">
           Failed to fetch card data.
         </span>
       </div>
-      <div class="flex justify-center items-center h-full" v-else-if="!paginatedResults.length">
+      <div class="flex h-full items-center justify-center" v-else-if="!paginatedResults.length">
         <span class="font-bold">No cards found.</span>
       </div>
-      <div class="flex flex-col h-full" v-else>
+      <div class="flex h-full flex-col" v-else>
         <div
-          class="hidden lg:grid grid-cols-4 2xl:grid-cols-5 gap-3 overflow-y-auto grow shrink basis-0 pb-2 px-2 mt-3 content-start scheme-light dark:scheme-dark"
+          class="mt-3 hidden shrink grow basis-0 grid-cols-4 content-start gap-3 overflow-y-auto px-2 pb-2 scheme-light lg:grid 2xl:grid-cols-5 dark:scheme-dark"
         >
           <template v-for="(card, index) in paginatedResults" :key="card.id">
             <CardTooltip
@@ -158,10 +158,10 @@ onMounted(() => {
           </template>
         </div>
         <div
-          class="flex lg:hidden flex-col gap-3 overflow-y-auto grow shrink basis-0 pb-2 px-2 mt-3"
+          class="mt-3 flex shrink grow basis-0 flex-col gap-3 overflow-y-auto px-2 pb-2 lg:hidden"
         >
           <div v-for="card in paginatedResults" :key="card.id" class="flex gap-2">
-            <div class="relative w-[70px] sm:w-20 flex-none">
+            <div class="relative w-[70px] flex-none sm:w-20">
               <CardPlaceholder
                 v-if="!hasFinishedLoadingImage(card.card_images[0].image_url_small)"
               />
@@ -170,7 +170,7 @@ onMounted(() => {
                 :src="card.card_images[0].image_url_small"
                 :alt="card.name"
                 draggable="false"
-                class="rounded-sm aspect-268/391 text-xs overflow-hidden bg-neutral-400/70 dark:bg-neutral-600"
+                class="aspect-268/391 overflow-hidden rounded-sm bg-neutral-400/70 text-xs dark:bg-neutral-600"
               />
               <BanStatus v-if="format === 'ocg'" :status="card.banlist_info?.ban_ocg" />
               <BanStatus v-else-if="format === 'tcg'" :status="card.banlist_info?.ban_tcg" />

@@ -24,10 +24,10 @@ function updateValue(val: boolean) {
       :id="id"
       v-model="model"
       @update:model-value="updateValue"
-      class="w-[42px] h-[22px] shadow-sm rounded-full cursor-pointer shrink-0 border border-neutral-400 dark:border-neutral-500 bg-neutral-300 dark:bg-neutral-500 data-[state=checked]:bg-emerald-700 transition-[background-color] duration-300"
+      class="h-[22px] w-[42px] shrink-0 cursor-pointer rounded-full border border-neutral-400 bg-neutral-300 shadow-sm transition-[background-color] duration-300 data-[state=checked]:bg-emerald-700 dark:border-neutral-500 dark:bg-neutral-500"
     >
       <SwitchThumb
-        class="flex justify-center items-center size-4 bg-white rounded-full translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[21px] transition-transform duration-300"
+        class="flex size-4 translate-x-0.5 items-center justify-center rounded-full bg-white transition-transform duration-300 will-change-transform data-[state=checked]:translate-x-[21px]"
       />
     </SwitchRoot>
     <label :for="id" class="text-xs sm:text-sm">{{ labelVal }}</label>

@@ -20,7 +20,7 @@ const model = defineModel<string>({ required: true })
     <select
       :id="id"
       v-model="model"
-      class="text-xs sm:text-base rounded-md pl-1.5 pr-6 py-0.5 appearance-none bg-no-repeat bg-position-[right_.2rem_center] bg-size-[auto_1.1rem] border border-neutral-500 transition-[background-color,background-image] duration-400"
+      class="appearance-none rounded-md border border-neutral-500 bg-size-[auto_1.1rem] bg-position-[right_.2rem_center] bg-no-repeat py-0.5 pr-6 pl-1.5 text-xs transition-[background-color,background-image] duration-400 sm:text-base"
       :class="bgColorClass || 'bg-neutral-200 dark:bg-neutral-800'"
     >
       <option v-for="option in options" :key="option.val" :value="option.val">

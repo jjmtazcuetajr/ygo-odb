@@ -29,7 +29,7 @@ const mobileOnly = props.onlyInMobile ? 'lg:hidden' : ''
   <button
     type="button"
     :class="`${buttonVariants[variant]} ${withIcon} ${mobileOnly}`"
-    class="px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base text-white transition-[background-color] duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+    class="cursor-pointer rounded-md px-2 py-1 text-xs text-white transition-[background-color] duration-200 disabled:cursor-not-allowed disabled:opacity-40 sm:text-base"
   >
     <slot name="textWithIcon" v-if="hasTextWithIconSlot"></slot>
     <template v-else>{{ textContent }}</template>

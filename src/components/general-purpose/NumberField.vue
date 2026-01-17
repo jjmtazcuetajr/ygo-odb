@@ -29,18 +29,18 @@ defineProps<{
       <label :for="id">{{ labelVal }}</label>
     </div>
     <div
-      class="flex items-center focus-within:ring rounded-md border border-neutral-500 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-950 transition-[background-color] duration-300"
+      class="flex items-center rounded-md border border-neutral-500 bg-neutral-200 transition-[background-color] duration-300 focus-within:ring hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-950"
     >
       <NumberFieldDecrement
-        class="p-0.5 sm:p-1.5 cursor-pointer disabled:cursor-not-allowed disabled:opacity-20"
+        class="cursor-pointer p-0.5 disabled:cursor-not-allowed disabled:opacity-20 sm:p-1.5"
       >
         <Minus :size="16" />
       </NumberFieldDecrement>
       <NumberFieldInput
-        class="bg-transparent w-12 tabular-nums text-center focus:outline-0 px-1 py-0.5"
+        class="w-12 bg-transparent px-1 py-0.5 text-center tabular-nums focus:outline-0"
       />
       <NumberFieldIncrement
-        class="p-0.5 sm:p-1.5 cursor-pointer disabled:cursor-not-allowed disabled:opacity-20"
+        class="cursor-pointer p-0.5 disabled:cursor-not-allowed disabled:opacity-20 sm:p-1.5"
       >
         <Plus :size="16" />
       </NumberFieldIncrement>

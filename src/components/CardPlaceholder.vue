@@ -1,9 +1,9 @@
 <template>
   <span
-    class="animate-pulse flex justify-center items-center flex-none self-start rounded-sm aspect-268/391 bg-neutral-300 dark:bg-neutral-700"
+    class="flex aspect-268/391 flex-none animate-pulse items-center justify-center self-start rounded-sm bg-neutral-300 dark:bg-neutral-700"
   >
     <span
-      class="animate-pulse rounded-[50%] grow-[.35] shrink basis-0 aspect-1/2 bg-neutral-400/50 dark:bg-neutral-600"
+      class="aspect-1/2 shrink grow-[.35] basis-0 animate-pulse rounded-[50%] bg-neutral-400/50 dark:bg-neutral-600"
     >
     </span>
   </span>

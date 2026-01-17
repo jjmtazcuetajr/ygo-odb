@@ -1,8 +1,8 @@
 <template>
   <div
-    class="2xl:max-w-7xl mx-5 sm:mx-10 md:mx-20 lg:mx-40 xl:mx-60 2xl:mx-auto my-4 sm:my-8 text-sm sm:text-base text-neutral-700 dark:text-neutral-400 transition-[color] duration-400"
+    class="mx-5 my-4 text-sm text-neutral-700 transition-[color] duration-400 sm:mx-10 sm:my-8 sm:text-base md:mx-20 lg:mx-40 xl:mx-60 2xl:mx-auto 2xl:max-w-7xl dark:text-neutral-400"
   >
-    <h1 class="text-3xl font-bold text-center mb-8">About</h1>
+    <h1 class="mb-8 text-center text-3xl font-bold">About</h1>
     <h2 class="text-xl font-bold">Motivation</h2>
     <p class="my-4">
       Since I was a kid, I have been exposed to anime, manga, and games. One of the franchises I
@@ -32,7 +32,7 @@
           href="https://vuejs.org/"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400"
+          class="inline-block text-emerald-700 transition-[color] duration-400 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700"
         >
           Vue.js
         </a>
@@ -43,7 +43,7 @@
           href="https://pinia.vuejs.org/"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400"
+          class="inline-block text-emerald-700 transition-[color] duration-400 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700"
         >
           Pinia
         </a>
@@ -54,7 +54,7 @@
           href="https://www.typescriptlang.org/"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400"
+          class="inline-block text-emerald-700 transition-[color] duration-400 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700"
         >
           TypeScript
         </a>
@@ -65,7 +65,7 @@
           href="https://tailwindcss.com/"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400"
+          class="inline-block text-emerald-700 transition-[color] duration-400 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700"
         >
           Tailwind CSS
         </a> </strong
@@ -75,7 +75,7 @@
           href="https://reka-ui.com/"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400"
+          class="inline-block text-emerald-700 transition-[color] duration-400 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700"
         >
           Reka UI
         </a>
@@ -86,7 +86,7 @@
           href="https://lucide.dev/"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400"
+          class="inline-block text-emerald-700 transition-[color] duration-400 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700"
         >
           Lucide
         </a>
@@ -98,7 +98,7 @@
           href="https://ygoprodeck.com/api-guide/"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400"
+          class="inline-block text-emerald-700 transition-[color] duration-400 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700"
         >
           YGOPRODeck
         </a> </strong
@@ -111,7 +111,7 @@
       formats are OCG, TCG, and Genesys. There are no plans to support other importing and exporting
       methods. Currently, there is no intent to include other formats like Speed Duels, GOAT, etc.
     </p>
-    <div class="flex gap-4 flex-wrap divide-x divide-neutral-300 dark:divide-neutral-700 mb-4">
+    <div class="mb-4 flex flex-wrap gap-4 divide-x divide-neutral-300 dark:divide-neutral-700">
       <span class="pr-4">
         Project source code
         <strong>
@@ -119,7 +119,7 @@
             href="https://github.com/jjmtazcuetajr/ygo-odb"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400"
+            class="inline-block text-emerald-700 transition-[color] duration-400 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700"
           >
             here
           </a>
@@ -131,7 +131,7 @@
             href="https://github.com/jjmtazcuetajr/ygo-odb/blob/main/LICENSE"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-block text-emerald-700 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700 transition-[color] duration-400"
+            class="inline-block text-emerald-700 transition-[color] duration-400 hover:text-emerald-800 dark:text-emerald-600 dark:hover:text-emerald-700"
           >
             LICENSE
           </a>

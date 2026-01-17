@@ -240,7 +240,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
     <DropdownMenuRoot v-model:open="toggleState" :modal="false">
       <DropdownMenuTrigger
         :aria-label="type + ' options'"
-        class="flex items-center justify-center grow gap-1 px-2 py-1 rounded-md cursor-pointer text-xs sm:text-base text-white bg-neutral-500 hover:bg-neutral-600 active:bg-neutral-700 transition-[background-color] duration-200"
+        class="flex grow cursor-pointer items-center justify-center gap-1 rounded-md bg-neutral-500 px-2 py-1 text-xs text-white transition-[background-color] duration-200 hover:bg-neutral-600 active:bg-neutral-700 sm:text-base"
       >
         <FileInput v-if="type === 'Import'" :size="16" />
         <FileOutput v-else-if="type === 'Export'" :size="16" />
@@ -251,35 +251,35 @@ function persistDialog(event: PointerDownOutsideEvent) {
 
       <DropdownMenuPortal>
         <DropdownMenuContent
-          class="rounded-md p-1 border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 shadow-xl shadow-neutral-400 dark:shadow-neutral-950 will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+          class="rounded-md border border-neutral-300 bg-neutral-100 p-1 shadow-xl shadow-neutral-400 will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade dark:border-neutral-600 dark:bg-neutral-800 dark:shadow-neutral-950"
           :side-offset="5"
         >
           <template v-if="type === 'Import' || type === 'Export'">
             <DropdownMenuItem
-              class="text-sm rounded flex items-center h-6 select-none outline-none text-emerald-700 data-highlighted:bg-emerald-500 data-highlighted:text-neutral-50 dark:text-emerald-400"
+              class="flex h-6 items-center rounded text-sm text-emerald-700 outline-none select-none data-highlighted:bg-emerald-500 data-highlighted:text-neutral-50 dark:text-emerald-400"
             >
               <DialogTrigger
-                class="w-full text-start px-3"
+                class="w-full px-3 text-start"
                 v-if="type === 'Import'"
                 @click="handleYdkFileImport"
               >
                 From YDK file
               </DialogTrigger>
-              <DialogTrigger class="w-full text-start px-3" v-else @click="handleYdkFileExport">
+              <DialogTrigger class="w-full px-3 text-start" v-else @click="handleYdkFileExport">
                 To YDK file
               </DialogTrigger>
             </DropdownMenuItem>
             <DropdownMenuItem
-              class="text-sm rounded flex items-center h-6 select-none outline-none text-emerald-700 data-highlighted:bg-emerald-500 data-highlighted:text-neutral-50 dark:text-emerald-400"
+              class="flex h-6 items-center rounded text-sm text-emerald-700 outline-none select-none data-highlighted:bg-emerald-500 data-highlighted:text-neutral-50 dark:text-emerald-400"
             >
               <DialogTrigger
-                class="w-full text-start px-3"
+                class="w-full px-3 text-start"
                 v-if="type === 'Import'"
                 @click="handleYdkeUrlImport"
               >
                 From YDKe URL
               </DialogTrigger>
-              <DialogTrigger class="w-full text-start px-3" v-else @click="handleYdkeUrlExport">
+              <DialogTrigger class="w-full px-3 text-start" v-else @click="handleYdkeUrlExport">
                 To YDKe URL
               </DialogTrigger>
             </DropdownMenuItem>
@@ -287,36 +287,36 @@ function persistDialog(event: PointerDownOutsideEvent) {
           <template v-else>
             <DropdownMenuItem
               @click="sortByName"
-              class="text-sm rounded flex items-center h-6 px-3 select-none outline-none text-emerald-700 data-highlighted:bg-emerald-500 data-highlighted:text-neutral-50 dark:text-emerald-400"
+              class="flex h-6 items-center rounded px-3 text-sm text-emerald-700 outline-none select-none data-highlighted:bg-emerald-500 data-highlighted:text-neutral-50 dark:text-emerald-400"
             >
               By name
             </DropdownMenuItem>
             <DropdownMenuItem
               @click="sortByCardType"
-              class="text-sm rounded flex items-center h-6 px-3 select-none outline-none text-emerald-700 data-highlighted:bg-emerald-500 data-highlighted:text-neutral-50 dark:text-emerald-400"
+              class="flex h-6 items-center rounded px-3 text-sm text-emerald-700 outline-none select-none data-highlighted:bg-emerald-500 data-highlighted:text-neutral-50 dark:text-emerald-400"
             >
               By card type
             </DropdownMenuItem>
           </template>
           <DropdownMenuArrow
-            class="fill-neutral-100 dark:fill-neutral-800 stroke-neutral-300 dark:stroke-neutral-600"
+            class="fill-neutral-100 stroke-neutral-300 dark:fill-neutral-800 dark:stroke-neutral-600"
           />
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
     <DialogPortal>
       <DialogOverlay
-        class="bg-neutral-900/70 data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide fixed inset-0 z-30 overflow-y-auto scheme-light-dark"
+        class="fixed inset-0 z-30 overflow-y-auto bg-neutral-900/70 scheme-light-dark data-[state=closed]:animate-overlayHide data-[state=open]:animate-overlayShow"
       >
         <DialogContent
           :aria-describedby="undefined"
           @pointer-down-outside="persistDialog"
-          class="flex flex-col data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide relative mx-auto mt-[50%] sm:mt-[10%] mb-[10%] w-[90vw] max-w-[500px] p-6 z-100 text-neutral-800 dark:text-neutral-300 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-900"
+          class="relative z-100 mx-auto mt-[50%] mb-[10%] flex w-[90vw] max-w-[500px] flex-col rounded-md border border-neutral-300 bg-white p-6 text-neutral-800 data-[state=closed]:animate-contentHide data-[state=open]:animate-contentShow sm:mt-[10%] dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-300"
         >
           <DialogTitle class="text-lg font-semibold">
             {{ type }} {{ usage && usage.includes('ydk-file') ? 'YDK file' : 'YDKe URL' }}
           </DialogTitle>
-          <div class="flex flex-col gap-2 mt-3">
+          <div class="mt-3 flex flex-col gap-2">
             <template v-if="usage === 'ydk-file-import'">
               <label for="file-import" class="text-sm sm:text-base">
                 Please upload a YDK file:
@@ -329,18 +329,18 @@ function persistDialog(event: PointerDownOutsideEvent) {
                 @change="handleFileUpload"
                 aria-errormessage="ydk-file-import-error"
                 :class="{
-                  'border-solid border-red-600 dark:border-red-400 hover:border-red-600 dark:hover:border-red-400 focus:outline-red-600 focus:dark:outline-red-400':
+                  'border-solid border-red-600 hover:border-red-600 focus:outline-red-600 dark:border-red-400 dark:hover:border-red-400 focus:dark:outline-red-400':
                     isErrorYDKFileImport,
                 }"
-                class="w-full py-10 px-2 text-xs sm:text-base focus:outline-2 focus:-outline-offset-2 dark:focus:outline-white rounded-lg border-2 border-dashed border-neutral-500 hover:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-[background-color] duration-200 file:mr-4 file:rounded-full file:px-4 file:py-2 file:text-xs file:sm:text-sm file:font-semibold file:cursor-pointer dark:text-white file:bg-emerald-400 hover:file:bg-emerald-500 dark:file:bg-emerald-600 dark:hover:file:bg-emerald-500 file:transition-[background-color] file:duration-200"
+                class="w-full rounded-lg border-2 border-dashed border-neutral-500 px-2 py-10 text-xs transition-[background-color] duration-200 file:mr-4 file:cursor-pointer file:rounded-full file:bg-emerald-400 file:px-4 file:py-2 file:text-xs file:font-semibold file:transition-[background-color] file:duration-200 hover:border-neutral-600 hover:bg-neutral-200 hover:file:bg-emerald-500 focus:outline-2 focus:-outline-offset-2 sm:text-base file:sm:text-sm dark:text-white dark:file:bg-emerald-600 dark:hover:bg-neutral-800 dark:hover:file:bg-emerald-500 dark:focus:outline-white"
               />
-              <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
+              <span class="text-xs text-neutral-500 sm:text-sm dark:text-neutral-400">
                 <strong>Note:</strong> Importing will remove your current progress in deck-building.
               </span>
               <span
                 v-if="isErrorYDKFileImport"
                 id="ydk-file-import-error"
-                class="text-xs sm:text-sm text-red-600 dark:text-red-400"
+                class="text-xs text-red-600 sm:text-sm dark:text-red-400"
               >
                 You did not upload a YDK file!
               </span>
@@ -356,15 +356,15 @@ function persistDialog(event: PointerDownOutsideEvent) {
                 @input="handleInputYDKeURL"
                 aria-errormessage="ydke-url-import-error"
                 :class="{
-                  'border-red-600 dark:border-red-400 focus-within:outline focus-within:outline-red-600 dark:focus-within:outline-red-400':
+                  'border-red-600 focus-within:outline focus-within:outline-red-600 dark:border-red-400 dark:focus-within:outline-red-400':
                     isErrorYDKeUrlImport,
                 }"
-                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 placeholder:italic placeholder:text-neutral-400 dark:placeholder:text-neutral-500 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:focus-within:outline dark:focus-within:outline-neutral-300"
+                class="w-full rounded-md border border-neutral-500 bg-neutral-100 px-2 py-0.5 text-sm placeholder:text-neutral-400 placeholder:italic sm:text-base dark:bg-neutral-800 dark:placeholder:text-neutral-500 dark:focus-within:outline dark:focus-within:outline-neutral-300"
               ></textarea>
               <span
                 v-if="isErrorYDKeUrlImport"
                 id="ydke-url-import-error"
-                class="text-xs sm:text-sm text-red-600 dark:text-red-400"
+                class="text-xs text-red-600 sm:text-sm dark:text-red-400"
               >
                 {{ ydkeUrlImportErrorMessage }}
               </span>
@@ -378,14 +378,14 @@ function persistDialog(event: PointerDownOutsideEvent) {
                 @input="handleInputDeckName"
                 id="deck-name"
                 type="text"
-                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 border border-neutral-500 bg-neutral-50 dark:bg-neutral-950 dark:focus-within:outline dark:focus-within:outline-neutral-300"
+                class="w-full rounded-md border border-neutral-500 bg-neutral-50 px-2 py-0.5 text-sm sm:text-base dark:bg-neutral-950 dark:focus-within:outline dark:focus-within:outline-neutral-300"
               />
-              <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
+              <span class="text-xs text-neutral-500 sm:text-sm dark:text-neutral-400">
                 You may only type letters, numbers, spaces, hyphens, and underscores.
               </span>
               <span
                 v-if="isErrorYDKFileExport"
-                class="text-xs sm:text-sm text-red-600 dark:text-red-400"
+                class="text-xs text-red-600 sm:text-sm dark:text-red-400"
                 aria-live="polite"
               >
                 Please add at least <strong>one</strong> card in either the main, extra, or side
@@ -397,11 +397,11 @@ function persistDialog(event: PointerDownOutsideEvent) {
                 id="ydke-export"
                 rows="7"
                 v-model="ydkeUrlExport"
-                class="w-full text-sm sm:text-base rounded-md px-2 py-0.5 border border-neutral-500 bg-neutral-100 dark:bg-neutral-800 dark:focus-within:outline dark:focus-within:outline-neutral-300"
+                class="w-full rounded-md border border-neutral-500 bg-neutral-100 px-2 py-0.5 text-sm sm:text-base dark:bg-neutral-800 dark:focus-within:outline dark:focus-within:outline-neutral-300"
               ></textarea>
               <span
                 v-if="isErrorYDKeUrlExport"
-                class="text-xs sm:text-sm text-red-600 dark:text-red-400"
+                class="text-xs text-red-600 sm:text-sm dark:text-red-400"
                 aria-live="polite"
               >
                 Please add at least <strong>one</strong> card in either the main, extra, or side
@@ -409,11 +409,11 @@ function persistDialog(event: PointerDownOutsideEvent) {
               </span>
             </template>
           </div>
-          <div class="mt-3 flex justify-end items-center gap-2">
+          <div class="mt-3 flex items-center justify-end gap-2">
             <span
               v-if="isCopySuccess"
               role="status"
-              class="text-xs sm:text-sm text-emerald-700 dark:text-emerald-500"
+              class="text-xs text-emerald-700 sm:text-sm dark:text-emerald-500"
             >
               <strong>Copied!</strong>
             </span>
@@ -434,7 +434,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
           </div>
           <DialogClose
             aria-label="Close"
-            class="absolute top-2.5 right-2.5 self-start p-1 size-6 rounded-full cursor-pointer hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color] duration-200"
+            class="absolute top-2.5 right-2.5 size-6 cursor-pointer self-start rounded-full p-1 transition-[background-color] duration-200 hover:bg-neutral-200 active:bg-neutral-300 dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
           >
             <X :size="16" />
           </DialogClose>

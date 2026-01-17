@@ -10,7 +10,7 @@ const { prev, next, toFirst, toLast } = store
 </script>
 
 <template>
-  <div class="flex justify-center mt-2">
+  <div class="mt-2 flex justify-center">
     <nav class="flex overflow-x-auto">
       <div class="flex items-center gap-1 p-1">
         <button
@@ -18,7 +18,7 @@ const { prev, next, toFirst, toLast } = store
           aria-label="First Page"
           @click="toFirst"
           :disabled="currentPage === 1"
-          class="p-2 cursor-pointer rounded-lg flex items-center justify-center bg-transparent hover:bg-neutral-300 active:bg-neutral-400 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color,color] duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+          class="flex cursor-pointer items-center justify-center rounded-lg bg-transparent p-2 transition-[background-color,color] duration-200 hover:bg-neutral-300 active:bg-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
         >
           <ChevronsLeft :size="16" />
         </button>
@@ -27,7 +27,7 @@ const { prev, next, toFirst, toLast } = store
           aria-label="Previous Page"
           @click="prev"
           :disabled="currentPage === 1"
-          class="p-2 cursor-pointer rounded-lg flex items-center justify-center bg-transparent hover:bg-neutral-300 active:bg-neutral-400 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color,color] duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+          class="flex cursor-pointer items-center justify-center rounded-lg bg-transparent p-2 transition-[background-color,color] duration-200 hover:bg-neutral-300 active:bg-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
         >
           <ChevronLeft :size="16" />
         </button>
@@ -37,7 +37,7 @@ const { prev, next, toFirst, toLast } = store
               type="button"
               title="Jump to Page"
               :aria-label="`Page ${currentPage} of ${totalPages}. Jump to a certain page?`"
-              class="p-1 whitespace-nowrap cursor-pointer rounded-md text-white bg-neutral-500 hover:bg-neutral-600 active:bg-neutral-700 transition-[background-color] duration-200"
+              class="cursor-pointer rounded-md bg-neutral-500 p-1 whitespace-nowrap text-white transition-[background-color] duration-200 hover:bg-neutral-600 active:bg-neutral-700"
             >
               {{ `${currentPage} / ${totalPages}` }}
             </button>
@@ -48,7 +48,7 @@ const { prev, next, toFirst, toLast } = store
           aria-label="Next Page"
           @click="next"
           :disabled="currentPage === totalPages"
-          class="p-2 cursor-pointer rounded-lg flex items-center justify-center bg-transparent hover:bg-neutral-300 active:bg-neutral-400 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color,color] duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+          class="flex cursor-pointer items-center justify-center rounded-lg bg-transparent p-2 transition-[background-color,color] duration-200 hover:bg-neutral-300 active:bg-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
         >
           <ChevronRight :size="16" />
         </button>
@@ -57,7 +57,7 @@ const { prev, next, toFirst, toLast } = store
           aria-label="Last Page"
           @click="toLast"
           :disabled="currentPage === totalPages"
-          class="p-2 cursor-pointer rounded-lg flex items-center justify-center bg-transparent hover:bg-neutral-300 active:bg-neutral-400 dark:hover:bg-neutral-700 dark:active:bg-neutral-600 transition-[background-color,color] duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+          class="flex cursor-pointer items-center justify-center rounded-lg bg-transparent p-2 transition-[background-color,color] duration-200 hover:bg-neutral-300 active:bg-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent dark:hover:bg-neutral-700 dark:active:bg-neutral-600"
         >
           <ChevronsRight :size="16" />
         </button>

@@ -72,7 +72,7 @@ watch(
 )
 </script>
 <template>
-  <div class="flex flex-col gap-2 mb-3">
+  <div class="mb-3 flex flex-col gap-2">
     <SwitchWithLabel
       id="gt-zero-genesys-pts"
       label-val="Show cards that have greater than zero Genesys points"
@@ -96,7 +96,7 @@ watch(
     />
     <div class="flex flex-col">
       <span>Filter by Genesys point range</span>
-      <div class="flex justify-between mb-3">
+      <div class="mb-3 flex justify-between">
         <span>
           Min: <strong>{{ genesysPointRange[0] }}</strong>
         </span>

@@ -95,7 +95,7 @@ function isButtonVisible(card: YGOCardData, format: Format, num: 2 | 3): boolean
 <template>
   <div v-if="isMainDeckCard(card.frameType)">
     <span>To Main Deck:</span>
-    <div class="flex gap-2 mt-1">
+    <div class="mt-1 flex gap-2">
       <ButtonComponent
         variant="emerald"
         class="w-full"
@@ -126,7 +126,7 @@ function isButtonVisible(card: YGOCardData, format: Format, num: 2 | 3): boolean
   </div>
   <div v-else-if="isExtraDeckCard(card.frameType)">
     <span>To Extra Deck:</span>
-    <div class="flex gap-2 mt-1">
+    <div class="mt-1 flex gap-2">
       <ButtonComponent
         variant="emerald"
         class="w-full"
@@ -157,7 +157,7 @@ function isButtonVisible(card: YGOCardData, format: Format, num: 2 | 3): boolean
   </div>
   <div>
     <span>To Side Deck:</span>
-    <div class="flex gap-2 mt-1">
+    <div class="mt-1 flex gap-2">
       <ButtonComponent
         variant="emerald"
         class="w-full"

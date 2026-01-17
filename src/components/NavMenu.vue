@@ -27,12 +27,12 @@ onBeforeMount(() => {
 </script>
 <template>
   <header
-    class="sticky top-0 border-b z-10 bg-white dark:bg-neutral-900 border-b-neutral-300 dark:border-b-neutral-700 py-4 px-5 transition-colors duration-400"
+    class="sticky top-0 z-10 border-b border-b-neutral-300 bg-white px-5 py-4 transition-colors duration-400 dark:border-b-neutral-700 dark:bg-neutral-900"
   >
-    <nav class="flex justify-between items-center text-neutral-800 dark:text-neutral-300">
+    <nav class="flex items-center justify-between text-neutral-800 dark:text-neutral-300">
       <RouterLink to="/" class="focus-visible:outline-offset-2">
         <div
-          class="flex items-center font-medium text-xl hover:opacity-70 transition-[opacity,color] duration-400"
+          class="flex items-center text-xl font-medium transition-[opacity,color] duration-400 hover:opacity-70"
         >
           <img alt="Vue logo" class="mr-1" src="@/assets/logo.webp" width="30" />YGO ODB
         </div>
@@ -40,7 +40,7 @@ onBeforeMount(() => {
       <div class="flex items-center divide-x divide-neutral-300 dark:divide-neutral-700">
         <div class="pr-4">
           <RouterLink
-            class="font-medium hover:text-emerald-700 dark:hover:text-emerald-600 transition-[color] duration-400 focus-visible:outline-offset-4"
+            class="font-medium transition-[color] duration-400 hover:text-emerald-700 focus-visible:outline-offset-4 dark:hover:text-emerald-600"
             activeClass="text-emerald-700 dark:text-emerald-600"
             to="/about"
           >
@@ -51,10 +51,10 @@ onBeforeMount(() => {
           aria-label="Change theme"
           v-model="isDarkTheme"
           @update:model-value="switchTheme"
-          class="w-[42px] h-[22px] ml-4 shadow-sm rounded-full relative cursor-pointer border border-neutral-400 dark:border-neutral-500 hover:border-emerald-600 transition-[border-color,background-color] duration-400 bg-neutral-200 data-[state=checked]:bg-neutral-700"
+          class="relative ml-4 h-[22px] w-[42px] cursor-pointer rounded-full border border-neutral-400 bg-neutral-200 shadow-sm transition-[border-color,background-color] duration-400 hover:border-emerald-600 data-[state=checked]:bg-neutral-700 dark:border-neutral-500"
         >
           <SwitchThumb
-            class="flex justify-center items-center size-[18px] my-auto bg-white shadow-sm rounded-full transition-transform duration-300 translate-x-px will-change-transform data-[state=checked]:translate-x-[21px] data-[state=checked]:bg-neutral-950"
+            class="my-auto flex size-[18px] translate-x-px items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-300 will-change-transform data-[state=checked]:translate-x-[21px] data-[state=checked]:bg-neutral-950"
           >
             <Sun v-if="!isDarkTheme" color="gray" :size="14" />
             <Moon v-else color="white" :size="14" />

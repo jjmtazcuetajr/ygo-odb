@@ -18,7 +18,7 @@ const maxDate = new Date().toISOString().split('T')[0]
       :min="min"
       :max="maxDate"
       v-model="model"
-      class="text-xs sm:text-base px-1 py-0.5 border rounded-md border-neutral-500 bg-neutral-200 dark:bg-neutral-800 scheme-light dark:scheme-dark"
+      class="rounded-md border border-neutral-500 bg-neutral-200 px-1 py-0.5 text-xs scheme-light sm:text-base dark:bg-neutral-800 dark:scheme-dark"
     />
   </div>
 </template>

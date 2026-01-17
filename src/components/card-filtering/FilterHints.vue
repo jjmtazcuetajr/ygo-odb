@@ -31,18 +31,18 @@ const { isHoverDetected } = useDetectHover()
     <TooltipRoot>
       <TooltipTrigger
         aria-label="Hint"
-        class="rounded-md size-5 flex items-center justify-center cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-700"
+        class="flex size-5 cursor-pointer items-center justify-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700"
       >
         <CircleHelp :size="16" />
       </TooltipTrigger>
       <TooltipPortal>
         <TooltipContent
           :side-offset="5"
-          class="rounded-lg p-2 z-150 w-[250px] text-sm text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-900 border border-emerald-600 shadow-lg shadow-neutral-700 dark:shadow-neutral-950 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade"
+          class="z-150 w-[250px] rounded-lg border border-emerald-600 bg-white p-2 text-sm text-neutral-700 shadow-lg shadow-neutral-700 will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-900 dark:text-neutral-300 dark:shadow-neutral-950"
         >
           <span v-if="usage === 'category'">You can only select one card category at a time.</span>
           <span v-else>You may select multiple link arrows.</span>
-          <TooltipArrow class="fill-white dark:fill-neutral-900 stroke-emerald-600" />
+          <TooltipArrow class="fill-white stroke-emerald-600 dark:fill-neutral-900" />
         </TooltipContent>
       </TooltipPortal>
     </TooltipRoot>
@@ -50,7 +50,7 @@ const { isHoverDetected } = useDetectHover()
   <PopoverRoot v-else>
     <PopoverTrigger
       aria-label="Hint"
-      class="rounded-md size-5 flex items-center justify-center cursor-pointer active:bg-neutral-200 dark:active:bg-neutral-700"
+      class="flex size-5 cursor-pointer items-center justify-center rounded-md active:bg-neutral-200 dark:active:bg-neutral-700"
     >
       <CircleHelp :size="16" />
     </PopoverTrigger>
@@ -58,11 +58,11 @@ const { isHoverDetected } = useDetectHover()
       <PopoverContent
         side="bottom"
         :side-offset="5"
-        class="rounded-lg p-2 z-150 w-[250px] text-sm text-neutral-700 dark:text-neutral-300 bg-white dark:bg-neutral-900 border border-emerald-600 shadow-lg shadow-neutral-700 dark:shadow-neutral-950 will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
+        class="z-150 w-[250px] rounded-lg border border-emerald-600 bg-white p-2 text-sm text-neutral-700 shadow-lg shadow-neutral-700 will-change-[transform,opacity] data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=top]:animate-slideDownAndFade dark:bg-neutral-900 dark:text-neutral-300 dark:shadow-neutral-950"
       >
         <span v-if="usage === 'category'">You can only select one card category at a time.</span>
         <span v-else>You may select multiple link arrows.</span>
-        <PopoverArrow class="fill-white dark:fill-neutral-900 stroke-emerald-600" />
+        <PopoverArrow class="fill-white stroke-emerald-600 dark:fill-neutral-900" />
       </PopoverContent>
     </PopoverPortal>
   </PopoverRoot>
