@@ -119,7 +119,7 @@ onMounted(() => {
         />
         <DialogModal usage="filters">
           <template #trigger>
-            <ButtonComponent :variant="buttonVariant" has-icon>
+            <ButtonComponent :variant="buttonVariant" has-icon-with-text>
               <template #textWithIcon> <Filter :size="16" /> Filters </template>
             </ButtonComponent>
           </template>

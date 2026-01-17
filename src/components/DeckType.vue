@@ -3,6 +3,7 @@ import { useDetectHover } from '@/composables/detectHover'
 import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { EXTRA_AND_SIDE_DECK_LIMIT, MAIN_DECK_LIMIT } from '@/utils/constants'
 import type { YGOCardData } from '@/utils/interfaces'
+import { cva } from 'class-variance-authority'
 import { storeToRefs } from 'pinia'
 import CardDialog from './CardDialog.vue'
 import CardTooltip from './CardTooltip.vue'
@@ -19,34 +20,28 @@ defineProps<{
   linkCount?: number
 }>()
 
-const cardsStore = useYgoCardsStore()
-const { format } = storeToRefs(cardsStore)
-
-type DeckProps = {
-  name: string
-  colors: string
-}
-const deckTypeMap: Record<string, DeckProps> = {
-  main: {
-    name: 'Main',
-    colors: 'border-neutral-400 bg-neutral-300 dark:border-neutral-500 dark:bg-neutral-700',
-  },
-  extra: {
-    name: 'Extra',
-    colors: 'border-emerald-400 bg-emerald-200 dark:border-emerald-500 dark:bg-emerald-800',
-  },
-  side: {
-    name: 'Side',
-    colors: 'border-cyan-400 bg-cyan-200 dark:border-cyan-600 dark:bg-cyan-900',
-  },
-}
+const { format } = storeToRefs(useYgoCardsStore())
 
 const { isHoverDetected } = useDetectHover()
+
+const deckVariants = cva(
+  // base classes (common to all variants)
+  'mt-1 grid min-h-15 grid-cols-6 content-start gap-1 rounded-md border p-1 transition-colors duration-400 sm:min-h-35 sm:gap-1.5 sm:p-1.5 md:grid-cols-8 lg:min-h-20 lg:grid-cols-10 xl:min-h-25 xl:grid-cols-12 2xl:grid-cols-15',
+  {
+    variants: {
+      type: {
+        main: 'border-neutral-400 bg-neutral-300 dark:border-neutral-500 dark:bg-neutral-700',
+        extra: 'border-emerald-400 bg-emerald-200 dark:border-emerald-500 dark:bg-emerald-800',
+        side: 'border-cyan-400 bg-cyan-200 dark:border-cyan-600 dark:bg-cyan-900',
+      },
+    },
+  },
+)
 </script>
 <template>
   <div>
     <div class="flex flex-wrap items-center gap-x-4">
-      <span class="text-lg font-bold sm:text-xl">{{ deckTypeMap[type].name }} Deck</span>
+      <span class="text-lg font-bold capitalize sm:text-xl">{{ type }} Deck</span>
       <span class="text-xs sm:text-base">
         <span>
           Cards:
@@ -88,11 +83,7 @@ const { isHoverDetected } = useDetectHover()
         )
       </span>
     </div>
-    <div
-      :id="type + '-deck'"
-      :class="deckTypeMap[type].colors"
-      class="mt-1 grid min-h-15 grid-cols-6 content-start gap-1 rounded-md border p-1 transition-colors duration-400 sm:min-h-35 sm:gap-1.5 sm:p-1.5 md:grid-cols-8 lg:min-h-20 lg:grid-cols-10 xl:min-h-25 xl:grid-cols-12 2xl:grid-cols-15"
-    >
+    <div :id="type + '-deck'" :class="deckVariants({ type })">
       <template v-for="(card, index) in deck" :key="index">
         <CardTooltip
           v-if="isHoverDetected"

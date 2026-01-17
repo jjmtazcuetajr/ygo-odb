@@ -102,21 +102,21 @@ onUnmounted(() => {
         <div class="hidden gap-2 sm:flex">
           <DialogModal usage="clear-all">
             <template #trigger>
-              <ButtonComponent variant="red" has-icon>
+              <ButtonComponent variant="red" has-icon-with-text>
                 <template #textWithIcon> <Trash2 :size="16" /> Clear </template>
               </ButtonComponent>
             </template>
           </DialogModal>
           <DialogModal usage="help">
             <template #trigger>
-              <ButtonComponent variant="sky" has-icon>
+              <ButtonComponent variant="sky" has-icon-with-text>
                 <template #textWithIcon> <CircleHelp :size="16" /> Help </template>
               </ButtonComponent>
             </template>
           </DialogModal>
           <ButtonComponent
             variant="emerald"
-            has-icon
+            has-icon-with-text
             only-in-mobile
             @click="isSideDrawerShown = true"
           >
@@ -140,7 +140,7 @@ onUnmounted(() => {
             <div class="flex gap-2 sm:hidden">
               <DialogModal usage="clear-all">
                 <template #trigger>
-                  <ButtonComponent variant="red" aria-label="Clear deck builder" has-icon>
+                  <ButtonComponent variant="red" aria-label="Clear deck builder">
                     <template #textWithIcon>
                       <Trash2 :size="20" />
                     </template>
@@ -149,7 +149,7 @@ onUnmounted(() => {
               </DialogModal>
               <DialogModal usage="help">
                 <template #trigger>
-                  <ButtonComponent variant="sky" aria-label="Tips and hints" has-icon>
+                  <ButtonComponent variant="sky" aria-label="Tips and hints">
                     <template #textWithIcon>
                       <CircleHelp :size="20" />
                     </template>
@@ -159,7 +159,6 @@ onUnmounted(() => {
               <ButtonComponent
                 variant="emerald"
                 aria-label="Add card"
-                has-icon
                 @click="isSideDrawerShown = true"
               >
                 <template #textWithIcon>
@@ -178,7 +177,6 @@ onUnmounted(() => {
               </span>
               <ButtonComponent
                 variant="neutral"
-                has-icon
                 class="rounded-full! p-1.5!"
                 aria-label="Change Genesys point limit"
                 title="Change Genesys point limit"
@@ -200,7 +198,6 @@ onUnmounted(() => {
               />
               <ButtonComponent
                 variant="emerald"
-                has-icon
                 class="rounded-full! p-1.5!"
                 aria-label="Confirm Genesys point limit change"
                 title="Confirm"
@@ -212,7 +209,6 @@ onUnmounted(() => {
               </ButtonComponent>
               <ButtonComponent
                 variant="red"
-                has-icon
                 class="rounded-full! p-1.5!"
                 aria-label="Cancel Genesys point limit change"
                 title="Cancel"
