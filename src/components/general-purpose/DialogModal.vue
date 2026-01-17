@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { useDeckStore } from '@/stores/deck'
+import { usePaginationStore } from '@/stores/pagination'
+import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { X } from 'lucide-vue-next'
+import { storeToRefs } from 'pinia'
 import {
   DialogClose,
   DialogContent,
@@ -8,16 +13,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from 'reka-ui'
-import { X } from 'lucide-vue-next'
-import ButtonComponent from './ButtonComponent.vue'
-import NumberField from './NumberField.vue'
+import { defineAsyncComponent, ref } from 'vue'
 import CardFiltersLoader from '../loaders/CardFiltersLoader.vue'
 import ErrorComponent from '../loaders/ErrorComponent.vue'
-import { useYgoCardsStore } from '@/stores/ygo-cards'
-import { usePaginationStore } from '@/stores/pagination'
-import { useDeckStore } from '@/stores/deck'
-import { ref, defineAsyncComponent } from 'vue'
-import { storeToRefs } from 'pinia'
+import ButtonComponent from './ButtonComponent.vue'
+import NumberField from './NumberField.vue'
 
 const props = defineProps<{
   usage: 'filters' | 'clear-all' | 'help' | 'pagination'

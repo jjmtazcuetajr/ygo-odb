@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useMobileDragAndDrop } from '@/composables/mobileDragAndDrop'
+import { useImageLoadingStore } from '@/stores/imageLoading'
+import type { Dropzone, Format, YGOCardData } from '@/utils/interfaces'
+import { X } from 'lucide-vue-next'
 import {
   DialogClose,
   DialogContent,
@@ -8,16 +12,12 @@ import {
   DialogTitle,
   VisuallyHidden,
 } from 'reka-ui'
-import { X } from 'lucide-vue-next'
-import { onMounted, onUnmounted, defineAsyncComponent } from 'vue'
-import CardPlaceholder from './CardPlaceholder.vue'
+import { defineAsyncComponent, onMounted, onUnmounted } from 'vue'
 import BanStatus from './BanStatus.vue'
+import CardPlaceholder from './CardPlaceholder.vue'
 import GenesysPoint from './GenesysPoint.vue'
 import CardInfoLoader from './loaders/CardInfoLoader.vue'
 import ErrorComponent from './loaders/ErrorComponent.vue'
-import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
-import { useMobileDragAndDrop } from '@/composables/mobileDragAndDrop'
-import { useImageLoadingStore } from '@/stores/imageLoading'
 
 defineProps<{
   card: YGOCardData

@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { Minus, Plus } from 'lucide-vue-next'
 import {
   NumberFieldDecrement,
   NumberFieldIncrement,
   NumberFieldInput,
   NumberFieldRoot,
 } from 'reka-ui'
-import { Plus, Minus } from 'lucide-vue-next'
 
 defineProps<{
   id: string

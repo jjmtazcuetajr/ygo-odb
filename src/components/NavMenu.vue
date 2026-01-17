@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { Moon, Sun } from 'lucide-vue-next'
 import { SwitchRoot, SwitchThumb } from 'reka-ui'
-import { ref, onBeforeMount } from 'vue'
-import { Sun, Moon } from 'lucide-vue-next'
+import { onBeforeMount, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const isDarkTheme = ref(false)
 

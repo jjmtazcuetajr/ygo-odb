@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import ButtonComponent from '../general-purpose/ButtonComponent.vue'
-import type { YGOCardData, Dropzone, Format } from '@/utils/interfaces'
 import { useDeckStore } from '@/stores/deck'
+import { EXTRA_AND_SIDE_DECK_LIMIT, MAIN_DECK_LIMIT } from '@/utils/constants'
+import { isExtraDeckCard, isMainDeckCard } from '@/utils/helpers'
+import type { Dropzone, Format, YGOCardData } from '@/utils/interfaces'
 import { storeToRefs } from 'pinia'
-import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
-import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
+import ButtonComponent from '../general-purpose/ButtonComponent.vue'
 
 const props = defineProps<{
   card: YGOCardData

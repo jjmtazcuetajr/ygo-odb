@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ToastDescription, ToastProvider, ToastRoot, ToastClose, ToastViewport } from 'reka-ui'
 import { X } from 'lucide-vue-next'
-import { ref, computed } from 'vue'
+import { ToastClose, ToastDescription, ToastProvider, ToastRoot, ToastViewport } from 'reka-ui'
+import { computed, ref } from 'vue'
 
 const props = defineProps<{
   isSuccess: boolean

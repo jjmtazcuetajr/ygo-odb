@@ -2,17 +2,17 @@
 import DeckType from '@/components/DeckType.vue'
 import DropdownMenu from '@/components/DropdownMenu.vue'
 import SearchResults from '@/components/SearchResults.vue'
-import DialogModal from '@/components/general-purpose/DialogModal.vue'
 import ButtonComponent from '@/components/general-purpose/ButtonComponent.vue'
-import SelectOption from '@/components/general-purpose/SelectOption.vue'
+import DialogModal from '@/components/general-purpose/DialogModal.vue'
 import NumberField from '@/components/general-purpose/NumberField.vue'
+import SelectOption from '@/components/general-purpose/SelectOption.vue'
 import MainLoader from '@/components/loaders/MainLoader.vue'
-import { Trash2, CircleHelp, Plus, Pen, Check, X } from 'lucide-vue-next'
-import { ref, onMounted, onUnmounted } from 'vue'
-import { formats } from '@/utils/select-options'
-import { useYgoCardsStore } from '@/stores/ygo-cards'
 import { useDeckStore } from '@/stores/deck'
+import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { formats } from '@/utils/select-options'
+import { Check, CircleHelp, Pen, Plus, Trash2, X } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const cardsStore = useYgoCardsStore()
 const { format, isLoading } = storeToRefs(cardsStore)

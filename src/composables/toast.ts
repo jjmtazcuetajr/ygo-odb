@@ -1,15 +1,15 @@
-import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useDeckStore } from '@/stores/deck'
 import {
-  MAIN_DECK_LIMIT,
   EXTRA_AND_SIDE_DECK_LIMIT,
   FORBIDDEN_CARD_LIMIT,
   LIMITED_CARD_LIMIT,
+  MAIN_DECK_LIMIT,
   SEMI_LIMITED_CARD_LIMIT,
 } from '@/utils/constants'
-import type { YGOCardData, Dropzone, BanStatus, Format } from '@/utils/interfaces'
 import { parseAlwaysTreatedAs } from '@/utils/helpers'
+import type { BanStatus, Dropzone, Format, YGOCardData } from '@/utils/interfaces'
+import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 export function useToast() {
   const { mainDeck, extraDeck, sideDeck, genesysLimit, getSumOfGenesysPoints } =

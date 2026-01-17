@@ -1,5 +1,5 @@
-import { ref, computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
+import { computed, ref } from 'vue'
 import { useYgoCardsStore } from './ygo-cards'
 
 export const usePaginationStore = defineStore('pagination', () => {

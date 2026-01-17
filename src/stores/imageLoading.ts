@@ -1,7 +1,7 @@
-import { ref } from 'vue'
-import { defineStore, storeToRefs } from 'pinia'
-import { usePaginationStore } from './pagination'
 import type { YGOCardData } from '@/utils/interfaces'
+import { defineStore, storeToRefs } from 'pinia'
+import { ref } from 'vue'
+import { usePaginationStore } from './pagination'
 
 interface LoadingImage {
   imageUrl: string

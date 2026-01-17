@@ -1,32 +1,32 @@
 <script setup lang="ts">
+import { usePaginationStore } from '@/stores/pagination'
+import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { MAX_ATK_DEF, MIN_OCG_DATE, MIN_TCG_DATE } from '@/utils/constants'
+import { debounce } from '@/utils/helpers'
+import type { BanStatus, CardCategory, MonsterStat } from '@/utils/interfaces'
+import {
+  attributes,
+  banStatus,
+  monsterAbilities,
+  monsterCards,
+  monsterTypes,
+  pendulums,
+  spellTypes,
+  trapTypes,
+  tuners,
+} from '@/utils/select-options'
+import { Search, X } from 'lucide-vue-next'
+import { storeToRefs } from 'pinia'
+import { onBeforeMount, ref, useTemplateRef, watch } from 'vue'
+import DateInput from '../general-purpose/DateInput.vue'
+import NumberField from '../general-purpose/NumberField.vue'
 import SelectOption from '../general-purpose/SelectOption.vue'
+import SliderComponent from '../general-purpose/SliderComponent.vue'
+import SwitchWithLabel from '../general-purpose/SwitchWithLabel.vue'
 import CardCategories from './CardCategories.vue'
 import FilterHints from './FilterHints.vue'
 import GenesysFilters from './GenesysFilters.vue'
-import NumberField from '../general-purpose/NumberField.vue'
-import SliderComponent from '../general-purpose/SliderComponent.vue'
-import SwitchWithLabel from '../general-purpose/SwitchWithLabel.vue'
 import LinkArrows from './LinkArrows.vue'
-import DateInput from '../general-purpose/DateInput.vue'
-import { X, Search } from 'lucide-vue-next'
-import {
-  monsterCards,
-  spellTypes,
-  trapTypes,
-  monsterTypes,
-  monsterAbilities,
-  tuners,
-  pendulums,
-  attributes,
-  banStatus,
-} from '@/utils/select-options'
-import { useYgoCardsStore } from '@/stores/ygo-cards'
-import { usePaginationStore } from '@/stores/pagination'
-import { storeToRefs } from 'pinia'
-import { ref, onBeforeMount, watch, useTemplateRef } from 'vue'
-import { debounce } from '@/utils/helpers'
-import { MAX_ATK_DEF, MIN_OCG_DATE, MIN_TCG_DATE } from '@/utils/constants'
-import type { CardCategory, BanStatus, MonsterStat } from '@/utils/interfaces'
 
 const { filters, format, isAltArtShown, selectedFormatForDateFilter } =
   storeToRefs(useYgoCardsStore())

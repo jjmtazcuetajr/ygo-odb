@@ -1,33 +1,33 @@
 <script setup lang="ts">
+import { useDragAndDrop } from '@/composables/dragAndDrop'
+import { useDeckStore } from '@/stores/deck'
+import { useImageLoadingStore } from '@/stores/imageLoading'
+import { isExtraDeckCard, isMainDeckCard } from '@/utils/helpers'
+import type { Dropzone, Format, YGOCardData } from '@/utils/interfaces'
+import { Info, Plus, Settings2, X } from 'lucide-vue-next'
+import { storeToRefs } from 'pinia'
 import {
-  TooltipArrow,
-  TooltipContent,
-  TooltipPortal,
-  TooltipProvider,
-  TooltipRoot,
-  TooltipTrigger,
   PopoverArrow,
   PopoverClose,
   PopoverContent,
   PopoverPortal,
   PopoverRoot,
   PopoverTrigger,
+  TooltipArrow,
+  TooltipContent,
+  TooltipPortal,
+  TooltipProvider,
+  TooltipRoot,
+  TooltipTrigger,
 } from 'reka-ui'
-import CardPlaceholder from './CardPlaceholder.vue'
+import { defineAsyncComponent, ref } from 'vue'
 import BanStatus from './BanStatus.vue'
+import CardPlaceholder from './CardPlaceholder.vue'
 import GenesysPoint from './GenesysPoint.vue'
 import CardInfoLoader from './loaders/CardInfoLoader.vue'
-import GridToDeckLoader from './loaders/GridToDeckLoader.vue'
 import DropzoneOpsLoader from './loaders/DropzoneOpsLoader.vue'
 import ErrorComponent from './loaders/ErrorComponent.vue'
-import type { YGOCardData, Format, Dropzone } from '@/utils/interfaces'
-import { useDragAndDrop } from '@/composables/dragAndDrop'
-import { ref, defineAsyncComponent } from 'vue'
-import { Info, Settings2, X, Plus } from 'lucide-vue-next'
-import { useDeckStore } from '@/stores/deck'
-import { useImageLoadingStore } from '@/stores/imageLoading'
-import { storeToRefs } from 'pinia'
-import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
+import GridToDeckLoader from './loaders/GridToDeckLoader.vue'
 
 defineProps<{
   card: YGOCardData

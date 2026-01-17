@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { Star, Diamond } from 'lucide-vue-next'
 import {
-  printTypeline,
-  handleBanStatusColor,
-  removeSingleQuotes,
   getCorrectReleaseDates,
+  handleBanStatusColor,
+  printTypeline,
+  removeSingleQuotes,
 } from '@/utils/helpers'
 import type { YGOCardData } from '@/utils/interfaces'
+import { Diamond, Star } from 'lucide-vue-next'
 
 defineProps<{ card: YGOCardData }>()
 

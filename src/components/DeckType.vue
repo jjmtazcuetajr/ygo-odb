@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { YGOCardData } from '@/utils/interfaces'
-import { useYgoCardsStore } from '@/stores/ygo-cards'
-import { storeToRefs } from 'pinia'
-import { MAIN_DECK_LIMIT, EXTRA_AND_SIDE_DECK_LIMIT } from '@/utils/constants'
 import { useDetectHover } from '@/composables/detectHover'
-import CardTooltip from './CardTooltip.vue'
+import { useYgoCardsStore } from '@/stores/ygo-cards'
+import { EXTRA_AND_SIDE_DECK_LIMIT, MAIN_DECK_LIMIT } from '@/utils/constants'
+import type { YGOCardData } from '@/utils/interfaces'
+import { storeToRefs } from 'pinia'
 import CardDialog from './CardDialog.vue'
+import CardTooltip from './CardTooltip.vue'
 
 defineProps<{
   type: 'main' | 'extra' | 'side'

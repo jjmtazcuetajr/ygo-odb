@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ToggleGroupItem, ToggleGroupRoot } from 'reka-ui'
 import {
-  ArrowUp,
   ArrowDown,
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpLeft,
-  ArrowUpRight,
   ArrowDownLeft,
   ArrowDownRight,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  ArrowUpLeft,
+  ArrowUpRight,
 } from 'lucide-vue-next'
+import { ToggleGroupItem, ToggleGroupRoot } from 'reka-ui'
 
 const toggleButtonStyles =
   'cursor-pointer flex justify-center items-center rounded-full size-[24px] shadow-sm data-[state=on]:inset-shadow-sm data-[state=on]:shadow-none transition-[color,background-color,box-shadow] duration-300'

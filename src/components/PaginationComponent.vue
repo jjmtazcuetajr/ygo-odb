@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'lucide-vue-next'
 import { usePaginationStore } from '@/stores/pagination'
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import DialogModal from './general-purpose/DialogModal.vue'
 

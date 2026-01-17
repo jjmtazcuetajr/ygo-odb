@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDetectHover } from '@/composables/detectHover'
+import { CircleHelp } from 'lucide-vue-next'
 import {
   PopoverArrow,
   PopoverContent,
@@ -12,8 +14,6 @@ import {
   TooltipRoot,
   TooltipTrigger,
 } from 'reka-ui'
-import { CircleHelp } from 'lucide-vue-next'
-import { useDetectHover } from '@/composables/detectHover'
 
 defineProps<{
   usage: 'category' | 'link-arrows'

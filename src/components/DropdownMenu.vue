@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue'
-import { FileInput, FileOutput, ChevronDown, ArrowDownUp, X } from 'lucide-vue-next'
+import { useYdkFile } from '@/composables/ydkFile'
+import { useYdkeUrl } from '@/composables/ydkeURL'
+import { useDeckStore } from '@/stores/deck'
+import { ArrowDownUp, ChevronDown, FileInput, FileOutput, X } from 'lucide-vue-next'
+import { storeToRefs } from 'pinia'
 import {
-  DropdownMenuArrow,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuRoot,
-  DropdownMenuTrigger,
   DialogClose,
   DialogContent,
   DialogOverlay,
@@ -15,12 +12,15 @@ import {
   DialogRoot,
   DialogTitle,
   DialogTrigger,
+  DropdownMenuArrow,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
 } from 'reka-ui'
+import { ref, useTemplateRef } from 'vue'
 import ButtonComponent from './general-purpose/ButtonComponent.vue'
-import { useYdkFile } from '@/composables/ydkFile'
-import { useYdkeUrl } from '@/composables/ydkeURL'
-import { storeToRefs } from 'pinia'
-import { useDeckStore } from '@/stores/deck'
 
 defineProps<{
   type: 'Import' | 'Export' | 'Sort'

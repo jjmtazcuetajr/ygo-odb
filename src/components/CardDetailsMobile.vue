@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import { useToast } from '@/composables/toast'
+import { useDeckStore } from '@/stores/deck'
+import { useImageLoadingStore } from '@/stores/imageLoading'
+import { isExtraDeckCard, isMainDeckCard } from '@/utils/helpers'
+import type { Dropzone, Format, YGOCardData } from '@/utils/interfaces'
+import { X } from 'lucide-vue-next'
+import { storeToRefs } from 'pinia'
 import {
   DialogClose,
   DialogContent,
@@ -9,18 +16,11 @@ import {
   DialogTrigger,
   VisuallyHidden,
 } from 'reka-ui'
-import { ref, onMounted, onUnmounted, defineAsyncComponent } from 'vue'
-import { X } from 'lucide-vue-next'
-import ButtonComponent from './general-purpose/ButtonComponent.vue'
+import { defineAsyncComponent, onMounted, onUnmounted, ref } from 'vue'
 import CardPlaceholder from './CardPlaceholder.vue'
+import ButtonComponent from './general-purpose/ButtonComponent.vue'
 import CardInfoLoader from './loaders/CardInfoLoader.vue'
 import ErrorComponent from './loaders/ErrorComponent.vue'
-import { isMainDeckCard, isExtraDeckCard } from '@/utils/helpers'
-import { useDeckStore } from '@/stores/deck'
-import { useImageLoadingStore } from '@/stores/imageLoading'
-import { storeToRefs } from 'pinia'
-import { useToast } from '@/composables/toast'
-import type { YGOCardData, Dropzone, Format } from '@/utils/interfaces'
 
 const props = defineProps<{
   card: YGOCardData

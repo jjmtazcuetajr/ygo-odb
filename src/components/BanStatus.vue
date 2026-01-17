@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Ban } from 'lucide-vue-next'
 import type { BanStatus } from '@/utils/interfaces'
+import { Ban } from 'lucide-vue-next'
 
 defineProps<{ status: BanStatus | undefined }>()
 </script>
