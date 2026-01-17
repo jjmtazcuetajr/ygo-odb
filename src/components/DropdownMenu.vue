@@ -236,7 +236,7 @@ function persistDialog(event: PointerDownOutsideEvent) {
 </script>
 
 <template>
-  <DialogRoot v-model:open="isDialogOpen" v-on:update:open="handleDialogClose">
+  <DialogRoot v-model:open="isDialogOpen" @update:open="handleDialogClose">
     <DropdownMenuRoot v-model:open="toggleState" :modal="false">
       <DropdownMenuTrigger
         :aria-label="type + ' options'"
@@ -256,26 +256,32 @@ function persistDialog(event: PointerDownOutsideEvent) {
         >
           <template v-if="type === 'Import' || type === 'Export'">
             <DropdownMenuItem
-              v-on="
-                type === 'Import' ? { click: handleYdkFileImport } : { click: handleYdkFileExport }
-              "
               class="text-sm rounded flex items-center h-6 select-none outline-none text-emerald-700 data-highlighted:bg-emerald-500 data-highlighted:text-neutral-50 dark:text-emerald-400"
             >
-              <DialogTrigger class="w-full text-start px-3" v-if="type === 'Import'">
+              <DialogTrigger
+                class="w-full text-start px-3"
+                v-if="type === 'Import'"
+                @click="handleYdkFileImport"
+              >
                 From YDK file
               </DialogTrigger>
-              <DialogTrigger class="w-full text-start px-3" v-else>To YDK file</DialogTrigger>
+              <DialogTrigger class="w-full text-start px-3" v-else @click="handleYdkFileExport">
+                To YDK file
+              </DialogTrigger>
             </DropdownMenuItem>
             <DropdownMenuItem
-              v-on="
-                type === 'Import' ? { click: handleYdkeUrlImport } : { click: handleYdkeUrlExport }
-              "
               class="text-sm rounded flex items-center h-6 select-none outline-none text-emerald-700 data-highlighted:bg-emerald-500 data-highlighted:text-neutral-50 dark:text-emerald-400"
             >
-              <DialogTrigger class="w-full text-start px-3" v-if="type === 'Import'">
+              <DialogTrigger
+                class="w-full text-start px-3"
+                v-if="type === 'Import'"
+                @click="handleYdkeUrlImport"
+              >
                 From YDKe URL
               </DialogTrigger>
-              <DialogTrigger class="w-full text-start px-3" v-else>To YDKe URL</DialogTrigger>
+              <DialogTrigger class="w-full text-start px-3" v-else @click="handleYdkeUrlExport">
+                To YDKe URL
+              </DialogTrigger>
             </DropdownMenuItem>
           </template>
           <template v-else>

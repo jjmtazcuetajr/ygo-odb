@@ -167,11 +167,7 @@ onMounted(() => {
               />
               <img
                 v-else
-                :src="
-                  hasFinishedLoadingImage(card.card_images[0].image_url_small)
-                    ? card.card_images[0].image_url_small
-                    : ''
-                "
+                :src="card.card_images[0].image_url_small"
                 :alt="card.name"
                 draggable="false"
                 class="rounded-sm aspect-268/391 text-xs overflow-hidden bg-neutral-400/70 dark:bg-neutral-600"
