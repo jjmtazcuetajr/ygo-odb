@@ -1,45 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-US">
+  <head>
+    <script>
+      ;(() => {
+        const theme = localStorage.getItem('theme')
+        const isDarkSystemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (theme === 'dark' || (!('theme' in localStorage) && isDarkSystemTheme)) {
+          document.documentElement.dataset.theme = 'dark'
+          localStorage.setItem('theme', 'dark')
+        } else {
+          document.documentElement.dataset.theme = ''
+          localStorage.setItem('theme', 'light')
+        }
+      })()
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/src/assets/main.css" rel="stylesheet preload" as="style" />
+    <title>YGO ODB</title>
+    <meta name="description" content="An online, fan-made Yu-Gi-Oh! deck builder" />
+    <meta name="color-scheme" content="dark light" />
 
-<head>
-  <script>
-    (() => {
-      const theme = localStorage.getItem('theme')
-      const isDarkSystemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-      if (theme === 'dark' || (!('theme' in localStorage) && isDarkSystemTheme)) {
-        document.documentElement.dataset.theme = 'dark'
-        localStorage.setItem('theme', 'dark')
-      } else {
-        document.documentElement.dataset.theme = ''
-        localStorage.setItem('theme', 'light')
-      }
-    })()
-  </script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="/src/assets/main.css" rel="stylesheet preload" as="style">
-  <title>YGO ODB</title>
-  <meta name="description" content="An online, fan-made Yu-Gi-Oh! deck builder">
-  <meta name="color-scheme" content="dark light" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="YGO ODB" />
+    <link rel="manifest" href="/site.webmanifest" />
+  </head>
 
-  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-title" content="YGO ODB" />
-  <link rel="manifest" href="/site.webmanifest" />
-</head>
-
-<body class="flex min-h-screen bg-white dark:bg-neutral-900 transition-colors duration-400">
-  <noscript>
-    <div style="position: absolute; display: flex; justify-content: center; width: 100%; padding-left: 20px; padding-right: 20px; margin-top: 40px;">
-      <strong style="color: black; font-size: 20px;">
-        Sorry but this application doesn't work without JavaScript enabled. Please enable it to continue.
-      </strong>
-    </div>
-  </noscript>
-  <div id="app" class="flex flex-col w-full"></div>
-  <script type="module" src="/src/main.ts"></script>
-</body>
-
+  <body class="flex min-h-screen bg-white transition-colors duration-400 dark:bg-neutral-900">
+    <noscript>
+      <div
+        style="
+          position: absolute;
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          padding-left: 20px;
+          padding-right: 20px;
+          margin-top: 40px;
+        "
+      >
+        <strong style="color: black; font-size: 20px">
+          Sorry but this application doesn't work without JavaScript enabled. Please enable it to
+          continue.
+        </strong>
+      </div>
+    </noscript>
+    <div id="app" class="flex w-full flex-col"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
